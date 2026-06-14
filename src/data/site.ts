@@ -329,7 +329,7 @@ export const portfolioProject = {
     "This portfolio is built as a personal operating system for Ebbad's work, combining recruiter-first content, interactive demos, a 3D skill globe, local chatbot guidance, Formspree contact delivery, and Vercel deployment.",
   techStack: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "React Three Fiber", "Formspree", "Vercel"],
   githubUrl: siteConfig.portfolioRepositoryUrl,
-  codeStatus: "coming-soon" as CodeStatus,
+  codeStatus: "available" as CodeStatus,
   live: siteConfig.siteUrl,
 };
 
