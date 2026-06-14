@@ -33,6 +33,7 @@ function getSectionState(debugEnabled: boolean): ActiveSectionState {
         index,
         element: null,
         top: 0,
+        bottom: 0,
       };
     }
 
@@ -43,6 +44,7 @@ function getSectionState(debugEnabled: boolean): ActiveSectionState {
       index,
       element,
       top: rect.top + window.scrollY,
+      bottom: rect.bottom + window.scrollY,
     };
   });
 
@@ -65,6 +67,11 @@ function getSectionState(debugEnabled: boolean): ActiveSectionState {
 
   for (const section of measuredSections) {
     if (!section.element) continue;
+    if (activationY >= section.top && activationY <= section.bottom) {
+      activeIndex = section.index;
+      break;
+    }
+
     if (activationY >= section.top) {
       activeIndex = section.index;
     }
