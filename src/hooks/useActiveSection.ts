@@ -5,9 +5,7 @@ import { PORTFOLIO_SECTIONS, type PortfolioSectionId } from "@/data/portfolioSec
 
 const ACTIVATION_RATIO = 0.42;
 const EDGE_THRESHOLD = 80;
-const DIRECTION_EPSILON = 1;
-const MIN_SECTION_ENTRY = 64;
-const MAX_SECTION_ENTRY = 140;
+const HYSTERESIS_PX = 36;
 
 type ActiveSectionState = {
   activeId: PortfolioSectionId;
@@ -18,8 +16,6 @@ type ActiveSectionState = {
   debugEnabled: boolean;
 };
 
-type ScrollDirection = "down" | "up" | "still" | "layout" | "jump";
-
 const initialState: ActiveSectionState = {
   activeId: PORTFOLIO_SECTIONS[0].id,
   activeIndex: 0,
@@ -29,7 +25,7 @@ const initialState: ActiveSectionState = {
   debugEnabled: false,
 };
 
-function getSectionState(debugEnabled: boolean, previousIndex: number, direction: ScrollDirection, initialized: boolean): ActiveSectionState {
+function getSectionState(debugEnabled: boolean, previousIndex: number, initialized: boolean): ActiveSectionState {
   const measuredSections = PORTFOLIO_SECTIONS.map((section, index) => {
     const element = document.getElementById(section.id);
     if (!element) {
@@ -39,7 +35,6 @@ function getSectionState(debugEnabled: boolean, previousIndex: number, direction
         element: null,
         top: 0,
         bottom: 0,
-        height: 0,
       };
     }
 
@@ -51,7 +46,6 @@ function getSectionState(debugEnabled: boolean, previousIndex: number, direction
       element,
       top: rect.top + window.scrollY,
       bottom: rect.bottom + window.scrollY,
-      height: rect.height,
     };
   });
 
@@ -70,25 +64,24 @@ function getSectionState(debugEnabled: boolean, previousIndex: number, direction
   }
 
   const activationY = window.scrollY + window.innerHeight * ACTIVATION_RATIO;
-  let rawIndex = 0;
+  let candidateIndex = 0;
 
   for (const section of measuredSections) {
     if (!section.element) continue;
-    const entryOffset = section.index === 0 ? 0 : Math.min(MAX_SECTION_ENTRY, Math.max(MIN_SECTION_ENTRY, section.height * 0.18));
-
-    if (activationY >= section.top + entryOffset) {
-      rawIndex = section.index;
+    if (activationY >= section.top) {
+      candidateIndex = section.index;
     }
   }
 
-  let activeIndex = rawIndex;
+  let activeIndex = candidateIndex;
 
   if (initialized) {
-    if (direction === "down") {
-      activeIndex = rawIndex < previousIndex ? previousIndex : Math.min(rawIndex, previousIndex + 1);
-    } else if (direction === "up") {
-      activeIndex = rawIndex > previousIndex ? previousIndex : Math.max(rawIndex, previousIndex - 1);
-    } else if (direction === "layout" || direction === "still") {
+    const candidateSection = measuredSections[candidateIndex];
+    const previousSection = measuredSections[previousIndex];
+
+    if (candidateIndex > previousIndex && candidateSection?.element && activationY < candidateSection.top + HYSTERESIS_PX) {
+      activeIndex = previousIndex;
+    } else if (candidateIndex < previousIndex && previousSection?.element && activationY > previousSection.top - HYSTERESIS_PX) {
       activeIndex = previousIndex;
     }
   }
@@ -107,15 +100,14 @@ export function useActiveSection() {
   const [state, setState] = useState<ActiveSectionState>(initialState);
   const activeIndexRef = useRef(initialState.activeIndex);
   const initializedRef = useRef(false);
-  const lastScrollYRef = useRef(0);
 
   useEffect(() => {
     let frame = 0;
     let missingSignature = "";
     const debugEnabled = process.env.NODE_ENV === "development" && new URLSearchParams(window.location.search).has("debugJourney");
 
-    const update = (direction: ScrollDirection) => {
-      const nextState = getSectionState(debugEnabled, activeIndexRef.current, direction, initializedRef.current);
+    const update = () => {
+      const nextState = getSectionState(debugEnabled, activeIndexRef.current, initializedRef.current);
       const nextMissingSignature = nextState.missingIds.join(",");
 
       if (process.env.NODE_ENV === "development" && nextMissingSignature && nextMissingSignature !== missingSignature) {
@@ -127,7 +119,6 @@ export function useActiveSection() {
       missingSignature = nextMissingSignature;
       activeIndexRef.current = nextState.activeIndex;
       initializedRef.current = true;
-      lastScrollYRef.current = window.scrollY;
       setState((current) =>
         current.activeId === nextState.activeId &&
         current.activeIndex === nextState.activeIndex &&
@@ -138,30 +129,19 @@ export function useActiveSection() {
           ? current
           : nextState,
       );
-      frame = 0;
+      frame = window.requestAnimationFrame(update);
     };
 
-    const requestUpdate = (direction: ScrollDirection) => {
+    const requestUpdate = () => {
       if (frame) return;
-      frame = window.requestAnimationFrame(() => update(direction));
+      frame = window.requestAnimationFrame(update);
     };
 
-    const handleScroll = () => {
-      const delta = window.scrollY - lastScrollYRef.current;
-      const direction: ScrollDirection =
-        Math.abs(delta) > window.innerHeight * 0.7 ? "jump" : delta > DIRECTION_EPSILON ? "down" : delta < -DIRECTION_EPSILON ? "up" : "still";
-      requestUpdate(direction);
-    };
-
-    const handleResize = () => requestUpdate("layout");
-
-    update("still");
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleResize);
+    requestUpdate();
+    window.addEventListener("resize", requestUpdate);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("resize", requestUpdate);
       if (frame) window.cancelAnimationFrame(frame);
     };
   }, []);
