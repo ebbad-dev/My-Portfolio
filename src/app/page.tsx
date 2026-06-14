@@ -37,7 +37,7 @@ export default function Home() {
       <ScrollJourneyLine />
       <BackToTop />
 
-      <section id="home" className="section-shell hero-shell content-center">
+      <section id="hero" data-section-id="hero" className="section-shell hero-shell content-center">
         <PremiumParticles className="opacity-70" />
         <SectionReveal>
           <div className="grid items-center gap-8 lg:grid-cols-[1.08fr_0.92fr] xl:gap-10">
@@ -79,7 +79,7 @@ export default function Home() {
         <LivingJourneyDock />
       </section>
 
-      <section id="recruiters" className="section-shell">
+      <section id="recruiters" data-section-id="recruiters" className="section-shell">
         <SectionReveal>
           <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
             <div className="glass-panel premium-card rounded-3xl p-6">
@@ -137,7 +137,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="projects" className="section-shell">
+      <section id="projects" data-section-id="projects" className="section-shell">
         <SectionHeader eyebrow="Featured Projects" title="Three serious builds, three different engineering angles.">
           These projects show AI monitoring, database-backed operations, and reasoning-product thinking without pretending mock demos are production systems.
         </SectionHeader>
@@ -150,7 +150,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="skills" className="section-shell">
+      <section id="skills" data-section-id="skills" className="section-shell">
         <PremiumParticles className="opacity-45" />
         <SectionHeader eyebrow="Skill Constellation" title="My stack is not just a list of tools.">
           Each skill connects to something I have built, explored, or used inside real project work.
@@ -169,7 +169,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="demos" className="section-shell">
+      <section id="demos" data-section-id="demos" className="section-shell">
         <SectionHeader eyebrow="Live Demos" title="Mini product experiences with honest labels.">
           Each demo uses mock data to show product flow clearly. These are portfolio demos, not production deployments.
         </SectionHeader>
@@ -228,7 +228,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="journey" className="section-shell">
+      <section id="journey" data-section-id="journey" className="section-shell">
         <SectionHeader eyebrow="Journey / Leadership" title="A practical path through software engineering.">
           From programming foundations to database systems, AI concepts, and class representative responsibilities.
         </SectionHeader>
@@ -245,7 +245,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="testimonials" className="section-shell">
+      <section id="testimonials" data-section-id="testimonials" className="section-shell">
         <SectionHeader eyebrow="What People Say" title="Trusted feedback, shown with permission." />
         {testimonial.status === "approved" ? (
           <div className="glass-panel premium-card max-w-4xl rounded-3xl p-6">
@@ -263,7 +263,7 @@ export default function Home() {
         )}
       </section>
 
-      <section id="resume" className="section-shell">
+      <section id="resume" data-section-id="resume" className="section-shell">
         <div className="grid gap-6 lg:grid-cols-2">
           <div>
             <SectionHeader eyebrow="Resume & Quick Profile" title="A quick overview of background, skills, and direction.">
@@ -294,14 +294,14 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="ask-ebbad" className="section-shell">
+      <section id="ask-ebbad" data-section-id="ask-ebbad" className="section-shell">
         <SectionHeader eyebrow="Ask Ebbad" title="A local portfolio guide with strict knowledge rules.">
           It answers from approved portfolio content only and falls back when a detail is not available.
         </SectionHeader>
         <DynamicAskEbbad />
       </section>
 
-      <section id="contact" className="section-shell">
+      <section id="contact" data-section-id="contact" className="section-shell">
         <PremiumParticles className="opacity-35" />
         <div className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr]">
           <div className="glass-panel premium-card rounded-3xl p-6">

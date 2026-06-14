@@ -1,41 +1,35 @@
 "use client";
 
 import { useReducedMotion } from "framer-motion";
-import { journeySections } from "@/components/navigation/journey-sections";
-import { useActiveSection } from "@/components/navigation/use-active-section";
+import { PORTFOLIO_SECTIONS } from "@/data/portfolioSections";
+import { useActiveSection } from "@/hooks/useActiveSection";
+import { scrollToSection } from "@/lib/scroll-to-section";
 import { cn } from "@/lib/utils";
-
-const sectionIds = journeySections.map((section) => section.id);
 
 export function LivingJourneyDock() {
   const reduce = useReducedMotion();
-  const active = useActiveSection(sectionIds);
-  const activeIndex = Math.max(journeySections.findIndex((section) => section.id === active), 0);
-  const progress = journeySections.length > 1 ? (activeIndex / (journeySections.length - 1)) * 100 : 0;
-
-  const goToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
-  };
+  const { activeId, activeIndex, progress } = useActiveSection();
+  const progressPercent = progress * 100;
 
   return (
     <nav aria-label="Portfolio section navigation" className="journey-dock-shell">
       <div className="journey-dock">
         <div className="journey-dock-line" aria-hidden="true">
           <span className="journey-dock-line-track" />
-          <span className="journey-dock-line-progress" style={{ width: `${progress}%` }} />
-          <span className="journey-dock-pulse" style={{ left: `${progress}%` }} />
+          <span className="journey-dock-line-progress" style={{ width: `${progressPercent}%` }} />
+          <span className="journey-dock-pulse" style={{ left: `${progressPercent}%` }} />
         </div>
         <div className="relative flex min-w-max items-center justify-between gap-2 px-2 sm:gap-3">
-          {journeySections.map((section, index) => {
+          {PORTFOLIO_SECTIONS.map((section, index) => {
             const Icon = section.icon;
-            const isActive = section.id === active;
+            const isActive = section.id === activeId;
             const isComplete = index < activeIndex;
 
             return (
               <button
                 key={section.id}
                 type="button"
-                onClick={() => goToSection(section.id)}
+                onClick={() => scrollToSection(section.id, Boolean(reduce))}
                 aria-label={`Go to ${section.label} section`}
                 aria-current={isActive ? "step" : undefined}
                 className={cn(

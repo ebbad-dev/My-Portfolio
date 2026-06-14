@@ -236,6 +236,10 @@ section[id] {
   padding-block: clamp(3.25rem, 7vw, 5.75rem);
 }
 
+section[id] {
+  scroll-margin-top: 96px;
+}
+
 .hero-shell {
   min-height: calc(100svh - 4rem);
   padding-block: clamp(2.35rem, 5vw, 4.5rem);

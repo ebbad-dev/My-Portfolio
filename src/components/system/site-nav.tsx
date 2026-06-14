@@ -7,7 +7,7 @@ import { siteConfig, socials } from "@/data/site";
 import { isUsableHref } from "@/lib/utils";
 
 const nav = [
-  ["Home", "/#home"],
+  ["Home", "/#hero"],
   ["For Recruiters", "/#recruiters"],
   ["Projects", "/#projects"],
   ["Skills", "/#skills"],
@@ -22,7 +22,7 @@ export function SiteNav() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#05070d]/75 backdrop-blur-xl">
       <nav className="mx-auto flex h-16 w-[min(1180px,calc(100%-2rem))] items-center justify-between" aria-label="Main navigation">
-        <Link href="/#home" className="group flex items-center gap-3">
+        <Link href="/#hero" className="group flex items-center gap-3">
           <span className="grid h-9 w-9 place-items-center rounded-full border border-cyan-300/30 bg-cyan-300/10 font-heading font-bold text-cyan-200">E</span>
           <span className="hidden font-heading text-sm font-semibold text-white sm:block">{siteConfig.shortName}</span>
         </Link>
