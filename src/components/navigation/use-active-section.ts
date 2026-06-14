@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+const ACTIVE_FOCUS_RATIO = 0.42;
+
 export function useActiveSection<T extends string>(sectionIds: readonly T[]) {
   const [active, setActive] = useState<T>(sectionIds[0]);
 
@@ -23,30 +25,27 @@ export function useActiveSection<T extends string>(sectionIds: readonly T[]) {
         return;
       }
 
-      const focusY = window.innerHeight * 0.45;
-      let closest = sectionIds[0];
-      let closestDistance = Number.POSITIVE_INFINITY;
-      let containing: T | null = null;
+      const focusPosition = window.scrollY + window.innerHeight * ACTIVE_FOCUS_RATIO;
+      const orderedSections = sectionIds
+        .map((id) => {
+          const element = document.getElementById(id);
+          if (!element) return null;
 
-      sectionIds.forEach((id) => {
-        const element = document.getElementById(id);
-        if (!element) return;
-        const rect = element.getBoundingClientRect();
-        const containsFocusLine = rect.top <= focusY && rect.bottom >= focusY;
-        const sectionCenter = rect.top + rect.height / 2;
-        const distance = Math.abs(sectionCenter - focusY);
+          return {
+            id,
+            top: element.getBoundingClientRect().top + window.scrollY,
+          };
+        })
+        .filter((section): section is { id: T; top: number } => Boolean(section))
+        .sort((a, b) => a.top - b.top);
 
-        if (containsFocusLine && containing === null) {
-          containing = id;
-        }
+      let nextActive = orderedSections[0]?.id ?? sectionIds[0];
 
-        if (distance < closestDistance) {
-          closest = id;
-          closestDistance = distance;
-        }
-      });
+      for (const section of orderedSections) {
+        if (section.top > focusPosition) break;
+        nextActive = section.id;
+      }
 
-      const nextActive = containing || closest;
       setActive((current) => (current === nextActive ? current : nextActive));
       frame = 0;
     };
