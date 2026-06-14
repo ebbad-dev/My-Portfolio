@@ -64,7 +64,7 @@ export const siteConfig = {
   brandLine: "Building intelligent systems from first principles.",
   heroHeadline: "I build intelligent full-stack systems that turn ideas into real products.",
   heroSubheadline:
-    "I'm Ebbad Ur Rehman, a Software Engineering student at COMSATS Lahore. I build AI-powered tools, database-backed applications, backend APIs, computer vision projects, and interactive product experiences.",
+    "I work across AI-powered tools, database-backed applications, backend APIs, computer vision projects, and interactive product experiences.",
   heroPersonalLine: "I like projects where the interface, the data, the logic, and the user problem all connect.",
   seoTitle: "Ebbad Ur Rehman - Full-Stack Developer | Software Engineering Student",
   seoDescription:
@@ -73,6 +73,8 @@ export const siteConfig = {
   portfolioRepositoryUrl: "https://github.com/ebbad-dev/My-Portfolio",
   emailAddress: "ebbadurrehman538@gmail.com",
   emailHref: "mailto:ebbadurrehman538@gmail.com?subject=Portfolio%20Inquiry%20for%20Ebbad%20Ur%20Rehman",
+  phoneDisplay: "0302 1846044",
+  whatsappHref: "https://wa.me/923021846044?text=Hi%20Ebbad%2C%20I%20visited%20your%20portfolio%20and%20wanted%20to%20connect.",
   resumePath: "/resume/ebbad-resume.pdf",
   resumeAvailable: true,
   profileImagePath: "/images/profile/profile-1.jpeg",
@@ -90,7 +92,7 @@ export const socials: SocialLink[] = [
 ];
 
 export const recruiterSummary =
-  "I'm Ebbad Ur Rehman, a Software Engineering student at COMSATS Lahore. I build full-stack systems across AI, databases, backend APIs, computer vision, and interactive product experiences. My strongest projects include ProctorAI, TeleTrack Enterprise, and MirrorMind. I'm looking for internships, collaborations, and opportunities where I can build real software and keep growing as an engineer.";
+  "I'm Ebbad Ur Rehman, a Software Engineering student at COMSATS Lahore. My strongest work connects product interfaces, backend logic, databases, computer vision, and reasoning workflows. Key projects include ProctorAI, TeleTrack Enterprise, and MirrorMind. I'm looking for internships, collaborations, and opportunities where I can build useful software and keep growing as an engineer.";
 
 export const quickFacts = [
   "Software Engineering student",

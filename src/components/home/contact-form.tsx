@@ -63,21 +63,26 @@ export function ContactForm() {
   };
 
   return (
-    <form onSubmit={submit} className="glass-panel rounded-3xl p-5">
+    <form onSubmit={submit} className="glass-panel premium-card rounded-3xl p-5 md:p-6">
       <input name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
+      <div className="mb-5">
+        <p className="mono-label">Message Form</p>
+        <h3 className="mt-2 font-heading text-2xl font-bold text-white">Tell me what you&apos;re building</h3>
+        <p className="mt-2 text-sm leading-6 text-slate-400">I&apos;ll receive this through Formspree. Success only appears after the provider accepts the message.</p>
+      </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="grid gap-2 text-sm text-slate-300">
           Name
-          <input name="name" required minLength={2} className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none transition focus:border-cyan-300/45 focus:bg-cyan-300/[0.04]" />
+          <input name="name" required minLength={2} className="rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-white outline-none transition placeholder:text-slate-600 focus:border-cyan-300/45 focus:bg-cyan-300/[0.04] focus:shadow-[0_0_22px_rgba(34,211,238,0.1)]" placeholder="Your name" />
         </label>
         <label className="grid gap-2 text-sm text-slate-300">
           Email
-          <input name="email" required type="email" className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none transition focus:border-cyan-300/45 focus:bg-cyan-300/[0.04]" />
+          <input name="email" required type="email" className="rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-white outline-none transition placeholder:text-slate-600 focus:border-cyan-300/45 focus:bg-cyan-300/[0.04] focus:shadow-[0_0_22px_rgba(34,211,238,0.1)]" placeholder="you@example.com" />
         </label>
       </div>
       <label className="mt-4 grid gap-2 text-sm text-slate-300">
         Purpose
-        <select name="purpose" className="rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-cyan-300/45">
+        <select name="purpose" className="rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3 text-white outline-none transition focus:border-cyan-300/45 focus:shadow-[0_0_22px_rgba(34,211,238,0.1)]">
           <option>Internship Opportunity</option>
           <option>Freelance Work</option>
           <option>Collaboration</option>
@@ -87,9 +92,9 @@ export function ContactForm() {
       </label>
       <label className="mt-4 grid gap-2 text-sm text-slate-300">
         Message
-        <textarea name="message" required minLength={10} rows={5} className="resize-none rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none transition focus:border-cyan-300/45 focus:bg-cyan-300/[0.04]" />
+        <textarea name="message" required minLength={10} rows={5} className="resize-none rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-white outline-none transition placeholder:text-slate-600 focus:border-cyan-300/45 focus:bg-cyan-300/[0.04] focus:shadow-[0_0_22px_rgba(34,211,238,0.1)]" placeholder="Share the opportunity, project idea, or what you want to discuss." />
       </label>
-      <button disabled={state === "loading"} className="mt-5 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-brand-gradient px-6 font-semibold text-white shadow-[0_0_28px_rgba(34,211,238,0.14)] transition hover:-translate-y-0.5 hover:shadow-glow active:translate-y-0 disabled:opacity-60">
+      <button disabled={state === "loading"} className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-brand-gradient px-6 font-semibold text-white shadow-[0_0_28px_rgba(34,211,238,0.14)] transition hover:-translate-y-0.5 hover:shadow-glow active:translate-y-0 disabled:opacity-60 sm:w-auto">
         <Send size={18} />
         {state === "loading" ? "Sending..." : "Send Message"}
       </button>

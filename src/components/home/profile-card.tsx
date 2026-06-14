@@ -9,10 +9,10 @@ export function ProfileCard() {
   const [imageMissing, setImageMissing] = useState(false);
 
   return (
-    <div className="glass-panel relative min-h-[460px] overflow-hidden rounded-3xl p-5">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(249,115,22,0.18),transparent_38%),radial-gradient(circle_at_top_left,rgba(34,211,238,0.18),transparent_44%)]" />
+    <div className="glass-panel relative min-h-[390px] overflow-hidden rounded-3xl p-5 lg:min-h-[430px]">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(139,92,246,0.16),transparent_38%),radial-gradient(circle_at_top_left,rgba(34,211,238,0.18),transparent_44%)]" />
       <div className="relative grid h-full content-between">
-        <div className="relative mx-auto mt-4 aspect-[4/5] w-full max-w-[330px] overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950">
+        <div className="relative mx-auto mt-2 aspect-[4/5] w-full max-w-[310px] overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950 lg:max-w-[330px]">
           <Image
             src={siteConfig.profileImagePath}
             alt="Ebbad Ur Rehman profile portrait"

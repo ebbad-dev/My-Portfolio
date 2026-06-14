@@ -33,10 +33,10 @@ export default async function DemoPage({ params }: Props) {
         <Link href="/#demos" className="mb-8 inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white">
           <ArrowLeft size={16} /> Back to demos
         </Link>
-        <div className="mb-8">
+        <div className="mb-7">
           <p className="mono-label">Interactive Portfolio Demo</p>
-          <h1 className="mt-4 font-heading text-5xl font-bold text-white lg:text-7xl">{project.title}</h1>
-          <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-300">Demo uses mock data to show the product flow. It is not presented as a deployed production system.</p>
+          <h1 className="mt-3 font-heading text-4xl font-bold text-white lg:text-6xl">{project.title}</h1>
+          <p className="mt-4 max-w-3xl text-base leading-8 text-slate-300">Demo uses mock data to show the product flow. It is not presented as a deployed production system.</p>
         </div>
         {slug === "proctorai" ? <ProctorInteractiveDemo /> : slug === "teletrack" ? <TeletrackInteractiveDemo /> : <MirrorMindInteractiveDemo />}
       </section>

@@ -1,6 +1,7 @@
 export type SkillCategory = "language" | "frontend" | "backend" | "database" | "ai" | "tools" | "nonTechnical";
 export type SkillLevel = "Learning" | "Comfortable" | "Project-Used" | "Strong";
 export type SkillMode = "technical" | "nonTechnical";
+export type NonTechnicalSkillGroup = "leadership" | "communication" | "thinking" | "collaboration";
 
 export type PortfolioSkill = {
   id: string;
@@ -15,6 +16,9 @@ export type PortfolioSkill = {
   relatedProjects: string[];
   projectCount?: number;
   highlights?: string[];
+  globePriority?: number;
+  featuredOnGlobe?: boolean;
+  nonTechnicalGroup?: NonTechnicalSkillGroup;
 };
 
 export const skillCategoryLabels: Record<SkillCategory, string> = {
@@ -28,6 +32,37 @@ export const skillCategoryLabels: Record<SkillCategory, string> = {
 };
 
 export const technicalCategories: SkillCategory[] = ["language", "frontend", "backend", "database", "ai", "tools"];
+
+export const nonTechnicalGroupLabels: Record<NonTechnicalSkillGroup, string> = {
+  leadership: "Leadership",
+  communication: "Communication",
+  thinking: "Thinking",
+  collaboration: "Collaboration",
+};
+
+export const nonTechnicalGroups: NonTechnicalSkillGroup[] = ["leadership", "communication", "thinking", "collaboration"];
+
+function nonTechnicalGroupFor(name: string): NonTechnicalSkillGroup {
+  if (["Leadership", "Initiative", "Presentation Skills", "Public Speaking"].includes(name)) return "leadership";
+  if (["Communication", "Empathy"].includes(name)) return "communication";
+  if (["Problem Solving", "Critical Thinking", "Analytical Thinking", "Adaptability"].includes(name)) return "thinking";
+  return "collaboration";
+}
+
+const featuredGlobeSkills = new Set([
+  "python",
+  "typescript",
+  "react",
+  "nextjs",
+  "sql",
+  "database-design",
+  "opencv",
+  "reasoning",
+  "nodejs",
+  "express",
+  "git",
+  "github",
+]);
 
 export const portfolioSkills: PortfolioSkill[] = [
   {
@@ -43,6 +78,8 @@ export const portfolioSkills: PortfolioSkill[] = [
     relatedProjects: ["ProctorAI", "MirrorMind"],
     projectCount: 2,
     highlights: ["OpenCV workflows", "AI project logic", "Backend experimentation"],
+    globePriority: 96,
+    featuredOnGlobe: true,
   },
   {
     id: "java",
@@ -57,6 +94,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     relatedProjects: ["Distributed Banking System", "Criminal DBMS"],
     projectCount: 2,
     highlights: ["OOP", "Socket programming", "CRUD systems"],
+    globePriority: 68,
   },
   {
     id: "cpp",
@@ -71,6 +109,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     relatedProjects: ["Plagiarism Detector"],
     projectCount: 1,
     highlights: ["Cosine similarity", "Karp-Rabin", "K-shingles"],
+    globePriority: 58,
   },
   {
     id: "sql",
@@ -85,6 +124,8 @@ export const portfolioSkills: PortfolioSkill[] = [
     relatedProjects: ["TeleTrack Enterprise", "Netflix Console", "Student Result Management API"],
     projectCount: 3,
     highlights: ["Stored procedures", "Views", "Reporting queries"],
+    globePriority: 92,
+    featuredOnGlobe: true,
   },
   {
     id: "javascript",
@@ -99,6 +140,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     relatedProjects: ["Student Result Management API", "Portfolio"],
     projectCount: 2,
     highlights: ["REST API integration", "Dynamic UI logic", "Frontend interactivity"],
+    globePriority: 76,
   },
   {
     id: "typescript",
@@ -113,6 +155,8 @@ export const portfolioSkills: PortfolioSkill[] = [
     relatedProjects: ["Portfolio"],
     projectCount: 1,
     highlights: ["Typed data models", "Component props", "Safer refactors"],
+    globePriority: 94,
+    featuredOnGlobe: true,
   },
   {
     id: "react",
@@ -127,6 +171,8 @@ export const portfolioSkills: PortfolioSkill[] = [
     relatedProjects: ["Portfolio", "MirrorMind"],
     projectCount: 2,
     highlights: ["Component architecture", "Interactive demos", "Client state"],
+    globePriority: 93,
+    featuredOnGlobe: true,
   },
   {
     id: "nextjs",
@@ -141,6 +187,8 @@ export const portfolioSkills: PortfolioSkill[] = [
     relatedProjects: ["Portfolio"],
     projectCount: 1,
     highlights: ["App Router", "SEO metadata", "Vercel deployment"],
+    globePriority: 90,
+    featuredOnGlobe: true,
   },
   {
     id: "tailwind",
@@ -155,6 +203,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     relatedProjects: ["Portfolio"],
     projectCount: 1,
     highlights: ["Responsive UI", "Theme system", "Glassmorphism"],
+    globePriority: 84,
   },
   {
     id: "html",
@@ -168,6 +217,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used as the foundation for page structure, forms, accessibility, and browser-rendered interfaces.",
     relatedProjects: ["Portfolio", "Student Result Management API"],
     projectCount: 2,
+    globePriority: 64,
   },
   {
     id: "css",
@@ -181,6 +231,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used for responsive design, interaction states, custom cursor styling, and premium page polish.",
     relatedProjects: ["Portfolio"],
     projectCount: 1,
+    globePriority: 63,
   },
   {
     id: "nodejs",
@@ -194,6 +245,8 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used to build server-side JavaScript APIs and database-connected application logic.",
     relatedProjects: ["Student Result Management API"],
     projectCount: 1,
+    globePriority: 82,
+    featuredOnGlobe: true,
   },
   {
     id: "express",
@@ -207,6 +260,8 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used for routing, controllers, request handling, and API structure in backend projects.",
     relatedProjects: ["Student Result Management API"],
     projectCount: 1,
+    globePriority: 80,
+    featuredOnGlobe: true,
   },
   {
     id: "rest",
@@ -220,6 +275,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used to expose structured endpoints for CRUD operations, reports, and application features.",
     relatedProjects: ["Student Result Management API", "Portfolio"],
     projectCount: 2,
+    globePriority: 78,
   },
   {
     id: "crud",
@@ -233,6 +289,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used for create, read, update, and delete workflows in practical academic systems.",
     relatedProjects: ["Student Result Management API", "Criminal DBMS"],
     projectCount: 2,
+    globePriority: 74,
   },
   {
     id: "jwt",
@@ -246,6 +303,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used as an authentication concept for protecting routes and modeling secure application flows.",
     relatedProjects: [],
     projectCount: 0,
+    globePriority: 44,
   },
   {
     id: "flask",
@@ -259,6 +317,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used for Python-based backend and database-driven interface concepts.",
     relatedProjects: ["ProctorAI"],
     projectCount: 1,
+    globePriority: 62,
   },
   {
     id: "fastapi",
@@ -272,6 +331,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used as a direction for modern Python API and AI/backend integration work.",
     relatedProjects: ["ProctorAI"],
     projectCount: 1,
+    globePriority: 55,
   },
   {
     id: "mysql",
@@ -285,6 +345,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used for storing and querying academic result data in backend workflows.",
     relatedProjects: ["Student Result Management API"],
     projectCount: 1,
+    globePriority: 66,
   },
   {
     id: "sqlserver",
@@ -298,6 +359,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used for database projects involving views, procedures, triggers, and structured reporting concepts.",
     relatedProjects: ["TeleTrack Enterprise"],
     projectCount: 1,
+    globePriority: 72,
   },
   {
     id: "sqlite",
@@ -311,6 +373,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used for local database storage in smaller systems and prototypes.",
     relatedProjects: ["Criminal DBMS", "ProctorAI"],
     projectCount: 2,
+    globePriority: 60,
   },
   {
     id: "postgres",
@@ -324,6 +387,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Familiar with PostgreSQL as a production-friendly relational database option.",
     relatedProjects: [],
     projectCount: 0,
+    globePriority: 46,
   },
   {
     id: "database-design",
@@ -337,6 +401,8 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used to model normalized schemas, workflows, audit data, and report-friendly structures.",
     relatedProjects: ["TeleTrack Enterprise", "Criminal DBMS", "Netflix Console"],
     projectCount: 3,
+    globePriority: 88,
+    featuredOnGlobe: true,
   },
   {
     id: "normalization",
@@ -350,6 +416,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used to reduce redundancy and keep relational systems easier to reason about.",
     relatedProjects: ["TeleTrack Enterprise", "Netflix Console"],
     projectCount: 2,
+    globePriority: 70,
   },
   {
     id: "erd",
@@ -363,6 +430,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used to model entities, relationships, specialization, and system structure before implementation.",
     relatedProjects: ["TeleTrack Enterprise", "Criminal DBMS"],
     projectCount: 2,
+    globePriority: 68,
   },
   {
     id: "procedures",
@@ -376,6 +444,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used for database-side operations and repeatable logic in structured systems.",
     relatedProjects: ["TeleTrack Enterprise"],
     projectCount: 1,
+    globePriority: 57,
   },
   {
     id: "triggers",
@@ -389,6 +458,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used for audit logs, status changes, and automatic data updates.",
     relatedProjects: ["TeleTrack Enterprise"],
     projectCount: 1,
+    globePriority: 56,
   },
   {
     id: "views",
@@ -402,6 +472,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used to expose query-friendly summaries and simplify reporting logic.",
     relatedProjects: ["TeleTrack Enterprise", "Netflix Console"],
     projectCount: 2,
+    globePriority: 59,
   },
   {
     id: "indexing",
@@ -415,6 +486,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Understood conceptually as a way to improve database query performance.",
     relatedProjects: ["TeleTrack Enterprise"],
     projectCount: 1,
+    globePriority: 50,
   },
   {
     id: "opencv",
@@ -429,6 +501,8 @@ export const portfolioSkills: PortfolioSkill[] = [
     relatedProjects: ["ProctorAI"],
     projectCount: 1,
     highlights: ["Face detection", "Eye monitoring", "Head pose signals"],
+    globePriority: 90,
+    featuredOnGlobe: true,
   },
   {
     id: "computer-vision",
@@ -442,6 +516,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used for detection-style systems that interpret visual signals for review workflows.",
     relatedProjects: ["ProctorAI"],
     projectCount: 1,
+    globePriority: 86,
   },
   {
     id: "nlp",
@@ -455,6 +530,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used in reasoning, debate analysis, and text-processing project concepts.",
     relatedProjects: ["MirrorMind", "Plagiarism Detector"],
     projectCount: 2,
+    globePriority: 64,
   },
   {
     id: "reasoning",
@@ -468,6 +544,8 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used to model claims, assumptions, evidence gaps, counterarguments, and reasoning reports.",
     relatedProjects: ["MirrorMind"],
     projectCount: 1,
+    globePriority: 88,
+    featuredOnGlobe: true,
   },
   {
     id: "search",
@@ -481,6 +559,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used as a foundation for AI and algorithmic reasoning tasks.",
     relatedProjects: ["Plagiarism Detector"],
     projectCount: 1,
+    globePriority: 54,
   },
   {
     id: "distributed",
@@ -494,6 +573,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used to understand multi-client communication and distributed application behavior.",
     relatedProjects: ["Distributed Banking System"],
     projectCount: 1,
+    globePriority: 58,
   },
   {
     id: "sockets",
@@ -507,6 +587,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used to connect clients and servers in a socket-based banking system.",
     relatedProjects: ["Distributed Banking System"],
     projectCount: 1,
+    globePriority: 52,
   },
   {
     id: "git",
@@ -520,6 +601,8 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used to manage project history, code changes, and collaborative development workflows.",
     relatedProjects: ["Portfolio"],
     projectCount: 1,
+    globePriority: 78,
+    featuredOnGlobe: true,
   },
   {
     id: "github",
@@ -533,6 +616,8 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used to publish repositories, organize code, and share project work.",
     relatedProjects: ["Portfolio"],
     projectCount: 1,
+    globePriority: 76,
+    featuredOnGlobe: true,
   },
   {
     id: "vscode",
@@ -546,6 +631,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used as the main editor for frontend, backend, database, and documentation work.",
     relatedProjects: ["Portfolio", "Student Result Management API"],
     projectCount: 2,
+    globePriority: 62,
   },
   {
     id: "postman",
@@ -559,6 +645,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used to test endpoints, inspect responses, and validate backend behavior.",
     relatedProjects: ["Student Result Management API"],
     projectCount: 1,
+    globePriority: 66,
   },
   {
     id: "vercel",
@@ -572,6 +659,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Used to deploy the portfolio, configure aliases, and verify production builds.",
     relatedProjects: ["Portfolio"],
     projectCount: 1,
+    globePriority: 72,
   },
   {
     id: "docker",
@@ -585,6 +673,7 @@ export const portfolioSkills: PortfolioSkill[] = [
     description: "Familiar with Docker as a direction for packaging and environment consistency.",
     relatedProjects: [],
     projectCount: 0,
+    globePriority: 48,
   },
   ...[
     "Communication",
@@ -612,5 +701,8 @@ export const portfolioSkills: PortfolioSkill[] = [
     relatedProjects: ["Portfolio", "Academic Projects"],
     projectCount: 2,
     highlights: ["Team coordination", "Project explanation", "Professional growth"],
+    globePriority: name === "Communication" || name === "Leadership" ? 80 : 50,
+    featuredOnGlobe: featuredGlobeSkills.has(name.toLowerCase().replace(/[^a-z0-9]+/g, "-")),
+    nonTechnicalGroup: nonTechnicalGroupFor(name),
   })),
 ];

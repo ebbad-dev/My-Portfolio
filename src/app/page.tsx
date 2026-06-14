@@ -1,4 +1,4 @@
-import { CheckCircle2, Cpu, Download, ExternalLink, Mail } from "lucide-react";
+import { CheckCircle2, Cpu, Download, ExternalLink, Mail, MessageCircle } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button-link";
 import { SectionHeader } from "@/components/ui/section-header";
 import { ProjectCard } from "@/components/home/project-card";
@@ -10,9 +10,11 @@ import { ArchiveSection } from "@/components/home/archive-section";
 import { SkillConstellation } from "@/components/home/skill-constellation";
 import { DynamicAskEbbad } from "@/components/home/dynamic-islands";
 import { ScrollJourneyLine } from "@/components/system/scroll-journey-line";
+import { BackToTop } from "@/components/system/back-to-top";
 import { SectionReveal } from "@/components/system/section-reveal";
+import { LivingJourneyDock } from "@/components/navigation/living-journey-dock";
+import { PremiumParticles } from "@/components/effects/premium-particles";
 import {
-  currentFocus,
   journey,
   nonTechnicalSkills,
   portfolioProject,
@@ -33,20 +35,27 @@ export default function Home() {
   return (
     <main id="main" className="relative overflow-hidden pt-16">
       <ScrollJourneyLine />
+      <BackToTop />
 
-      <section id="home" className="section-shell min-h-[calc(100vh-4rem)] content-center">
+      <section id="home" className="section-shell hero-shell content-center">
+        <PremiumParticles className="opacity-70" />
         <SectionReveal>
-          <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
-            <div>
-              <p className="mono-label mb-5">Software Engineering Student / Full-Stack Developer / AI / ML / Databases / Systems</p>
-              <h1 className="font-heading text-5xl font-bold leading-[0.98] text-white sm:text-6xl lg:text-7xl">
-                I build <span className="text-gradient">intelligent full-stack systems</span> that turn ideas into real products.
+          <div className="grid items-center gap-8 lg:grid-cols-[1.08fr_0.92fr] xl:gap-10">
+            <div className="max-w-3xl">
+              <p className="mb-4 font-heading text-lg italic text-cyan-100 drop-shadow-[0_0_14px_rgba(34,211,238,0.25)]">Hello, I&apos;m</p>
+              <h1 className="font-heading text-[clamp(3.25rem,8vw,7.35rem)] font-bold leading-[0.94] text-white">
+                Ebbad <span className="text-gradient">Ur Rehman</span>
               </h1>
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
+              <h2 className="mt-4 font-heading text-[clamp(1.75rem,3.5vw,3.2rem)] font-bold leading-tight text-white">
+                Software <span className="text-gradient">Engineer.</span>
+              </h2>
+              <p className="mono-label mt-4 text-slate-300">Full-Stack Developer / AI / ML / Databases / Systems</p>
+              <p className="mt-4 max-w-2xl text-base leading-8 text-slate-200 sm:text-lg">{siteConfig.heroHeadline}</p>
+              <p className="mt-3 max-w-2xl text-base leading-8 text-slate-300">
                 <PremiumTypewriter text={siteConfig.heroSubheadline} />
               </p>
-              <p className="mt-4 text-slate-400">{siteConfig.heroPersonalLine}</p>
-              <div className="mt-8 flex flex-wrap gap-3">
+              <p className="mt-3 text-sm leading-7 text-slate-400 sm:text-base">{siteConfig.heroPersonalLine}</p>
+              <div className="mt-6 flex flex-wrap gap-3">
                 <ButtonLink href="#projects" variant="primary">View Projects</ButtonLink>
                 <ButtonLink href="#demos">Try Demos</ButtonLink>
                 <ButtonLink href="#ask-ebbad">Ask Ebbad</ButtonLink>
@@ -55,7 +64,7 @@ export default function Home() {
                 </ButtonLink>
                 <ButtonLink href="#contact">Contact Me</ButtonLink>
               </div>
-              <div className="mt-8 flex flex-wrap gap-2">
+              <div className="mt-5 flex flex-wrap gap-2">
                 {["Full-Stack Development", "AI / ML", "Database Systems", "Computer Vision", "Backend APIs", "System Design"].map((badge) => (
                   <span key={badge} className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 font-mono text-xs text-slate-300">{badge}</span>
                 ))}
@@ -64,6 +73,10 @@ export default function Home() {
             <ProfileCard />
           </div>
         </SectionReveal>
+      </section>
+
+      <section className="journey-dock-section">
+        <LivingJourneyDock />
       </section>
 
       <section id="recruiters" className="section-shell">
@@ -87,7 +100,7 @@ export default function Home() {
             <div className="grid gap-4 sm:grid-cols-2">
               {[
                 ["Who I Am", "Software Engineering student at COMSATS University Islamabad, Lahore Campus."],
-                ["What I Build", "Full-stack applications, AI-powered tools, database systems, backend APIs, and interactive products."],
+                ["What I Build", "Practical software that connects interfaces, data, logic, and clear user workflows."],
                 ["Strongest Work", "Featured projects include ProctorAI, TeleTrack Enterprise, and MirrorMind."],
                 ["Availability", "Open to internships, collaborations, freelance opportunities, and technical project work."],
               ].map(([title, text]) => (
@@ -103,7 +116,7 @@ export default function Home() {
 
       <section id="about" className="section-shell">
         <SectionHeader eyebrow="About Me" title="I like projects where the interface, database, logic, and user problem all connect.">
-          I&apos;m a Software Engineering student at COMSATS Lahore. My work spans full-stack applications, AI-powered tools, computer vision, database systems, backend APIs, reasoning platforms, and system-style academic projects.
+          I&apos;m a Software Engineering student at COMSATS Lahore. My work sits where product interfaces, data models, backend logic, and intelligent workflows meet.
         </SectionHeader>
         <div className="grid gap-6 lg:grid-cols-[1fr_0.9fr]">
           <div className="glass-panel rounded-3xl p-6">
@@ -138,6 +151,7 @@ export default function Home() {
       </section>
 
       <section id="skills" className="section-shell">
+        <PremiumParticles className="opacity-45" />
         <SectionHeader eyebrow="Skill Constellation" title="My stack is not just a list of tools.">
           Each skill connects to something I have built, explored, or used inside real project work.
         </SectionHeader>
@@ -253,7 +267,7 @@ export default function Home() {
         <div className="grid gap-6 lg:grid-cols-2">
           <div>
             <SectionHeader eyebrow="Resume & Quick Profile" title="A quick overview of background, skills, and direction.">
-              Software Engineering student focused on full-stack development, AI-powered tools, databases, backend APIs, computer vision, and systems-based projects.
+              Software Engineering student focused on practical product engineering, databases, computer vision, reasoning workflows, and systems-based projects.
             </SectionHeader>
             <div className="flex flex-wrap gap-3">
               <ButtonLink href={siteConfig.resumePath} available={siteConfig.resumeAvailable} variant="primary" unavailableLabel="Resume not added yet" openInNewTab>
@@ -287,44 +301,61 @@ export default function Home() {
         <DynamicAskEbbad />
       </section>
 
-      <section id="now" className="section-shell">
-        <div className="glass-panel rounded-3xl p-6">
-          <p className="mono-label">Now</p>
-          <p className="mt-4 max-w-4xl text-xl leading-9 text-slate-200">
-            Right now, I&apos;m focused on improving my full-stack development skills, building stronger AI-assisted products, deepening my understanding of databases and backend systems, and preparing for internships where I can contribute to real software projects.
-          </p>
-          <div className="mt-5 flex flex-wrap gap-2">
-            {currentFocus.map((item) => (
-              <span key={item} className="rounded-full bg-white/[0.05] px-3 py-1.5 text-xs text-slate-300">{item}</span>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section id="contact" className="section-shell">
-        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-          <div>
-            <SectionHeader eyebrow="Contact" title="Let's build something real.">
-              Have an internship opportunity, collaboration idea, freelance project, or technical discussion in mind? Send a message.
-            </SectionHeader>
-            <div className="glass-panel rounded-3xl p-5">
-              <div className="flex items-center gap-3 text-slate-300"><Mail className="text-cyan-200" /> Prefer direct contact? Use email, LinkedIn, GitHub, or Instagram below.</div>
-              {visibleSocials.length ? (
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {visibleSocials.map((social) => (
-                    <a
-                      key={social.label}
-                      href={social.href}
-                      target={social.href.startsWith("http") ? "_blank" : undefined}
-                      rel={social.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                      className="rounded-full border border-white/10 px-3 py-1.5 text-sm text-slate-300 hover:text-white"
-                    >
-                      {social.label}
+        <PremiumParticles className="opacity-35" />
+        <div className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr]">
+          <div className="glass-panel premium-card rounded-3xl p-6">
+            <p className="mono-label">Contact</p>
+            <h2 className="mt-3 font-heading text-4xl font-bold text-white">Let&apos;s Build Something Real</h2>
+            <p className="mt-4 leading-8 text-slate-300">
+              Have an internship opportunity, collaboration idea, or project in mind? Send me a message and I&apos;ll get back to you.
+            </p>
+            <div className="mt-6 grid gap-3">
+              <div className="rounded-3xl border border-cyan-300/15 bg-cyan-300/[0.06] p-4">
+                <div className="flex items-start gap-3 text-slate-300">
+                  <Mail className="mt-1 shrink-0 text-cyan-200" />
+                  <div>
+                    <p className="font-semibold text-white">Email</p>
+                    <a href={siteConfig.emailHref} className="mt-1 block break-all text-sm text-cyan-100 hover:text-white">
+                      {siteConfig.emailAddress}
                     </a>
-                  ))}
+                  </div>
                 </div>
-              ) : null}
+              </div>
+              <a
+                href={siteConfig.whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-3xl border border-emerald-300/18 bg-emerald-400/[0.055] p-4 transition hover:-translate-y-0.5 hover:border-emerald-300/35 hover:bg-emerald-400/[0.08]"
+              >
+                <div className="flex items-start gap-3 text-slate-300">
+                  <MessageCircle className="mt-1 shrink-0 text-emerald-200" />
+                  <div>
+                    <p className="font-semibold text-white">WhatsApp</p>
+                    <p className="mt-1 text-sm text-emerald-100">{siteConfig.phoneDisplay}</p>
+                    <p className="mt-1 text-xs text-slate-500">Message on WhatsApp</p>
+                  </div>
+                </div>
+              </a>
             </div>
+            {visibleSocials.length ? (
+              <div className="mt-5 grid gap-2 sm:grid-cols-2">
+                {visibleSocials.map((social) => (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target={social.href.startsWith("http") ? "_blank" : undefined}
+                    rel={social.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    className="rounded-2xl border border-white/10 bg-white/[0.035] px-4 py-3 text-sm font-semibold text-slate-300 transition hover:-translate-y-0.5 hover:border-cyan-300/40 hover:text-white"
+                  >
+                    {social.label}
+                  </a>
+                ))}
+              </div>
+            ) : null}
+            <p className="mt-5 rounded-2xl border border-violet-300/15 bg-violet-400/[0.07] px-4 py-3 text-sm leading-6 text-violet-100">
+              Open to internships, collaborations, freelance opportunities, and technical project work.
+            </p>
           </div>
           <ContactForm />
         </div>
