@@ -27,7 +27,7 @@ const initialState: ActiveSectionState = {
 
 function getSectionState(debugEnabled: boolean, previousIndex: number, initialized: boolean): ActiveSectionState {
   const measuredSections = PORTFOLIO_SECTIONS.map((section, index) => {
-    const element = document.getElementById(section.id);
+    const element = document.querySelector<HTMLElement>(`[data-section-id="${section.id}"]`);
     if (!element) {
       return {
         id: section.id,

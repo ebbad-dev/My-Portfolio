@@ -35,7 +35,7 @@ export function ScrollJourneyLine() {
         <path d={pathD} stroke="rgba(148,163,184,0.18)" strokeWidth="2" fill="none" strokeLinecap="round" />
         <motion.path
           d={pathD}
-          stroke="url(#journey)"
+          stroke="url(#journey-line-gradient)"
           strokeWidth="3"
           fill="none"
           strokeLinecap="round"
@@ -45,7 +45,7 @@ export function ScrollJourneyLine() {
           transition={{ duration: reduce ? 0 : 0.28, ease: "easeOut" }}
         />
         <defs>
-          <linearGradient id="journey" x1="0" x2="1" y1="0" y2="1">
+          <linearGradient id="journey-line-gradient" x1="0" x2="1" y1="0" y2="1">
             <stop stopColor="#22D3EE" />
             <stop offset="0.55" stopColor="#3B82F6" />
             <stop offset="1" stopColor="#8B5CF6" />
