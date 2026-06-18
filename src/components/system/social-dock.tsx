@@ -65,6 +65,7 @@ export function SocialDock() {
           )}
           aria-label={open ? "Close social links" : "Open social links"}
           aria-expanded={open}
+          aria-controls="social-dock-panel"
           data-cursor-label={open ? "Close" : "Socials"}
         >
           <span className="absolute inset-y-4 right-0 w-px bg-gradient-to-b from-transparent via-cyan-300/45 to-transparent" />
@@ -77,7 +78,11 @@ export function SocialDock() {
           </span>
           <ChevronRight size={15} className={cn("text-cyan-200 transition duration-300", open && "rotate-180")} aria-hidden="true" />
         </button>
-        <div className={cn("overflow-visible transition-all duration-300", open ? "max-h-[17rem] opacity-100" : "max-h-0 opacity-0")}>
+        <div
+          id="social-dock-panel"
+          aria-hidden={!open}
+          className={cn("overflow-visible transition-all duration-300", open ? "max-h-[17rem] opacity-100" : "max-h-0 opacity-0")}
+        >
           <div className="flex w-10 flex-col gap-1.5">
             {visible.map((social) => {
               const Icon = icons[social.kind];
@@ -88,6 +93,7 @@ export function SocialDock() {
                   href={social.href}
                   target={newTab ? "_blank" : undefined}
                   rel={newTab ? "noopener noreferrer" : undefined}
+                  tabIndex={open ? 0 : -1}
                   className="group relative grid h-10 w-10 place-items-center rounded-full border border-cyan-300/12 bg-cyan-300/[0.045] text-slate-300 backdrop-blur transition hover:-translate-y-0.5 hover:border-cyan-300/42 hover:text-white hover:shadow-[0_0_24px_rgba(34,211,238,0.16)] focus-visible:border-cyan-200"
                   aria-label={social.label}
                   data-cursor-label={social.kind === "email" ? "Email" : social.kind === "resume" ? "Resume" : "Open"}

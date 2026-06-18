@@ -1,6 +1,9 @@
 .next/
 node_modules/
 .npm-cache/
+.intro-render/
+__pycache__/
+*.pyc
 out/
 dist/
 build/

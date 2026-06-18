@@ -1,6 +1,45 @@
+"use client";
+
+import Image from "next/image";
+import { useState } from "react";
 import { Project } from "@/data/site";
+import { cn } from "@/lib/utils";
 
 export function ProjectVisual({ project }: { project: Project }) {
+  const [imageMissing, setImageMissing] = useState(false);
+
+  if (project.thumbnail && !imageMissing) {
+    return (
+      <div className={cn(
+        "project-thumbnail group/visual relative h-72 overflow-hidden rounded-3xl border bg-slate-950",
+        project.visualAccent === "violet"
+          ? "border-violet-300/25 shadow-[0_0_55px_rgba(139,92,246,0.11)]"
+          : project.visualAccent === "blue"
+            ? "border-blue-300/25 shadow-[0_0_55px_rgba(59,130,246,0.11)]"
+            : "border-cyan-300/25 shadow-[0_0_55px_rgba(34,211,238,0.11)]",
+      )}>
+        <Image
+          src={project.thumbnail}
+          alt={project.thumbnailAlt || `${project.title} interface visual thumbnail`}
+          fill
+          sizes="(min-width: 1024px) 33vw, 100vw"
+          className="object-cover transition duration-700 group-hover/visual:scale-[1.035]"
+          onError={() => setImageMissing(true)}
+        />
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(120deg,transparent_18%,rgba(255,255,255,0.13)_34%,transparent_48%)] opacity-0 transition duration-700 group-hover/visual:translate-x-20 group-hover/visual:opacity-100" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-slate-950/86 to-transparent" />
+        <div className="absolute bottom-4 left-4 right-4 flex flex-wrap items-center justify-between gap-2">
+          <span className="rounded-full border border-white/10 bg-slate-950/70 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-cyan-50 backdrop-blur">
+            Honest interface preview
+          </span>
+          <span className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-cyan-100 backdrop-blur">
+            {project.demoLabel || "Case Study"}
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   if (project.slug === "proctorai") {
     return (
       <div className="relative h-64 overflow-hidden rounded-3xl border border-cyan-300/20 bg-slate-950 p-4">

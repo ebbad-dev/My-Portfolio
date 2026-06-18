@@ -3,12 +3,11 @@
 import { useReducedMotion } from "framer-motion";
 import { PORTFOLIO_SECTIONS } from "@/data/portfolioSections";
 import { useActiveSection } from "@/hooks/useActiveSection";
-import { scrollToSection } from "@/lib/scroll-to-section";
 import { cn } from "@/lib/utils";
 
 export function LivingJourneyDock() {
   const reduce = useReducedMotion();
-  const { activeId, activeIndex, progress } = useActiveSection();
+  const { activeId, activeIndex, progress, scrollToSection } = useActiveSection();
   const progressPercent = progress * 100;
 
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import {
   Activity,
@@ -44,20 +44,27 @@ export function ProctorInteractiveDemo() {
   const [events, setEvents] = useState(proctorEventPool.slice(0, 2));
   const [selected, setSelected] = useState(proctorEventPool[0]);
   const [reportOpen, setReportOpen] = useState(false);
+  const [riskHistory, setRiskHistory] = useState([34, 42, 38, 49]);
+  const eventCursor = useRef(2);
 
   useEffect(() => {
     if (status !== "running") return;
     const timer = window.setInterval(() => {
       setElapsed((value) => value + 3);
       setEvents((current) => {
-        const next = proctorEventPool[(current.length + elapsed) % proctorEventPool.length];
+        const next = proctorEventPool[eventCursor.current % proctorEventPool.length];
+        eventCursor.current += 1;
         setSelected(next);
-        setRisk((score) => Math.max(24, Math.min(94, score + next.delta - 4)));
+        setRisk((score) => {
+          const updated = Math.max(24, Math.min(94, score + next.delta - 4));
+          setRiskHistory((history) => [...history, updated].slice(-10));
+          return updated;
+        });
         return [next, ...current].slice(0, 6);
       });
     }, 1600);
     return () => window.clearInterval(timer);
-  }, [elapsed, status]);
+  }, [status]);
 
   const visibleEvents = filter === "All" ? events : events.filter((event) => event.severity === filter);
   const criticalCount = events.filter((event) => event.severity === "Critical").length;
@@ -68,8 +75,10 @@ export function ProctorInteractiveDemo() {
     setStatus("idle");
     setElapsed(0);
     setRisk(34);
+    setRiskHistory([34, 42, 38, 49]);
     setEvents(proctorEventPool.slice(0, 2));
     setSelected(proctorEventPool[0]);
+    eventCursor.current = 2;
     setReportOpen(false);
   };
 
@@ -118,6 +127,18 @@ export function ProctorInteractiveDemo() {
               <MetricCard label="Critical Events" value={criticalCount} tone={criticalCount ? "critical" : "normal"} />
               <MetricCard label="Evidence Clips" value={events.length} tone="normal" />
               <MetricCard label="Review State" value={status === "idle" ? "Idle" : status === "paused" ? "Paused" : "Live"} tone="normal" />
+              <div className="rounded-3xl border border-cyan-300/15 bg-cyan-300/[0.07] p-4">
+                <p className="text-sm text-slate-400">Risk Trend</p>
+                <div className="mt-4 flex h-20 items-end gap-1.5" aria-label="Mock risk trend chart">
+                  {riskHistory.map((point, index) => (
+                    <span
+                      key={`${point}-${index}`}
+                      className="flex-1 rounded-t-full bg-brand-gradient shadow-[0_0_18px_rgba(34,211,238,0.18)] transition-all"
+                      style={{ height: `${Math.max(16, point)}%` }}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -139,6 +160,21 @@ export function ProctorInteractiveDemo() {
           <div className="mt-5 rounded-2xl border border-cyan-300/20 bg-cyan-300/10 p-4 text-sm leading-7 text-cyan-50">
             <strong>{selected.title}:</strong> {selected.detail}
           </div>
+          <div className="mt-4 grid gap-2">
+            {events.slice(0, 3).map((event, index) => (
+              <button
+                key={`${event.title}-evidence-${index}`}
+                onClick={() => setSelected(event)}
+                className="grid grid-cols-[2.5rem_1fr] items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-3 text-left text-sm text-slate-300 transition hover:border-cyan-300/35 hover:text-white"
+              >
+                <span className="grid h-10 w-10 place-items-center rounded-xl bg-cyan-300/10 font-mono text-xs text-cyan-100">E{index + 1}</span>
+                <span>
+                  <span className="block font-semibold text-slate-100">{event.title}</span>
+                  <span className="text-xs text-slate-500">Mock evidence preview captured for instructor review</span>
+                </span>
+              </button>
+            ))}
+          </div>
           <button onClick={() => setReportOpen(true)} className="demo-action-primary mt-4"><FileText size={16} /> Generate Report</button>
         </div>
       </div>
@@ -147,6 +183,13 @@ export function ProctorInteractiveDemo() {
         <DemoModal title="Mock ProctorAI Report" onClose={() => setReportOpen(false)}>
           <p>Risk score: {risk}. Critical events: {criticalCount}. Session duration: {minutes}:{seconds}.</p>
           <p className="mt-3">Recommendation: {criticalCount > 1 ? "Instructor review recommended before accepting the attempt." : "Low manual review priority with normal evidence sampling."}</p>
+          <div className="mt-5 grid gap-2 sm:grid-cols-3">
+            {["Evidence", "Timeline", "Decision"].map((item) => (
+              <div key={item} className="rounded-2xl border border-cyan-300/15 bg-cyan-300/[0.07] p-3 text-sm text-cyan-50">
+                {item} ready
+              </div>
+            ))}
+          </div>
         </DemoModal>
       ) : null}
     </div>
@@ -213,12 +256,15 @@ export function TeletrackInteractiveDemo() {
         <div className="grid gap-5">
           <div className="glass-panel rounded-3xl p-5">
             <h2 className="font-heading text-2xl font-bold text-white">Topology</h2>
-            <div className="relative mt-5 h-64 rounded-3xl border border-cyan-300/20 bg-cyan-300/10">
+            <div className="relative mt-5 h-64 overflow-hidden rounded-3xl border border-cyan-300/20 bg-cyan-300/10">
+              <div className="absolute inset-8 rounded-full border border-cyan-300/10" />
+              <div className="absolute inset-x-10 top-1/2 h-px bg-cyan-300/15" />
+              <div className="absolute inset-y-10 left-1/2 w-px bg-blue-300/15" />
               {devices.map((device, index) => {
                 const positions = [[18, 24], [52, 20], [75, 46], [32, 66]];
                 const [x, y] = positions[index];
                 return (
-                  <button key={device.name} onClick={() => setSelectedName(device.name)} className={cn("absolute grid h-12 w-12 place-items-center rounded-full border bg-slate-950 shadow-[0_0_18px_rgba(34,211,238,0.35)] transition hover:scale-110", selected.name === device.name ? "border-cyan-200 text-cyan-100" : "border-cyan-200/30 text-slate-300")} style={{ left: `${x}%`, top: `${y}%` }} data-cursor-label="Node">
+                  <button key={device.name} onClick={() => setSelectedName(device.name)} className={cn("absolute grid h-12 w-12 place-items-center rounded-full border bg-slate-950 shadow-[0_0_18px_rgba(34,211,238,0.35)] transition hover:scale-110 hover:shadow-[0_0_30px_rgba(34,211,238,0.42)]", selected.name === device.name ? "border-cyan-200 text-cyan-100" : "border-cyan-200/30 text-slate-300")} style={{ left: `${x}%`, top: `${y}%` }} data-cursor-label="Node">
                     <Network size={18} />
                   </button>
                 );
@@ -230,6 +276,11 @@ export function TeletrackInteractiveDemo() {
             <p className="mt-3 text-slate-300">{selected.name} is assigned to {selected.technician}. Incident is {selected.incident}.</p>
             <div className="mt-4 h-3 overflow-hidden rounded-full bg-white/10">
               <div className="h-full rounded-full bg-brand-gradient transition-all" style={{ width: `${selected.sla}%` }} />
+            </div>
+            <div className="mt-4 grid grid-cols-7 gap-1.5" aria-label="Mock seven point SLA history">
+              {[86, selected.sla - 8, 91, selected.sla, 88, Math.min(100, selected.sla + 7), selected.sla].map((point, index) => (
+                <span key={`${point}-${index}`} className="rounded-t-xl bg-cyan-300/55 shadow-[0_0_14px_rgba(34,211,238,0.18)]" style={{ height: `${Math.max(28, point * 0.72)}px` }} />
+              ))}
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
               <button onClick={() => updateSelected({ technician: "Zain", incident: "Assigned" }, `${selected.name} assigned to Zain`)} className="demo-action"><UserCheck size={16} /> Assign Technician</button>
@@ -304,7 +355,8 @@ export function MirrorMindInteractiveDemo() {
       <div className="grid gap-5">
         <div className="glass-panel rounded-3xl p-5">
           <h2 className="font-heading text-2xl font-bold text-white">Argument Map</h2>
-          <div className="mt-4 grid gap-3 sm:grid-cols-4">
+          <div className="relative mt-4 grid gap-3 overflow-hidden rounded-3xl border border-white/10 bg-white/[0.025] p-4 sm:grid-cols-4">
+            <div className="pointer-events-none absolute left-1/2 top-1/2 h-px w-[82%] -translate-x-1/2 bg-gradient-to-r from-transparent via-cyan-300/20 to-transparent" />
             {["Claim", "Reasons", "Assumptions", "Evidence Gaps"].map((node) => (
               <button key={node} onClick={() => setSelectedNode(node)} className={cn("rounded-2xl border p-4 text-sm transition", selectedNode === node ? "border-cyan-300/45 bg-cyan-300/10 text-cyan-50" : "border-white/10 bg-white/[0.04] text-slate-300 hover:text-white")}>
                 {node}
@@ -323,6 +375,16 @@ export function MirrorMindInteractiveDemo() {
           <p className="mt-4 rounded-2xl border border-cyan-300/20 bg-cyan-300/10 p-4 text-sm leading-7 text-cyan-50">
             Suggested improvement: narrow the claim, add evidence, name the trade-offs, and explain when the idea should not be used.
           </p>
+          <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+            <p className="font-mono text-xs uppercase tracking-[0.12em] text-violet-100">Mock report preview</p>
+            <div className="mt-3 grid gap-2">
+              {["Claim clarity: medium", "Evidence strength: low", "Assumptions: visible", "Revision priority: high"].map((item) => (
+                <div key={item} className="flex items-center gap-2 rounded-xl bg-white/[0.045] px-3 py-2 text-sm text-slate-300">
+                  <CheckCircle2 size={15} className="text-cyan-200" /> {item}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -369,12 +431,23 @@ function FilterButton({ active, children, onClick }: { active: boolean; children
 }
 
 function DemoModal({ title, children, onClose }: { title: string; children: ReactNode; onClose: () => void }) {
+  const closeRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    closeRef.current?.focus();
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
   return (
-    <div className="fixed inset-0 z-[90] grid place-items-center bg-slate-950/72 p-4 backdrop-blur" role="dialog" aria-modal="true" aria-label={title}>
-      <div className="glass-panel max-w-lg rounded-3xl p-6">
+    <div className="fixed inset-0 z-[90] grid place-items-center bg-slate-950/72 p-4 backdrop-blur" role="dialog" aria-modal="true" aria-label={title} onMouseDown={onClose}>
+      <div className="glass-panel max-w-lg rounded-3xl p-6" onMouseDown={(event) => event.stopPropagation()}>
         <div className="flex items-center justify-between gap-4">
           <h3 className="font-heading text-2xl font-bold text-white">{title}</h3>
-          <button onClick={onClose} className="rounded-full border border-white/10 p-2 text-slate-300 hover:text-white" aria-label="Close report preview">
+          <button ref={closeRef} onClick={onClose} className="rounded-full border border-white/10 p-2 text-slate-300 hover:text-white" aria-label="Close report preview">
             <X size={18} />
           </button>
         </div>

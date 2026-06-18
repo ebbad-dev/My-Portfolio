@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">MirrorMind reasoning platform thumbnail</title>
+  <desc id="desc">A stylized reasoning interface with argument map nodes, assumptions, evidence gaps, counterargument, and report preview.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#020617"/><stop offset=".55" stop-color="#0f1026"/><stop offset="1" stop-color="#1e1238"/></linearGradient>
+    <linearGradient id="brand" x1="0" x2="1"><stop stop-color="#22d3ee"/><stop offset=".5" stop-color="#3b82f6"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient>
+    <filter id="glow" x="-35%" y="-35%" width="170%" height="170%"><feGaussianBlur stdDeviation="12" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1200" height="760" rx="54" fill="url(#bg)"/>
+  <circle cx="330" cy="208" r="270" fill="#8b5cf6" opacity=".12"/>
+  <circle cx="980" cy="605" r="260" fill="#22d3ee" opacity=".1"/>
+  <rect x="70" y="68" width="1060" height="624" rx="34" fill="#07111f" opacity=".84" stroke="#8b5cf6" stroke-opacity=".28"/>
+  <g transform="translate(112 110)" font-family="Inter,Arial,sans-serif">
+    <text x="0" y="28" fill="#fff" font-size="30" font-weight="850">Argument Intelligence</text>
+    <rect x="0" y="62" width="480" height="108" rx="28" fill="#ffffff" opacity=".045" stroke="#ffffff" stroke-opacity=".12"/>
+    <text x="28" y="104" fill="#cbd5e1" font-size="18">Input claim</text>
+    <text x="28" y="138" fill="#e0f2fe" font-size="23" font-weight="750">AI should be used in classrooms...</text>
+  </g>
+  <g transform="translate(116 254)">
+    <rect width="606" height="346" rx="30" fill="#081827" stroke="#8b5cf6" stroke-opacity=".25"/>
+    <path d="M302 96 150 214M302 96 304 242M302 96 462 214M150 214 304 242M304 242 462 214" stroke="#a5b4fc" stroke-width="3" opacity=".3"/>
+    <g font-family="Inter,Arial,sans-serif" font-weight="800" text-anchor="middle" filter="url(#glow)">
+      <circle cx="302" cy="96" r="56" fill="#22d3ee" opacity=".94"/><text x="302" y="104" fill="#02111f" font-size="22">Claim</text>
+      <circle cx="150" cy="214" r="48" fill="#3b82f6" opacity=".95"/><text x="150" y="222" fill="#fff" font-size="18">Reason</text>
+      <circle cx="304" cy="242" r="52" fill="#8b5cf6" opacity=".94"/><text x="304" y="250" fill="#fff" font-size="17">Assume</text>
+      <circle cx="462" cy="214" r="48" fill="#22d3ee" opacity=".88"/><text x="462" y="222" fill="#02111f" font-size="17">Gaps</text>
+    </g>
+  </g>
+  <g transform="translate(760 166)" font-family="Inter,Arial,sans-serif">
+    <rect width="310" height="434" rx="30" fill="#081827" stroke="#22d3ee" stroke-opacity=".23"/>
+    <text x="28" y="48" fill="#fff" font-size="26" font-weight="850">Reasoning Report</text>
+    <g font-size="17" fill="#cbd5e1">
+      <rect x="28" y="82" width="254" height="66" rx="18" fill="#8b5cf6" opacity=".13" stroke="#8b5cf6" stroke-opacity=".25"/>
+      <text x="48" y="111">Hidden assumption</text><text x="48" y="134" fill="#e0f2fe">Accuracy is reliable</text>
+      <rect x="28" y="166" width="254" height="66" rx="18" fill="#22d3ee" opacity=".1" stroke="#22d3ee" stroke-opacity=".23"/>
+      <text x="48" y="195">Evidence gap</text><text x="48" y="218" fill="#e0f2fe">No outcome data</text>
+      <rect x="28" y="250" width="254" height="92" rx="18" fill="#ffffff" opacity=".055" stroke="#ffffff" stroke-opacity=".12"/>
+      <text x="48" y="282">Counterargument</text>
+      <path d="M48 306h196M48 326h146" stroke="#cbd5e1" stroke-width="5" stroke-linecap="round" opacity=".55"/>
+      <rect x="28" y="374" width="254" height="16" rx="8" fill="#1e293b"/>
+      <rect x="28" y="374" width="182" height="16" rx="8" fill="url(#brand)" filter="url(#glow)"/>
+    </g>
+  </g>
+</svg>

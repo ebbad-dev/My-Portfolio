@@ -38,14 +38,14 @@ export function WelcomeIntro() {
                 <h2 className="mt-5 font-heading text-6xl font-bold text-white">Hello.</h2>
                 <p className="mt-4 text-2xl text-slate-200">I&apos;m Ebbad Ur Rehman.</p>
                 <p className="mx-auto mt-5 max-w-2xl leading-8 text-slate-300">
-                  Welcome to my engineering portfolio, an interactive space for projects, skills, demos, and the systems I&apos;m building.
+                  Welcome to my engineering portfolio. Watch the short intro or jump straight into the projects, skills, demos, and systems I&apos;m building.
                 </p>
                 <div className="mt-8 flex flex-wrap justify-center gap-3">
                   <button onClick={enter} className="rounded-full bg-brand-gradient px-6 py-3 font-semibold text-white shadow-glow">
                     Enter Portfolio
                   </button>
                   {siteConfig.introVideoAvailable ? (
-                    <button onClick={() => setVideoOpen(true)} className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-6 py-3 font-semibold text-slate-100">
+                    <button onClick={() => setVideoOpen(true)} className="inline-flex min-h-12 items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-6 py-3 font-semibold text-slate-100 transition hover:border-cyan-300/40 hover:bg-white/[0.08]">
                       <Play size={17} /> Watch Intro
                     </button>
                   ) : null}
@@ -63,15 +63,29 @@ export function WelcomeIntro() {
         {videoOpen && siteConfig.introVideoAvailable ? (
           <motion.div className="fixed inset-0 z-[130] grid place-items-center bg-slate-950/85 p-4 backdrop-blur" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <div className="glass-panel w-full max-w-4xl rounded-3xl p-5">
-              <div className="mb-4 flex items-center justify-between">
-                <p className="mono-label">Intro video</p>
+              <div className="mb-4 flex items-center justify-between gap-4">
+                <div>
+                  <p className="mono-label">Intro video</p>
+                  <p className="mt-1 text-sm text-slate-400">A quick guided tour of Ebbad&apos;s work and focus areas.</p>
+                </div>
                 <button onClick={() => setVideoOpen(false)} className="rounded-full p-2 text-slate-400 hover:bg-white/10 hover:text-white" aria-label="Close intro video">
                   <X size={20} />
                 </button>
               </div>
-              <video controls className="aspect-video w-full rounded-2xl border border-white/10 bg-slate-950" poster={siteConfig.profileImagePath}>
+              <video controls playsInline preload="metadata" className="aspect-video w-full rounded-2xl border border-white/10 bg-slate-950" poster={siteConfig.profileImagePath}>
                 <source src={siteConfig.introVideoPath} type="video/mp4" />
               </video>
+              <div className="mt-4 flex flex-wrap justify-end gap-3">
+                <button
+                  onClick={() => {
+                    setVideoOpen(false);
+                    enter();
+                  }}
+                  className="rounded-full bg-brand-gradient px-5 py-2.5 text-sm font-semibold text-white shadow-glow"
+                >
+                  Enter Portfolio
+                </button>
+              </div>
             </div>
           </motion.div>
         ) : null}

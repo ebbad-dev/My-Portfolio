@@ -11,6 +11,7 @@ import { SocialDock } from "@/components/system/social-dock";
 import { SmoothScroll } from "@/components/system/smooth-scroll";
 import { WelcomeIntro } from "@/components/system/welcome-intro";
 import { FloatingChatbot } from "@/components/chatbot/floating-chatbot";
+import { ActiveSectionProvider } from "@/hooks/useActiveSection";
 
 const heading = Space_Grotesk({
   subsets: ["latin"],
@@ -96,15 +97,17 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-slate-950">
           Skip to content
         </a>
-        <SiteNav />
-        <SocialDock />
-        <CommandPalette />
-        <SmoothScroll />
-        <WelcomeIntro />
-        <FloatingChatbot />
-        <HolographicCursor />
+        <ActiveSectionProvider>
+          <SiteNav />
+          <SocialDock />
+          <CommandPalette />
+          <SmoothScroll />
+          <WelcomeIntro />
+          <FloatingChatbot />
+          <HolographicCursor />
+          {children}
+        </ActiveSectionProvider>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
-        {children}
         <Analytics />
       </body>
     </html>

@@ -4,7 +4,7 @@ export function SectionHeader({ eyebrow, title, children, id }: { eyebrow: strin
   return (
     <div id={id} className="mb-10 max-w-3xl">
       <p className="mono-label mb-3">{eyebrow}</p>
-      <h2 className="font-heading text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">{title}</h2>
+      <h2 className="font-heading text-[clamp(2.75rem,5.4vw,4.9rem)] font-bold leading-[1.02] text-white">{title}</h2>
       {children ? <p className="mt-5 text-base leading-8 text-slate-300 sm:text-lg">{children}</p> : null}
     </div>
   );

@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">ProctorAI dashboard thumbnail</title>
+  <desc id="desc">A stylized exam monitoring dashboard with webcam scan, risk score, evidence timeline, and review queue.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop stop-color="#020617"/>
+      <stop offset=".55" stop-color="#07142a"/>
+      <stop offset="1" stop-color="#130b2a"/>
+    </linearGradient>
+    <linearGradient id="brand" x1="0" x2="1">
+      <stop stop-color="#22d3ee"/>
+      <stop offset=".55" stop-color="#3b82f6"/>
+      <stop offset="1" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="13" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="1200" height="760" rx="54" fill="url(#bg)"/>
+  <circle cx="950" cy="96" r="240" fill="#22d3ee" opacity=".12"/>
+  <circle cx="190" cy="675" r="280" fill="#8b5cf6" opacity=".11"/>
+  <g opacity=".16" stroke="#67e8f9">
+    <path d="M80 165h1040M80 282h1040M80 399h1040M80 516h1040"/>
+    <path d="M200 92v580M402 92v580M604 92v580M806 92v580M1008 92v580"/>
+  </g>
+  <rect x="70" y="68" width="1060" height="624" rx="34" fill="#07111f" opacity=".82" stroke="#22d3ee" stroke-opacity=".25"/>
+  <rect x="104" y="106" width="660" height="420" rx="28" fill="#081827" stroke="#22d3ee" stroke-opacity=".32"/>
+  <rect x="132" y="136" width="604" height="328" rx="24" fill="#06111d" stroke="#e0f2fe" stroke-opacity=".08"/>
+  <ellipse cx="434" cy="296" rx="122" ry="145" fill="#22d3ee" opacity=".08" stroke="#67e8f9" stroke-opacity=".45"/>
+  <circle cx="434" cy="238" r="48" fill="#c7d2fe" opacity=".22"/>
+  <path d="M322 420c30-70 196-70 224 0" fill="#c7d2fe" opacity=".13"/>
+  <path d="M132 302h604" stroke="#67e8f9" stroke-width="3" opacity=".65" filter="url(#glow)"/>
+  <path d="M434 150v292" stroke="#67e8f9" stroke-dasharray="8 12" opacity=".34"/>
+  <g fill="#e0f2fe" font-family="Inter,Arial,sans-serif" font-size="24" font-weight="700">
+    <text x="132" y="506">Webcam intelligence</text>
+    <text x="816" y="146">Risk 72</text>
+  </g>
+  <g transform="translate(812 172)">
+    <circle cx="108" cy="108" r="92" fill="none" stroke="#1e293b" stroke-width="24"/>
+    <path d="M108 16a92 92 0 0 1 83 132" fill="none" stroke="url(#brand)" stroke-width="24" stroke-linecap="round" filter="url(#glow)"/>
+    <text x="108" y="118" text-anchor="middle" fill="#fff" font-family="Inter,Arial,sans-serif" font-size="44" font-weight="800">72</text>
+  </g>
+  <g transform="translate(804 438)" font-family="Inter,Arial,sans-serif" font-size="18" fill="#cbd5e1">
+    <rect width="270" height="50" rx="18" fill="#22d3ee" opacity=".12" stroke="#22d3ee" stroke-opacity=".24"/>
+    <text x="22" y="32">Evidence captured</text>
+    <rect y="68" width="270" height="50" rx="18" fill="#8b5cf6" opacity=".13" stroke="#8b5cf6" stroke-opacity=".28"/>
+    <text x="22" y="100">Review queue updated</text>
+    <rect y="136" width="270" height="50" rx="18" fill="#ffffff" opacity=".06" stroke="#ffffff" stroke-opacity=".11"/>
+    <text x="22" y="168">Instructor report ready</text>
+  </g>
+  <g transform="translate(104 556)">
+    <rect width="660" height="96" rx="24" fill="#ffffff" opacity=".04" stroke="#ffffff" stroke-opacity=".1"/>
+    <path d="M34 62c80-58 132 28 202-18 84-55 128 30 204-10 60-32 92-6 184 4" fill="none" stroke="url(#brand)" stroke-width="5" stroke-linecap="round" filter="url(#glow)"/>
+    <g fill="#22d3ee">
+      <circle cx="34" cy="62" r="7"/><circle cx="236" cy="44" r="7"/><circle cx="440" cy="34" r="7"/><circle cx="624" cy="38" r="7"/>
+    </g>
+  </g>
+</svg>

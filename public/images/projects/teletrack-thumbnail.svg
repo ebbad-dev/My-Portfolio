@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">TeleTrack Enterprise operations thumbnail</title>
+  <desc id="desc">A stylized network monitoring interface with topology nodes, device health cards, alert stream, and SLA meter.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#020617"/><stop offset=".6" stop-color="#06162e"/><stop offset="1" stop-color="#111827"/></linearGradient>
+    <linearGradient id="brand" x1="0" x2="1"><stop stop-color="#22d3ee"/><stop offset=".52" stop-color="#3b82f6"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient>
+    <filter id="glow" x="-35%" y="-35%" width="170%" height="170%"><feGaussianBlur stdDeviation="11" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1200" height="760" rx="54" fill="url(#bg)"/>
+  <circle cx="970" cy="132" r="260" fill="#3b82f6" opacity=".14"/>
+  <circle cx="146" cy="612" r="250" fill="#22d3ee" opacity=".1"/>
+  <rect x="70" y="68" width="1060" height="624" rx="34" fill="#07111f" opacity=".84" stroke="#3b82f6" stroke-opacity=".28"/>
+  <g transform="translate(106 108)" font-family="Inter,Arial,sans-serif">
+    <g fill="#e0f2fe" font-weight="800">
+      <text x="0" y="24" font-size="28">Network Operations</text>
+      <text x="812" y="24" font-size="24">94% SLA</text>
+    </g>
+    <g transform="translate(0 62)" font-size="18" fill="#cbd5e1">
+      <rect width="205" height="88" rx="22" fill="#22d3ee" opacity=".11" stroke="#22d3ee" stroke-opacity=".24"/>
+      <text x="24" y="38">Online Devices</text><text x="24" y="70" fill="#fff" font-size="28" font-weight="800">116</text>
+      <rect x="226" width="205" height="88" rx="22" fill="#8b5cf6" opacity=".12" stroke="#8b5cf6" stroke-opacity=".26"/>
+      <text x="250" y="38">Critical Alerts</text><text x="250" y="70" fill="#fff" font-size="28" font-weight="800">3</text>
+      <rect x="452" width="205" height="88" rx="22" fill="#3b82f6" opacity=".12" stroke="#3b82f6" stroke-opacity=".26"/>
+      <text x="476" y="38">Active Incidents</text><text x="476" y="70" fill="#fff" font-size="28" font-weight="800">7</text>
+    </g>
+  </g>
+  <g transform="translate(112 256)">
+    <rect width="610" height="360" rx="30" fill="#081827" stroke="#22d3ee" stroke-opacity=".25"/>
+    <path d="M130 84 306 116 465 78M306 116 218 248M306 116 448 270M218 248 448 270" stroke="#67e8f9" stroke-width="3" opacity=".32"/>
+    <g filter="url(#glow)">
+      <circle cx="130" cy="84" r="22" fill="#22d3ee"/><circle cx="306" cy="116" r="28" fill="#3b82f6"/><circle cx="465" cy="78" r="22" fill="#22d3ee"/>
+      <circle cx="218" cy="248" r="24" fill="#8b5cf6"/><circle cx="448" cy="270" r="24" fill="#22d3ee"/>
+    </g>
+    <g fill="#e2e8f0" font-family="Inter,Arial,sans-serif" font-size="17" font-weight="700">
+      <text x="78" y="47">Lahore-03</text><text x="267" y="76">Core</text><text x="426" y="42">Edge-1</text><text x="162" y="304">Floor-2</text><text x="397" y="326">Backup</text>
+    </g>
+  </g>
+  <g transform="translate(760 256)" font-family="Inter,Arial,sans-serif">
+    <rect width="310" height="360" rx="30" fill="#081827" stroke="#3b82f6" stroke-opacity=".25"/>
+    <text x="28" y="46" fill="#fff" font-size="25" font-weight="800">Alert Stream</text>
+    <g font-size="17" fill="#cbd5e1">
+      <rect x="28" y="78" width="254" height="56" rx="18" fill="#8b5cf6" opacity=".13" stroke="#8b5cf6" stroke-opacity=".25"/><text x="48" y="113">Router offline</text>
+      <rect x="28" y="150" width="254" height="56" rx="18" fill="#22d3ee" opacity=".1" stroke="#22d3ee" stroke-opacity=".23"/><text x="48" y="185">Latency warning</text>
+      <rect x="28" y="222" width="254" height="56" rx="18" fill="#ffffff" opacity=".055" stroke="#ffffff" stroke-opacity=".12"/><text x="48" y="257">Audit log updated</text>
+      <rect x="28" y="304" width="254" height="16" rx="8" fill="#1e293b"/>
+      <rect x="28" y="304" width="214" height="16" rx="8" fill="url(#brand)" filter="url(#glow)"/>
+    </g>
+  </g>
+</svg>

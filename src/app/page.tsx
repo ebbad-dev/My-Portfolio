@@ -23,7 +23,7 @@ import {
   recruiterSummary,
   siteConfig,
   socials,
-  testimonial,
+  testimonials,
 } from "@/data/site";
 import { isUsableHref } from "@/lib/utils";
 
@@ -246,21 +246,43 @@ export default function Home() {
       </section>
 
       <section id="testimonials" data-section-id="testimonials" className="section-shell">
-        <SectionHeader eyebrow="What People Say" title="Trusted feedback, shown with permission." />
-        {testimonial.status === "approved" ? (
-          <div className="glass-panel premium-card max-w-4xl rounded-3xl p-6">
-            <div className="flex items-center gap-4">
-              <div className="grid h-14 w-14 place-items-center rounded-full bg-brand-gradient font-heading font-bold text-white">{testimonial.initials}</div>
-              <div>
-                <h3 className="font-heading text-xl font-semibold text-white">{testimonial.name}</h3>
-                <p className="text-sm text-slate-400">{testimonial.role}</p>
+        <div className="mb-12 text-center">
+          <p className="mono-label mb-4 justify-center">Testimonials</p>
+          <h2 className="mx-auto max-w-4xl font-heading text-[clamp(3rem,7vw,6.7rem)] font-bold leading-[0.95] text-white">
+            Testimonials
+          </h2>
+        </div>
+        <div className="grid gap-5 lg:grid-cols-3">
+          {testimonials.map((item) => (
+            <article key={item.initials} className="testimonial-card glass-panel premium-card relative min-h-[25rem] overflow-hidden rounded-3xl p-6">
+              <div className="pointer-events-none absolute left-8 top-3 font-heading text-8xl font-black leading-none text-cyan-300/[0.06]" aria-hidden="true">
+                &ldquo;
               </div>
-            </div>
-            <p className="mt-6 text-lg leading-9 text-slate-200">&ldquo;{testimonial.quote}&rdquo;</p>
-          </div>
-        ) : (
-          <div className="glass-panel rounded-3xl p-6 text-slate-300">References available on request.</div>
-        )}
+              <div className="relative flex h-full flex-col">
+                <div className="mb-6 flex items-center justify-between gap-3">
+                  <span className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-cyan-100">
+                    {item.proof}
+                  </span>
+                  <span className="h-px flex-1 bg-gradient-to-r from-cyan-300/20 via-blue-400/20 to-transparent" aria-hidden="true" />
+                </div>
+                {item.kind === "approved" ? (
+                  <p className="relative text-base italic leading-8 text-slate-100">&ldquo;{item.quote}&rdquo;</p>
+                ) : (
+                  <p className="relative text-base leading-8 text-slate-300">{item.note}</p>
+                )}
+                <div className="mt-auto flex items-center gap-4 pt-8">
+                  <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-brand-gradient font-heading text-sm font-bold text-white shadow-[0_0_24px_rgba(34,211,238,0.2)]">
+                    {item.initials}
+                  </div>
+                  <div>
+                    <h3 className="font-heading text-lg font-semibold text-white">{item.kind === "approved" ? item.name : item.title}</h3>
+                    <p className="mt-0.5 text-sm text-slate-400">{item.role}</p>
+                  </div>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
       </section>
 
       <section id="resume" data-section-id="resume" className="section-shell">

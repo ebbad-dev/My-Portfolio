@@ -35,6 +35,9 @@ export type Project = {
   demo?: string;
   demoRoute?: string;
   demoLabel?: string;
+  thumbnail?: string;
+  thumbnailAlt?: string;
+  visualAccent?: "cyan" | "blue" | "violet";
 };
 
 export type ArchiveProject = {
@@ -79,7 +82,7 @@ export const siteConfig = {
   resumeAvailable: true,
   profileImagePath: "/images/profile/profile-1.jpeg",
   introVideoPath: "/videos/intro.mp4",
-  introVideoAvailable: false,
+  introVideoAvailable: true,
   formspreeEndpoint: "https://formspree.io/f/mqeogggp",
 };
 
@@ -171,6 +174,9 @@ export const projects: Project[] = [
     codeStatus: "coming-soon",
     demoRoute: "/demos/proctorai",
     demoLabel: "Interactive Portfolio Demo",
+    thumbnail: "/images/projects/proctorai-thumbnail.svg",
+    thumbnailAlt: "Stylized ProctorAI dashboard thumbnail with webcam scan, risk meter, evidence timeline, and review queue",
+    visualAccent: "cyan",
   },
   {
     title: "TeleTrack Enterprise",
@@ -210,6 +216,9 @@ export const projects: Project[] = [
     codeStatus: "available",
     demoRoute: "/demos/teletrack",
     demoLabel: "Interactive Portfolio Demo",
+    thumbnail: "/images/projects/teletrack-thumbnail.svg",
+    thumbnailAlt: "Stylized TeleTrack Enterprise network operations thumbnail with topology, device health, alerts, and SLA panels",
+    visualAccent: "blue",
   },
   {
     title: "MirrorMind",
@@ -248,6 +257,9 @@ export const projects: Project[] = [
     codeStatus: "available",
     demoRoute: "/demos/mirrormind",
     demoLabel: "Interactive Portfolio Demo",
+    thumbnail: "/images/projects/mirrormind-thumbnail.svg",
+    thumbnailAlt: "Stylized MirrorMind reasoning platform thumbnail with argument map, assumptions, evidence gaps, and report panel",
+    visualAccent: "violet",
   },
   {
     title: "Student Result Management API",
@@ -419,14 +431,53 @@ export const journey = [
   ["Current Direction", "Focused on full-stack development, AI systems, backend engineering, database systems, and real-world software products."],
 ];
 
-export const testimonial = {
-  name: "Saad Faisal",
-  initials: "SF",
-  role: "CEO, Sanestix",
-  status: "approved",
-  quote:
-    "Ebbad shows the kind of curiosity and ownership that stands out early. He approaches tasks with a serious mindset, asks thoughtful questions, and tries to improve the final outcome instead of only completing the minimum requirement. His ability to combine technical learning with clear communication makes him someone with strong growth potential.",
-};
+export type TestimonialCard =
+  | {
+      kind: "approved";
+      name: string;
+      initials: string;
+      role: string;
+      quote: string;
+      proof: string;
+    }
+  | {
+      kind: "placeholder";
+      title: string;
+      initials: string;
+      role: string;
+      note: string;
+      proof: string;
+    };
+
+export const testimonials: TestimonialCard[] = [
+  {
+    kind: "approved",
+    name: "Saad Faisal",
+    initials: "SF",
+    role: "CEO, Sanestix",
+    proof: "Approved reference",
+    quote:
+      "Ebbad shows the kind of curiosity and ownership that stands out early. He approaches tasks with a serious mindset, asks thoughtful questions, and tries to improve the final outcome instead of only completing the minimum requirement. His ability to combine technical learning with clear communication makes him someone with strong growth potential.",
+  },
+  {
+    kind: "placeholder",
+    title: "Reference Available",
+    initials: "RA",
+    role: "Academic / project collaborators",
+    proof: "On request",
+    note: "Additional references can be shared privately when a recruiter or collaborator needs more context.",
+  },
+  {
+    kind: "placeholder",
+    title: "More Feedback Coming Soon",
+    initials: "MF",
+    role: "Future approved testimonials",
+    proof: "Pending approval",
+    note: "This slot is intentionally held for a real approved testimonial instead of showing invented praise.",
+  },
+];
+
+export const testimonial = testimonials[0];
 
 export const demoData = {
   proctorai: {

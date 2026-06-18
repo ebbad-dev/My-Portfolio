@@ -75,11 +75,22 @@ export default async function ProjectPage({ params }: Props) {
             <h2 className="font-heading text-3xl font-bold text-white">System Flow</h2>
             <div className="mt-6 grid gap-3">
               {project.architecture.map((step, index) => (
-                <div key={step} className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-3 text-sm text-slate-300">
+                <div key={step} className="group flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-3 text-sm text-slate-300 transition hover:border-cyan-300/30 hover:bg-cyan-300/[0.06]">
                   <span className="grid h-8 w-8 place-items-center rounded-full bg-cyan-300/10 font-mono text-xs text-cyan-100">{index + 1}</span>
                   {step}
                 </div>
               ))}
+            </div>
+            <div className="mt-6 rounded-3xl border border-cyan-300/15 bg-cyan-300/[0.06] p-4">
+              <p className="font-mono text-xs uppercase tracking-[0.12em] text-cyan-100">Product flow preview</p>
+              <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-300">
+                {project.architecture.slice(0, 5).map((step, index) => (
+                  <span key={`${step}-preview`} className="inline-flex items-center gap-2">
+                    <span className="rounded-full border border-white/10 bg-slate-950/70 px-3 py-1.5">{step}</span>
+                    {index < Math.min(project.architecture.length, 5) - 1 ? <span className="text-cyan-300/60">/</span> : null}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
           <div className="grid gap-5 sm:grid-cols-2">

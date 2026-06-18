@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { createContext, createElement, useContext, useEffect, useMemo, useRef, useState } from "react";
+import type { ReactNode } from "react";
 import { PORTFOLIO_SECTIONS, type PortfolioSectionId } from "@/data/portfolioSections";
+import { scrollToSection as scrollToPortfolioSection } from "@/lib/scroll-to-section";
 
-const ACTIVATION_RATIO = 0.42;
+const ACTIVATION_RATIO = 0.4;
 const EDGE_THRESHOLD = 80;
-const HYSTERESIS_PX = 36;
+const HYSTERESIS_PX = 24;
 
 type ActiveSectionState = {
   activeId: PortfolioSectionId;
@@ -14,6 +16,7 @@ type ActiveSectionState = {
   foundIds: PortfolioSectionId[];
   missingIds: PortfolioSectionId[];
   debugEnabled: boolean;
+  scrollToSection: (id: PortfolioSectionId, reduceMotion?: boolean) => void;
 };
 
 const initialState: ActiveSectionState = {
@@ -23,10 +26,22 @@ const initialState: ActiveSectionState = {
   foundIds: [],
   missingIds: [],
   debugEnabled: false,
+  scrollToSection: () => {},
 };
 
-function getSectionState(debugEnabled: boolean, previousIndex: number, initialized: boolean): ActiveSectionState {
-  const measuredSections = PORTFOLIO_SECTIONS.map((section, index) => {
+type MeasuredSection = {
+  id: PortfolioSectionId;
+  index: number;
+  element: HTMLElement | null;
+  top: number;
+  bottom: number;
+  midpoint: number;
+};
+
+const ActiveSectionContext = createContext<ActiveSectionState>(initialState);
+
+function measureSections(): MeasuredSection[] {
+  return PORTFOLIO_SECTIONS.map((section, index) => {
     const element = document.querySelector<HTMLElement>(`[data-section-id="${section.id}"]`);
     if (!element) {
       return {
@@ -35,53 +50,78 @@ function getSectionState(debugEnabled: boolean, previousIndex: number, initializ
         element: null,
         top: 0,
         bottom: 0,
+        midpoint: 0,
       };
     }
 
     const rect = element.getBoundingClientRect();
+    const top = rect.top + window.scrollY;
+    const bottom = rect.bottom + window.scrollY;
 
     return {
       id: section.id,
       index,
       element,
-      top: rect.top + window.scrollY,
-      bottom: rect.bottom + window.scrollY,
+      top,
+      bottom,
+      midpoint: top + rect.height / 2,
     };
   });
+}
+
+function getSectionState(
+  debugEnabled: boolean,
+  previousIndex: number,
+  initialized: boolean,
+  scrollToSection: ActiveSectionState["scrollToSection"],
+): ActiveSectionState {
+  const measuredSections = measureSections();
 
   const foundIds = measuredSections.filter((section) => section.element).map((section) => section.id);
   const missingIds = measuredSections.filter((section) => !section.element).map((section) => section.id);
   const lastIndex = PORTFOLIO_SECTIONS.length - 1;
+  const availableSections = measuredSections
+    .filter((section): section is MeasuredSection & { element: HTMLElement } => Boolean(section.element))
+    .sort((a, b) => a.top - b.top);
 
   if (window.scrollY < EDGE_THRESHOLD) {
-    return { activeId: PORTFOLIO_SECTIONS[0].id, activeIndex: 0, progress: 0, foundIds, missingIds, debugEnabled };
+    return { activeId: PORTFOLIO_SECTIONS[0].id, activeIndex: 0, progress: 0, foundIds, missingIds, debugEnabled, scrollToSection };
   }
 
   const scrollBottom = window.innerHeight + window.scrollY;
   const documentHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
   if (scrollBottom >= documentHeight - EDGE_THRESHOLD) {
-    return { activeId: PORTFOLIO_SECTIONS[lastIndex].id, activeIndex: lastIndex, progress: 1, foundIds, missingIds, debugEnabled };
+    return { activeId: PORTFOLIO_SECTIONS[lastIndex].id, activeIndex: lastIndex, progress: 1, foundIds, missingIds, debugEnabled, scrollToSection };
   }
 
-  const activationY = window.scrollY + window.innerHeight * ACTIVATION_RATIO;
-  let candidateIndex = 0;
+  if (!availableSections.length) {
+    return { ...initialState, debugEnabled, scrollToSection };
+  }
 
-  for (const section of measuredSections) {
-    if (!section.element) continue;
-    if (activationY >= section.top) {
-      candidateIndex = section.index;
+  const activationY = window.scrollY + Math.min(window.innerHeight * ACTIVATION_RATIO, 360);
+  const containing = availableSections.find((section, index) => {
+    const next = availableSections[index + 1];
+    const bottom = next ? Math.min(section.bottom, next.top) : section.bottom;
+    return activationY >= section.top - 1 && activationY < bottom;
+  });
+
+  let candidate = containing;
+
+  if (!candidate) {
+    candidate = availableSections[0];
+    for (const section of availableSections) {
+      if (activationY >= section.top) candidate = section;
     }
   }
 
-  let activeIndex = candidateIndex;
+  let activeIndex = candidate.index;
 
   if (initialized) {
-    const candidateSection = measuredSections[candidateIndex];
     const previousSection = measuredSections[previousIndex];
 
-    if (candidateIndex > previousIndex && candidateSection?.element && activationY < candidateSection.top + HYSTERESIS_PX) {
+    if (activeIndex > previousIndex && activationY < candidate.top + HYSTERESIS_PX) {
       activeIndex = previousIndex;
-    } else if (candidateIndex < previousIndex && previousSection?.element && activationY > previousSection.top - HYSTERESIS_PX) {
+    } else if (activeIndex < previousIndex && previousSection?.element && activationY > previousSection.top - HYSTERESIS_PX) {
       activeIndex = previousIndex;
     }
   }
@@ -93,10 +133,15 @@ function getSectionState(debugEnabled: boolean, previousIndex: number, initializ
     foundIds,
     missingIds,
     debugEnabled,
+    scrollToSection,
   };
 }
 
-export function useActiveSection() {
+export function ActiveSectionProvider({ children }: { children: ReactNode }) {
+  const scrollToSection = useMemo(
+    () => (id: PortfolioSectionId, reduceMotion = false) => scrollToPortfolioSection(id, reduceMotion),
+    [],
+  );
   const [state, setState] = useState<ActiveSectionState>(initialState);
   const activeIndexRef = useRef(initialState.activeIndex);
   const initializedRef = useRef(false);
@@ -107,7 +152,8 @@ export function useActiveSection() {
     const debugEnabled = process.env.NODE_ENV === "development" && new URLSearchParams(window.location.search).has("debugJourney");
 
     const update = () => {
-      const nextState = getSectionState(debugEnabled, activeIndexRef.current, initializedRef.current);
+      frame = 0;
+      const nextState = getSectionState(debugEnabled, activeIndexRef.current, initializedRef.current, scrollToSection);
       const nextMissingSignature = nextState.missingIds.join(",");
 
       if (process.env.NODE_ENV === "development" && nextMissingSignature && nextMissingSignature !== missingSignature) {
@@ -129,7 +175,6 @@ export function useActiveSection() {
           ? current
           : nextState,
       );
-      frame = window.requestAnimationFrame(update);
     };
 
     const requestUpdate = () => {
@@ -138,13 +183,21 @@ export function useActiveSection() {
     };
 
     requestUpdate();
+    window.addEventListener("scroll", requestUpdate, { passive: true });
     window.addEventListener("resize", requestUpdate);
+    window.addEventListener("hashchange", requestUpdate);
 
     return () => {
+      window.removeEventListener("scroll", requestUpdate);
       window.removeEventListener("resize", requestUpdate);
+      window.removeEventListener("hashchange", requestUpdate);
       if (frame) window.cancelAnimationFrame(frame);
     };
-  }, []);
+  }, [scrollToSection]);
 
-  return state;
+  return createElement(ActiveSectionContext.Provider, { value: state }, children);
+}
+
+export function useActiveSection() {
+  return useContext(ActiveSectionContext);
 }

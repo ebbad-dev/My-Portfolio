@@ -70,10 +70,6 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
-section[id] {
-  scroll-margin-top: 5.75rem;
-}
-
 :focus-visible {
   outline: 2px solid var(--accent-cyan);
   outline-offset: 4px;
@@ -120,7 +116,6 @@ section[id] {
       0 24px 76px rgba(34, 211, 238, 0.1),
       0 0 0 1px rgba(139, 92, 246, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.08);
-    transform: translateY(-2px);
   }
 
   .premium-card:hover {
@@ -238,6 +233,23 @@ section[id] {
 
 section[id] {
   scroll-margin-top: 96px;
+}
+
+.project-thumbnail::after,
+.testimonial-card::after {
+  position: absolute;
+  inset: auto 1.25rem 0;
+  height: 1px;
+  content: "";
+  background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.55), rgba(139, 92, 246, 0.38), transparent);
+  opacity: 0.72;
+}
+
+.testimonial-card {
+  box-shadow:
+    0 22px 70px rgba(0, 0, 0, 0.38),
+    0 0 0 1px rgba(34, 211, 238, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .hero-shell {

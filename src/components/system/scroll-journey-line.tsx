@@ -3,7 +3,6 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { PORTFOLIO_SECTIONS } from "@/data/portfolioSections";
 import { useActiveSection } from "@/hooks/useActiveSection";
-import { scrollToSection } from "@/lib/scroll-to-section";
 
 const VIEWBOX_HEIGHT = 720;
 const VIEWBOX_WIDTH = 64;
@@ -27,7 +26,7 @@ function getDotPosition(index: number) {
 
 export function ScrollJourneyLine() {
   const reduce = useReducedMotion();
-  const { activeId, activeIndex, progress, foundIds, missingIds, debugEnabled } = useActiveSection();
+  const { activeId, activeIndex, progress, foundIds, missingIds, debugEnabled, scrollToSection } = useActiveSection();
 
   return (
     <nav className="pointer-events-none fixed left-[max(1.25rem,calc((100vw-1180px)/2-4rem))] top-24 z-10 hidden h-[calc(100vh-7rem)] w-16 lg:block" aria-label="Vertical portfolio journey navigation">
