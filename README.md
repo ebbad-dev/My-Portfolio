@@ -51,24 +51,24 @@ https://formspree.io/f/mqeogggp
 
 It sends `name`, `email`, `purpose`, and `message`, plus a subject and reply-to value. To change the provider or endpoint, edit `siteConfig.formspreeEndpoint` in `src/data/site.ts`.
 
-## Avatar intro video script
+## Real voice intro video
 
-The intro video at `public/videos/intro.mp4` is generated from the profile reference image at `public/images/profile/profile-1.jpeg`. To regenerate it locally, use Python with Pillow, Windows text-to-speech, and FFmpeg. If FFmpeg is not on PATH, set `FFMPEG_PATH` to `ffmpeg.exe`, then run:
+The intro video at `public/videos/intro.mp4` is generated from a real recorded video so the face movement and voice stay natural. By default the renderer reads:
+
+```text
+C:\Users\HP\Downloads\VID-20260530-WA0046.mp4
+```
+
+To regenerate it with another recording, set `INTRO_SOURCE_VIDEO` to the source `.mp4`. If FFmpeg is not on PATH, set `FFMPEG_PATH` to `ffmpeg.exe`, then run:
 
 ```bash
 python scripts/render-intro-video.py
 ```
 
-Use this voiceover script:
+The current render keeps the source audio and trims it into a portfolio-ready intro. The on-screen message is:
 
 ```text
-Hello, I'm Ebbad Ur Rehman - a Software Engineer and full-stack developer.
-
-I build intelligent software systems across AI, databases, backend APIs, computer vision, and interactive product experiences.
-
-Explore my projects, try the demos, view my skills, or ask my AI assistant about my work.
-
-Welcome to my portfolio.
+Full-stack systems, AI tools, databases, backend APIs, computer vision, and interactive product experiences.
 ```
 
 ## Chatbot knowledge guide
