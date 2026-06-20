@@ -92,8 +92,26 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
   };
 
   return (
-    <html lang="en" className={`${heading.variable} ${body.variable} ${mono.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${heading.variable} ${body.variable} ${mono.variable}`}>
       <body>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (() => {
+                try {
+                  const stored = localStorage.getItem("ebbad-theme");
+                  const systemLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+                  const theme = stored === "light" || stored === "dark" ? stored : systemLight ? "light" : "dark";
+                  document.documentElement.dataset.theme = theme;
+                  document.documentElement.style.colorScheme = theme;
+                } catch {
+                  document.documentElement.dataset.theme = "dark";
+                  document.documentElement.style.colorScheme = "dark";
+                }
+              })();
+            `,
+          }}
+        />
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-slate-950">
           Skip to content
         </a>

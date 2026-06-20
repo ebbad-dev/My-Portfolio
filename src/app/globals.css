@@ -19,6 +19,23 @@
   --border-glow: rgba(34, 211, 238, 0.35);
 }
 
+html[data-theme="light"] {
+  --background-main: #edf7fb;
+  --background-secondary: #f8fbff;
+  --background-elevated: #ffffff;
+  --background-card: rgba(255, 255, 255, 0.76);
+  --background-glass: rgba(255, 255, 255, 0.62);
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --accent-cyan: #0891b2;
+  --accent-blue: #2563eb;
+  --accent-violet: #7c3aed;
+  --accent-emerald: #047857;
+  --border-soft: rgba(15, 23, 42, 0.12);
+  --border-glow: rgba(8, 145, 178, 0.28);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -39,6 +56,14 @@ body {
   letter-spacing: 0;
 }
 
+html[data-theme="light"] body {
+  background:
+    radial-gradient(circle at top left, rgba(34, 211, 238, 0.2), transparent 28rem),
+    radial-gradient(circle at 85% 8%, rgba(139, 92, 246, 0.16), transparent 34rem),
+    linear-gradient(180deg, #f8fbff 0%, #edf7fb 48%, #f7fbff 100%);
+  color: var(--text-primary);
+}
+
 body::before {
   position: fixed;
   inset: 0;
@@ -50,6 +75,12 @@ body::before {
     linear-gradient(90deg, rgba(148, 163, 184, 0.03) 1px, transparent 1px);
   background-size: 48px 48px;
   mask-image: linear-gradient(to bottom, black, transparent 80%);
+}
+
+html[data-theme="light"] body::before {
+  background-image:
+    linear-gradient(rgba(15, 23, 42, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.045) 1px, transparent 1px);
 }
 
 ::selection {
@@ -107,6 +138,116 @@ a {
     box-shadow 240ms ease,
     transform 240ms ease,
     background 240ms ease;
+}
+
+html[data-theme="light"] .glass-panel {
+  border-color: rgba(15, 23, 42, 0.12);
+  background:
+    radial-gradient(circle at top left, rgba(34, 211, 238, 0.13), transparent 38%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(226, 244, 250, 0.72));
+  box-shadow:
+    0 18px 50px rgba(15, 23, 42, 0.12),
+    0 0 0 1px rgba(255, 255, 255, 0.72),
+    inset 0 1px 0 rgba(255, 255, 255, 0.88);
+}
+
+html[data-theme="light"] .site-nav-header {
+  border-color: rgba(15, 23, 42, 0.1);
+  background: rgba(248, 251, 255, 0.78);
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
+}
+
+html[data-theme="light"] .site-nav-mobile {
+  border-color: rgba(15, 23, 42, 0.1);
+  background: rgba(248, 251, 255, 0.96);
+}
+
+html[data-theme="light"] .theme-toggle .dark-icon {
+  display: none;
+}
+
+html[data-theme="light"] .theme-toggle .light-icon {
+  display: block;
+}
+
+html[data-theme="light"] .text-white,
+html[data-theme="light"] .text-slate-50,
+html[data-theme="light"] .text-slate-100,
+html[data-theme="light"] .text-slate-200 {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .text-slate-300,
+html[data-theme="light"] .text-slate-400,
+html[data-theme="light"] .text-slate-500 {
+  color: #475569 !important;
+}
+
+html[data-theme="light"] .text-cyan-50,
+html[data-theme="light"] .text-cyan-100,
+html[data-theme="light"] .text-cyan-200 {
+  color: #0e7490 !important;
+}
+
+html[data-theme="light"] .text-blue-100,
+html[data-theme="light"] .text-blue-200 {
+  color: #1d4ed8 !important;
+}
+
+html[data-theme="light"] .text-violet-100,
+html[data-theme="light"] .text-violet-200 {
+  color: #6d28d9 !important;
+}
+
+html[data-theme="light"] .text-emerald-100 {
+  color: #047857 !important;
+}
+
+html[data-theme="light"] .bg-slate-950,
+html[data-theme="light"] .bg-slate-900,
+html[data-theme="light"] [class*="bg-slate-950/"],
+html[data-theme="light"] [class*="bg-slate-900/"] {
+  background-color: rgba(255, 255, 255, 0.84) !important;
+}
+
+html[data-theme="light"] [class*="bg-[#05070d]"],
+html[data-theme="light"] [class*="bg-[#05070d]/"] {
+  background-color: rgba(248, 251, 255, 0.84) !important;
+}
+
+html[data-theme="light"] [class*="bg-white/"],
+html[data-theme="light"] [class*="bg-white["] {
+  background-color: rgba(15, 23, 42, 0.045) !important;
+}
+
+html[data-theme="light"] [class*="border-white/"] {
+  border-color: rgba(15, 23, 42, 0.12) !important;
+}
+
+html[data-theme="light"] .shadow-\[0_0_24px_rgba\(34\,211\,238\,0\.08\)\],
+html[data-theme="light"] .shadow-\[0_0_34px_rgba\(34\,211\,238\,0\.16\)\] {
+  box-shadow: 0 14px 34px rgba(8, 145, 178, 0.12) !important;
+}
+
+html[data-theme="light"] .project-visual-shell,
+html[data-theme="light"] .journey-dock,
+html[data-theme="light"] .testimonial-card {
+  background:
+    radial-gradient(circle at 18% 12%, rgba(34, 211, 238, 0.15), transparent 32%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(226, 244, 250, 0.74)) !important;
+}
+
+html[data-theme="light"] .project-visual-shell .text-white,
+html[data-theme="light"] .project-visual-shell .text-slate-100,
+html[data-theme="light"] .project-visual-shell .text-slate-200,
+html[data-theme="light"] .project-visual-shell .text-slate-300,
+html[data-theme="light"] .project-visual-shell .text-slate-400 {
+  color: #eaf8ff !important;
+}
+
+html[data-theme="light"] .project-visual-shell .bg-slate-950,
+html[data-theme="light"] .project-visual-shell [class*="bg-slate-950/"] {
+  background-color: rgba(2, 6, 23, 0.72) !important;
 }
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
