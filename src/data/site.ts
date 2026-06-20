@@ -171,7 +171,7 @@ export const projects: Project[] = [
       "Structured evidence around reviewability so instructors can inspect context before making decisions.",
     ],
     githubUrl: "https://github.com/ebbad-dev/Proctor-Ai",
-    codeStatus: "coming-soon",
+    codeStatus: "available",
     demoRoute: "/demos/proctorai",
     demoLabel: "Interactive Portfolio Demo",
     thumbnail: "/images/projects/proctorai-thumbnail.svg",
@@ -304,7 +304,7 @@ export const archiveProjects: ArchiveProject[] = [
     description: "A Netflix-style database project with structured subscriber, content, watch history, and database operation flows.",
     techStack: ["SQL", "Database Design", "Console App"],
     githubUrl: "https://github.com/ebbad-dev/Netlfix-Console",
-    codeStatus: "coming-soon",
+    codeStatus: "available",
     tags: ["Database", "Systems"],
   },
   {
@@ -313,7 +313,7 @@ export const archiveProjects: ArchiveProject[] = [
     description: "C++ text similarity engine using cosine similarity, Karp-Rabin rolling hash, k-shingles, stemming, and stopword removal.",
     techStack: ["C++", "Algorithms", "NLP Concepts"],
     githubUrl: "https://github.com/ebbad-dev/PlagiarismDetector",
-    codeStatus: "coming-soon",
+    codeStatus: "available",
     tags: ["Algorithms", "AI"],
   },
   {
@@ -322,7 +322,7 @@ export const archiveProjects: ArchiveProject[] = [
     description: "Socket-based client-server banking system with multi-client communication and transaction handling.",
     techStack: ["Java", "Sockets", "Multithreading"],
     githubUrl: "https://github.com/ebbad-dev/distributed-banking-system",
-    codeStatus: "coming-soon",
+    codeStatus: "available",
     tags: ["Systems", "Backend"],
   },
   {
@@ -331,7 +331,7 @@ export const archiveProjects: ArchiveProject[] = [
     description: "Database management system with role-based access, CRUD modules, evidence records, audit logs, and reports.",
     techStack: ["Java", "SQLite", "Database Design"],
     githubUrl: "https://github.com/ebbad-dev/Criminal-Database-Management-System",
-    codeStatus: "coming-soon",
+    codeStatus: "available",
     tags: ["Database", "Systems"],
   },
 ];

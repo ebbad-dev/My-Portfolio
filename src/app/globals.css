@@ -245,6 +245,54 @@ section[id] {
   opacity: 0.72;
 }
 
+.project-visual-shell {
+  transform: translateZ(0);
+}
+
+.project-visual-shimmer {
+  animation: projectShimmer 4.2s ease-in-out infinite;
+}
+
+.project-scan-sweep {
+  animation: projectScanSweep 2.6s ease-in-out infinite;
+}
+
+.project-meter {
+  position: relative;
+  overflow: hidden;
+}
+
+.project-meter::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  animation: projectMeterTravel 2.1s linear infinite;
+}
+
+.project-orbit {
+  animation: projectOrbitSpin 5.8s linear infinite;
+}
+
+.project-flow-line {
+  fill: none;
+  stroke: rgba(34, 211, 238, 0.45);
+  stroke-width: 1.35;
+  stroke-linecap: round;
+  stroke-dasharray: 7 10;
+  filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.42));
+  animation: projectDataFlow 2.4s linear infinite;
+}
+
+.project-flow-line.violet {
+  stroke: rgba(168, 85, 247, 0.48);
+  filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.42));
+}
+
+.project-node-pulse {
+  animation: projectNodePulse 2.8s ease-in-out infinite;
+}
+
 .testimonial-card {
   box-shadow:
     0 22px 70px rgba(0, 0, 0, 0.38),
@@ -507,6 +555,67 @@ section[id] {
   }
 }
 
+@keyframes projectShimmer {
+  0%,
+  20% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  45% {
+    opacity: 0.72;
+  }
+  70%,
+  100% {
+    transform: translateX(310%);
+    opacity: 0;
+  }
+}
+
+@keyframes projectScanSweep {
+  0%,
+  100% {
+    transform: translateY(-70%);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translateY(245%);
+    opacity: 0.8;
+  }
+}
+
+@keyframes projectMeterTravel {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes projectOrbitSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes projectDataFlow {
+  to {
+    stroke-dashoffset: -34;
+  }
+}
+
+@keyframes projectNodePulse {
+  0%,
+  100% {
+    transform: scale(0.94);
+    filter: saturate(1);
+  }
+  50% {
+    transform: scale(1.06);
+    filter: saturate(1.45);
+  }
+}
+
 @keyframes particleDrift {
   0%,
   100% {
@@ -552,6 +661,12 @@ section[id] {
   .journey-dock-svg-glow,
   .journey-dock-svg-shimmer,
   .journey-dock-pulse::after,
+  .project-visual-shimmer,
+  .project-scan-sweep,
+  .project-meter::after,
+  .project-orbit,
+  .project-flow-line,
+  .project-node-pulse,
   .premium-particles span {
     animation: none;
   }
