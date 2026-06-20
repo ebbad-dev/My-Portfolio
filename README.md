@@ -27,7 +27,7 @@ Missing links and assets are handled with clean unavailable states. Raw placehol
 ## Features
 
 - First-visit welcome intro with session memory
-- Generated intro modal using `public/videos/intro.mp4`
+- Intro video asset retained at `public/videos/intro.mp4`, with the public video UI disabled for now
 - Cinematic hero with profile image slot
 - Recruiter snapshot and 30-second summary
 - About section, resume section, and leadership journey
@@ -53,7 +53,9 @@ It sends `name`, `email`, `purpose`, and `message`, plus a subject and reply-to 
 
 ## Real voice intro video
 
-The intro video at `public/videos/intro.mp4` is generated from a real recorded video so the face movement and voice stay natural. By default the renderer reads:
+The intro video asset remains at `public/videos/intro.mp4`, but the public intro video UI is currently disabled through `siteConfig.introVideoAvailable` in `src/data/site.ts`. Set that flag back to `true` when the intro should be shown again.
+
+The video is generated from a real recorded video so the face movement and voice stay natural. By default the renderer reads:
 
 ```text
 C:\Users\HP\Downloads\VID-20260530-WA0046.mp4

@@ -226,9 +226,9 @@ a {
 .section-shell {
   position: relative;
   z-index: 1;
-  width: min(1180px, calc(100% - 2rem));
+  width: min(1100px, calc(100% - 2rem));
   margin-inline: auto;
-  padding-block: clamp(3.25rem, 7vw, 5.75rem);
+  padding-block: clamp(2.6rem, 5.8vw, 4.8rem);
 }
 
 section[id] {
@@ -254,14 +254,14 @@ section[id] {
 
 .hero-shell {
   min-height: calc(100svh - 4rem);
-  padding-block: clamp(2.35rem, 5vw, 4.5rem);
+  padding-block: clamp(1.9rem, 4vw, 3.6rem);
 }
 
 .journey-dock-section {
   position: relative;
   z-index: 3;
-  width: min(1180px, calc(100% - 1rem));
-  margin: -1.25rem auto 0;
+  width: min(1100px, calc(100% - 1rem));
+  margin: -1rem auto 0;
 }
 
 .journey-dock-shell {
@@ -346,11 +346,11 @@ section[id] {
 @media (max-height: 780px) and (min-width: 1024px) {
   .hero-shell {
     min-height: auto;
-    padding-block: 2rem;
+    padding-block: 1.45rem;
   }
 
   .section-shell {
-    padding-block: clamp(2.75rem, 6vw, 4.75rem);
+    padding-block: clamp(2.2rem, 4.8vw, 3.9rem);
   }
 }
 

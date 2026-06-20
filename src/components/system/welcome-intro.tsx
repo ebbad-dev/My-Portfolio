@@ -38,7 +38,7 @@ export function WelcomeIntro() {
                 <h2 className="mt-5 font-heading text-6xl font-bold text-white">Hello.</h2>
                 <p className="mt-4 text-2xl text-slate-200">I&apos;m Ebbad Ur Rehman.</p>
                 <p className="mx-auto mt-5 max-w-2xl leading-8 text-slate-300">
-                  Welcome to my engineering portfolio. Watch the short intro or jump straight into the projects, skills, demos, and systems I&apos;m building.
+                  Welcome to my engineering portfolio. Jump straight into the projects, skills, demos, and systems I&apos;m building.
                 </p>
                 <div className="mt-8 flex flex-wrap justify-center gap-3">
                   <button onClick={enter} className="rounded-full bg-brand-gradient px-6 py-3 font-semibold text-white shadow-glow">

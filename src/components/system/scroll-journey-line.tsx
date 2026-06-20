@@ -29,7 +29,7 @@ export function ScrollJourneyLine() {
   const { activeId, activeIndex, progress, foundIds, missingIds, debugEnabled, scrollToSection } = useActiveSection();
 
   return (
-    <nav className="pointer-events-none fixed left-[max(1.25rem,calc((100vw-1180px)/2-4rem))] top-24 z-10 hidden h-[calc(100vh-7rem)] w-16 lg:block" aria-label="Vertical portfolio journey navigation">
+    <nav className="pointer-events-none fixed left-[max(1.25rem,calc((100vw-1100px)/2-4rem))] top-24 z-10 hidden h-[calc(100vh-7rem)] w-16 lg:block" aria-label="Vertical portfolio journey navigation">
       <svg className="absolute inset-0 h-full w-full overflow-visible" viewBox={`0 0 64 ${VIEWBOX_HEIGHT}`} preserveAspectRatio="none" aria-hidden="true">
         <path d={pathD} stroke="rgba(148,163,184,0.18)" strokeWidth="2" fill="none" strokeLinecap="round" />
         <motion.path

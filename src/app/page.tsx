@@ -1,4 +1,4 @@
-import { CheckCircle2, Cpu, Download, ExternalLink, Mail, MessageCircle } from "lucide-react";
+import { CheckCircle2, Cpu, Download, ExternalLink, Mail, MessageCircle, Star } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button-link";
 import { SectionHeader } from "@/components/ui/section-header";
 import { ProjectCard } from "@/components/home/project-card";
@@ -43,10 +43,10 @@ export default function Home() {
           <div className="grid items-center gap-8 lg:grid-cols-[1.08fr_0.92fr] xl:gap-10">
             <div className="max-w-3xl">
               <p className="mb-4 font-heading text-lg italic text-cyan-100 drop-shadow-[0_0_14px_rgba(34,211,238,0.25)]">Hello, I&apos;m</p>
-              <h1 className="font-heading text-[clamp(3.25rem,8vw,7.35rem)] font-bold leading-[0.94] text-white">
+              <h1 className="font-heading text-[clamp(3rem,7vw,6.45rem)] font-bold leading-[0.94] text-white">
                 Ebbad <span className="text-gradient">Ur Rehman</span>
               </h1>
-              <h2 className="mt-4 font-heading text-[clamp(1.75rem,3.5vw,3.2rem)] font-bold leading-tight text-white">
+              <h2 className="mt-4 font-heading text-[clamp(1.55rem,3vw,2.75rem)] font-bold leading-tight text-white">
                 Software <span className="text-gradient">Engineer.</span>
               </h2>
               <p className="mono-label mt-4 text-slate-300">Full-Stack Developer / AI / ML / Databases / Systems</p>
@@ -246,36 +246,34 @@ export default function Home() {
       </section>
 
       <section id="testimonials" data-section-id="testimonials" className="section-shell">
-        <div className="mb-12 text-center">
+        <div className="mb-9 text-center">
           <p className="mono-label mb-4 justify-center">Testimonials</p>
-          <h2 className="mx-auto max-w-4xl font-heading text-[clamp(3rem,7vw,6.7rem)] font-bold leading-[0.95] text-white">
+          <h2 className="mx-auto max-w-4xl font-heading text-[clamp(2.55rem,5.2vw,4.9rem)] font-bold leading-[0.98] text-white">
             Testimonials
           </h2>
         </div>
         <div className="grid gap-5 lg:grid-cols-3">
           {testimonials.map((item) => (
-            <article key={item.initials} className="testimonial-card glass-panel premium-card relative min-h-[25rem] overflow-hidden rounded-3xl p-6">
-              <div className="pointer-events-none absolute left-8 top-3 font-heading text-8xl font-black leading-none text-cyan-300/[0.06]" aria-hidden="true">
+            <article key={item.initials} className="testimonial-card glass-panel premium-card relative min-h-[22rem] overflow-hidden rounded-3xl p-5">
+              <div className="pointer-events-none absolute left-6 top-2 font-heading text-8xl font-black leading-none text-cyan-300/[0.055]" aria-hidden="true">
                 &ldquo;
               </div>
               <div className="relative flex h-full flex-col">
-                <div className="mb-6 flex items-center justify-between gap-3">
-                  <span className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-cyan-100">
-                    {item.proof}
-                  </span>
+                <div className="mb-5 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-1.5" aria-label={`${item.rating} out of 5 stars`}>
+                    {Array.from({ length: item.rating }).map((_, index) => (
+                      <Star key={index} size={15} className="fill-cyan-200 text-cyan-200 drop-shadow-[0_0_10px_rgba(34,211,238,0.32)]" />
+                    ))}
+                  </div>
                   <span className="h-px flex-1 bg-gradient-to-r from-cyan-300/20 via-blue-400/20 to-transparent" aria-hidden="true" />
                 </div>
-                {item.kind === "approved" ? (
-                  <p className="relative text-base italic leading-8 text-slate-100">&ldquo;{item.quote}&rdquo;</p>
-                ) : (
-                  <p className="relative text-base leading-8 text-slate-300">{item.note}</p>
-                )}
-                <div className="mt-auto flex items-center gap-4 pt-8">
+                <p className="relative text-[0.98rem] italic leading-7 text-slate-100">&ldquo;{item.quote}&rdquo;</p>
+                <div className="mt-auto flex items-center gap-4 pt-7">
                   <div className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-brand-gradient font-heading text-sm font-bold text-white shadow-[0_0_24px_rgba(34,211,238,0.2)]">
                     {item.initials}
                   </div>
                   <div>
-                    <h3 className="font-heading text-lg font-semibold text-white">{item.kind === "approved" ? item.name : item.title}</h3>
+                    <h3 className="font-heading text-lg font-semibold text-white">{item.name}</h3>
                     <p className="mt-0.5 text-sm text-slate-400">{item.role}</p>
                   </div>
                 </div>
@@ -384,7 +382,7 @@ export default function Home() {
       </section>
 
       <footer className="border-t border-white/10 px-4 py-10">
-        <div className="mx-auto flex w-[min(1180px,100%)] flex-col gap-4 text-sm text-slate-400 md:flex-row md:items-center md:justify-between">
+        <div className="mx-auto flex w-[min(1100px,100%)] flex-col gap-4 text-sm text-slate-400 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="font-heading text-lg font-semibold text-white">{siteConfig.brandLine}</p>
             <p className="mt-1">Built with Next.js, TypeScript, Tailwind CSS, Three.js, and curiosity.</p>

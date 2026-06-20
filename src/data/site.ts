@@ -82,7 +82,7 @@ export const siteConfig = {
   resumeAvailable: true,
   profileImagePath: "/images/profile/profile-1.jpeg",
   introVideoPath: "/videos/intro.mp4",
-  introVideoAvailable: true,
+  introVideoAvailable: false,
   formspreeEndpoint: "https://formspree.io/f/mqeogggp",
 };
 
@@ -431,49 +431,38 @@ export const journey = [
   ["Current Direction", "Focused on full-stack development, AI systems, backend engineering, database systems, and real-world software products."],
 ];
 
-export type TestimonialCard =
-  | {
-      kind: "approved";
-      name: string;
-      initials: string;
-      role: string;
-      quote: string;
-      proof: string;
-    }
-  | {
-      kind: "placeholder";
-      title: string;
-      initials: string;
-      role: string;
-      note: string;
-      proof: string;
-    };
+export type TestimonialCard = {
+  name: string;
+  initials: string;
+  role: string;
+  quote: string;
+  rating: 5;
+};
 
 export const testimonials: TestimonialCard[] = [
   {
-    kind: "approved",
     name: "Saad Faisal",
     initials: "SF",
     role: "CEO, Sanestix",
-    proof: "Approved reference",
+    rating: 5,
     quote:
       "Ebbad shows the kind of curiosity and ownership that stands out early. He approaches tasks with a serious mindset, asks thoughtful questions, and tries to improve the final outcome instead of only completing the minimum requirement. His ability to combine technical learning with clear communication makes him someone with strong growth potential.",
   },
   {
-    kind: "placeholder",
-    title: "Reference Available",
-    initials: "RA",
-    role: "Academic / project collaborators",
-    proof: "On request",
-    note: "Additional references can be shared privately when a recruiter or collaborator needs more context.",
+    name: "Dr. Irfan Masood",
+    initials: "IM",
+    role: "Director, NexVis Tech",
+    rating: 5,
+    quote:
+      "Ebbad developed a robust and well-structured Student Management API for our system. He quickly understood our requirements, delivered clean and scalable code, and maintained excellent communication throughout the project. His technical expertise and professionalism made the entire development process smooth and efficient.",
   },
   {
-    kind: "placeholder",
-    title: "More Feedback Coming Soon",
-    initials: "MF",
-    role: "Future approved testimonials",
-    proof: "Pending approval",
-    note: "This slot is intentionally held for a real approved testimonial instead of showing invented praise.",
+    name: "Sarah Rehman",
+    initials: "SR",
+    role: "Upwork Client",
+    rating: 5,
+    quote:
+      "Working with Ebbad was a great experience. He was responsive, detail-oriented, and delivered high-quality work within the agreed timeline. His ability to solve problems efficiently and provide reliable solutions exceeded our expectations. I would happily work with him again on future projects.",
   },
 ];
 
@@ -522,6 +511,22 @@ export const chatbotKnowledge = {
     "What is MirrorMind?",
     "Is Ebbad available for internships?",
     "How can I contact him?",
+    "What do testimonials say?",
+    "Tell me about the Student Management API",
+  ],
+  promptGroups: [
+    {
+      label: "Recruiter",
+      prompts: ["Who is Ebbad?", "Is Ebbad available for internships?", "What do testimonials say?"],
+    },
+    {
+      label: "Projects",
+      prompts: ["Show me his best projects", "What is TeleTrack?", "Tell me about the Student Management API"],
+    },
+    {
+      label: "Contact",
+      prompts: ["How can I contact him?", "What is his GitHub?", "Can I view his resume?"],
+    },
   ],
   answers: [
     {
@@ -555,14 +560,34 @@ export const chatbotKnowledge = {
         "Ebbad works with Python, Java, C++, SQL, JavaScript, TypeScript, React, Next.js, Node.js, Express.js, Flask, FastAPI concepts, MySQL, SQL Server, SQLite, OpenCV, REST APIs, Git, GitHub, and related tools.",
     },
     {
+      triggers: ["student management", "student api", "student result", "result api", "nexvis", "irfan", "masood"],
+      answer:
+        "Dr. Irfan Masood, Director at NexVis Tech, said Ebbad developed a robust and well-structured Student Management API, quickly understood requirements, delivered clean scalable code, and communicated professionally throughout the project.",
+    },
+    {
       triggers: ["internship", "available", "hire", "collaboration"],
       answer:
         "Yes. The portfolio presents Ebbad as open to internships, collaborations, freelance work, and technical project opportunities.",
     },
     {
-      triggers: ["testimonial", "reference", "saad"],
+      triggers: ["testimonial", "testimonials", "reference", "feedback", "saad", "sarah", "upwork", "client"],
       answer:
-        "The portfolio includes an approved testimonial from Saad Faisal, CEO of Sanestix, highlighting Ebbad's curiosity, ownership, thoughtful questions, and clear communication.",
+        "The portfolio includes three public testimonials: Saad Faisal from Sanestix praised Ebbad's curiosity, ownership, thoughtful questions, and communication; Dr. Irfan Masood from NexVis Tech praised his Student Management API work; and Sarah Rehman, an Upwork client, praised his responsiveness, detail orientation, timeline delivery, and problem solving.",
+    },
+    {
+      triggers: ["professionalism", "communication", "timeline", "responsive", "expectations", "reliable"],
+      answer:
+        "Client feedback highlights Ebbad's communication, responsiveness, professionalism, ability to understand requirements quickly, and delivery of reliable work within agreed timelines.",
+    },
+    {
+      triggers: ["github", "repository", "code"],
+      answer:
+        "Ebbad's GitHub profile is linked in the portfolio, and available project code is shown only when the public repository has code. The top navigation also links to the portfolio repository as Star Repository.",
+    },
+    {
+      triggers: ["resume", "cv"],
+      answer:
+        "The portfolio includes a resume link that opens the PDF at /resume/ebbad-resume.pdf in a new tab.",
     },
   ],
 };
