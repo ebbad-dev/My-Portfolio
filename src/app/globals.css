@@ -203,6 +203,12 @@ html[data-theme="light"] .text-emerald-100 {
   color: #047857 !important;
 }
 
+html[data-theme="light"] .bg-brand-gradient,
+html[data-theme="light"] .bg-brand-gradient.text-white,
+html[data-theme="light"] .bg-brand-gradient .text-white {
+  color: #ffffff !important;
+}
+
 html[data-theme="light"] .bg-slate-950,
 html[data-theme="light"] .bg-slate-900,
 html[data-theme="light"] [class*="bg-slate-950/"],
