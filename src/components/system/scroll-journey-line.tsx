@@ -33,6 +33,19 @@ function getDistanceSquared(a: DOMPoint, b: { x: number; y: number }) {
   return dx * dx + dy * dy;
 }
 
+function getInterpolatedPathProgress(progress: number, nodeProgress: number[]) {
+  if (nodeProgress.length <= 1) return progress;
+
+  const scaledProgress = Math.max(0, Math.min(nodeProgress.length - 1, progress * (nodeProgress.length - 1)));
+  const lowerIndex = Math.floor(scaledProgress);
+  const upperIndex = Math.min(nodeProgress.length - 1, lowerIndex + 1);
+  const localProgress = scaledProgress - lowerIndex;
+  const lowerProgress = nodeProgress[lowerIndex] ?? progress;
+  const upperProgress = nodeProgress[upperIndex] ?? lowerProgress;
+
+  return lowerProgress + (upperProgress - lowerProgress) * localProgress;
+}
+
 export function ScrollJourneyLine() {
   const reduce = useReducedMotion();
   const { activeId, activeIndex, progress, foundIds, missingIds, debugEnabled, scrollToSection } = useActiveSection();
@@ -69,7 +82,7 @@ export function ScrollJourneyLine() {
     setPathMetrics({ totalLength, nodeProgress });
   }, []);
 
-  const targetProgress = pathMetrics.nodeProgress[activeIndex] ?? progress;
+  const targetProgress = getInterpolatedPathProgress(progress, pathMetrics.nodeProgress);
   const targetLength = useMemo(
     () => Math.max(0, Math.min(pathMetrics.totalLength, pathMetrics.totalLength * targetProgress)),
     [pathMetrics.totalLength, targetProgress],
@@ -159,6 +172,7 @@ export function ScrollJourneyLine() {
         <div className="pointer-events-none absolute left-12 top-0 w-64 rounded-2xl border border-cyan-300/20 bg-slate-950/92 p-3 font-mono text-[11px] leading-5 text-cyan-50 shadow-[0_0_30px_rgba(34,211,238,0.16)]">
           <p>Active ID: {activeId}</p>
           <p>Active Index: {activeIndex}</p>
+          <p>Progress: {progress.toFixed(3)}</p>
           <p>Found Sections: {foundIds.length ? foundIds.join(", ") : "none"}</p>
           <p>Missing Sections: {missingIds.length ? missingIds.join(", ") : "none"}</p>
         </div>

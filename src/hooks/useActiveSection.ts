@@ -40,6 +40,10 @@ type MeasuredSection = {
 
 const ActiveSectionContext = createContext<ActiveSectionState>(initialState);
 
+function clamp(value: number, min = 0, max = 1) {
+  return Math.min(max, Math.max(min, value));
+}
+
 function measureSections(): MeasuredSection[] {
   return PORTFOLIO_SECTIONS.map((section, index) => {
     const element = document.querySelector<HTMLElement>(`[data-section-id="${section.id}"]`);
@@ -126,10 +130,25 @@ function getSectionState(
     }
   }
 
+  let continuousProgress = lastIndex > 0 ? activeIndex / lastIndex : 0;
+
+  if (lastIndex > 0) {
+    const previousByTop = [...availableSections].reverse().find((section) => activationY >= section.top) ?? availableSections[0];
+    const nextByTop = availableSections.find((section) => section.index > previousByTop.index && section.top > previousByTop.top);
+
+    if (nextByTop) {
+      const sectionSpan = Math.max(nextByTop.top - previousByTop.top, 1);
+      const segmentProgress = clamp((activationY - previousByTop.top) / sectionSpan);
+      continuousProgress = clamp((previousByTop.index + segmentProgress * (nextByTop.index - previousByTop.index)) / lastIndex);
+    } else {
+      continuousProgress = clamp(previousByTop.index / lastIndex);
+    }
+  }
+
   return {
     activeId: PORTFOLIO_SECTIONS[activeIndex].id,
     activeIndex,
-    progress: lastIndex > 0 ? activeIndex / lastIndex : 0,
+    progress: continuousProgress,
     foundIds,
     missingIds,
     debugEnabled,
