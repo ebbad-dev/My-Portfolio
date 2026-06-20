@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { PORTFOLIO_SECTIONS } from "@/data/portfolioSections";
 import { useActiveSection } from "@/hooks/useActiveSection";
@@ -20,28 +21,95 @@ const dotPositions = [
   { x: 32, y: 704 },
 ] as const;
 
+const fallbackNodeProgress = dotPositions.map((_, index) => index / Math.max(dotPositions.length - 1, 1));
+
 function getDotPosition(index: number) {
   return dotPositions[index] ?? dotPositions[dotPositions.length - 1];
+}
+
+function getDistanceSquared(a: DOMPoint, b: { x: number; y: number }) {
+  const dx = a.x - b.x;
+  const dy = a.y - b.y;
+  return dx * dx + dy * dy;
 }
 
 export function ScrollJourneyLine() {
   const reduce = useReducedMotion();
   const { activeId, activeIndex, progress, foundIds, missingIds, debugEnabled, scrollToSection } = useActiveSection();
+  const measuringPathRef = useRef<SVGPathElement | null>(null);
+  const [pathMetrics, setPathMetrics] = useState({
+    totalLength: 1,
+    nodeProgress: fallbackNodeProgress,
+  });
+
+  useEffect(() => {
+    const path = measuringPathRef.current;
+    if (!path) return;
+
+    const totalLength = path.getTotalLength();
+    const samples = 1200;
+    const nodeProgress = dotPositions.map((dot) => {
+      let closestLength = 0;
+      let closestDistance = Number.POSITIVE_INFINITY;
+
+      for (let index = 0; index <= samples; index += 1) {
+        const length = (index / samples) * totalLength;
+        const point = path.getPointAtLength(length);
+        const distance = getDistanceSquared(point, dot);
+
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestLength = length;
+        }
+      }
+
+      return closestLength / totalLength;
+    });
+
+    setPathMetrics({ totalLength, nodeProgress });
+  }, []);
+
+  const targetProgress = pathMetrics.nodeProgress[activeIndex] ?? progress;
+  const targetLength = useMemo(
+    () => Math.max(0, Math.min(pathMetrics.totalLength, pathMetrics.totalLength * targetProgress)),
+    [pathMetrics.totalLength, targetProgress],
+  );
+  const strokeDashoffset = pathMetrics.totalLength - targetLength;
 
   return (
     <nav className="pointer-events-none fixed left-[max(1.25rem,calc((100vw-1100px)/2-4rem))] top-24 z-10 hidden h-[calc(100vh-7rem)] w-16 lg:block" aria-label="Vertical portfolio journey navigation">
       <svg className="absolute inset-0 h-full w-full overflow-visible" viewBox={`0 0 64 ${VIEWBOX_HEIGHT}`} preserveAspectRatio="none" aria-hidden="true">
-        <path d={pathD} stroke="rgba(148,163,184,0.18)" strokeWidth="2" fill="none" strokeLinecap="round" />
+        <path ref={measuringPathRef} d={pathD} stroke="rgba(148,163,184,0.18)" strokeWidth="2" fill="none" strokeLinecap="round" />
+        <motion.path
+          d={pathD}
+          stroke="url(#journey-line-gradient)"
+          strokeWidth="9"
+          fill="none"
+          strokeLinecap="round"
+          strokeDasharray={pathMetrics.totalLength}
+          strokeDashoffset={strokeDashoffset}
+          initial={false}
+          animate={{ strokeDashoffset }}
+          transition={{ duration: reduce ? 0 : 0.32, ease: "easeOut" }}
+          opacity="0.3"
+          style={{
+            filter: "blur(7px) drop-shadow(0 0 20px rgba(34,211,238,0.48))",
+          }}
+        />
         <motion.path
           d={pathD}
           stroke="url(#journey-line-gradient)"
           strokeWidth="3"
           fill="none"
           strokeLinecap="round"
-          pathLength={1}
+          strokeDasharray={pathMetrics.totalLength}
+          strokeDashoffset={strokeDashoffset}
           initial={false}
-          animate={{ pathLength: reduce ? progress : progress }}
-          transition={{ duration: reduce ? 0 : 0.28, ease: "easeOut" }}
+          animate={{ strokeDashoffset }}
+          transition={{ duration: reduce ? 0 : 0.32, ease: "easeOut" }}
+          style={{
+            filter: "drop-shadow(0 0 10px rgba(34,211,238,0.55)) drop-shadow(0 0 18px rgba(139,92,246,0.24))",
+          }}
         />
         <defs>
           <linearGradient id="journey-line-gradient" x1="0" x2="1" y1="0" y2="1">
