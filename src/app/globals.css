@@ -294,9 +294,67 @@ section[id] {
   position: absolute;
   left: 3.1rem;
   right: 3.1rem;
-  top: 2.05rem;
-  height: 2px;
+  top: 1.35rem;
+  height: 24px;
   overflow: visible;
+}
+
+.journey-dock-line-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.journey-dock-svg-track,
+.journey-dock-svg-progress,
+.journey-dock-svg-glow,
+.journey-dock-svg-shimmer {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.journey-dock-svg-track {
+  stroke: rgba(34, 211, 238, 0.38);
+  stroke-width: 3;
+  stroke-dasharray: 9 17;
+  opacity: 0.72;
+  filter: drop-shadow(0 0 7px rgba(34, 211, 238, 0.38)) drop-shadow(0 0 16px rgba(59, 130, 246, 0.2));
+  animation: journeySvgDash 1.55s linear infinite, journeyTrackBreath 2.8s ease-in-out infinite;
+}
+
+.journey-dock-svg-glow {
+  stroke: url("#journey-dock-progress-gradient");
+  stroke-width: 14;
+  stroke-dasharray: 9 17;
+  opacity: 0.3;
+  filter: blur(8px) drop-shadow(0 0 20px rgba(34, 211, 238, 0.72)) drop-shadow(0 0 34px rgba(139, 92, 246, 0.36));
+  animation: journeySvgDash 1s linear infinite, journeyProgressGlow 1.8s ease-in-out infinite;
+}
+
+.journey-dock-svg-progress {
+  stroke: url("#journey-dock-progress-gradient");
+  stroke-width: 3.6;
+  stroke-dasharray: 9 17;
+  filter: drop-shadow(0 0 9px rgba(34, 211, 238, 0.8)) drop-shadow(0 0 18px rgba(59, 130, 246, 0.44));
+  animation: journeySvgDash 1s linear infinite, journeyProgressGlow 1.8s ease-in-out infinite;
+}
+
+.journey-dock-svg-shimmer {
+  stroke: rgba(224, 242, 254, 0.82);
+  stroke-width: 7;
+  stroke-dasharray: 1 130;
+  opacity: 0.52;
+  filter: blur(3px) drop-shadow(0 0 18px rgba(34, 211, 238, 0.72));
+  animation: journeyShimmerTravel 2.25s linear infinite;
+}
+
+.journey-dock-svg-pulse {
+  fill: #e0f2fe;
+  stroke: rgba(224, 242, 254, 0.88);
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.95)) drop-shadow(0 0 22px rgba(59, 130, 246, 0.52)) drop-shadow(0 0 34px rgba(139, 92, 246, 0.34));
 }
 
 .journey-dock-line-track,
@@ -401,6 +459,31 @@ section[id] {
   }
 }
 
+@keyframes journeySvgDash {
+  to {
+    stroke-dashoffset: -26;
+  }
+}
+
+@keyframes journeyTrackBreath {
+  0%,
+  100% {
+    opacity: 0.58;
+  }
+  50% {
+    opacity: 0.92;
+  }
+}
+
+@keyframes journeyShimmerTravel {
+  from {
+    stroke-dashoffset: 140;
+  }
+  to {
+    stroke-dashoffset: -1000;
+  }
+}
+
 @keyframes journeyProgressGlow {
   0%,
   100% {
@@ -464,6 +547,10 @@ section[id] {
 
   .journey-dock-line-track,
   .journey-dock-line-progress,
+  .journey-dock-svg-track,
+  .journey-dock-svg-progress,
+  .journey-dock-svg-glow,
+  .journey-dock-svg-shimmer,
   .journey-dock-pulse::after,
   .premium-particles span {
     animation: none;
