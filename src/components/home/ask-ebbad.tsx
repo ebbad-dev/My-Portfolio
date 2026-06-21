@@ -110,6 +110,11 @@ export function AskEbbad({
             <p className={cn("mt-2 max-w-xl text-sm leading-6 text-slate-400", compact && "hidden", compactPanel && "text-xs leading-5")}>
               Recruiter-ready answers from approved portfolio data only. Unknown details fall back honestly.
             </p>
+            {compactPanel ? (
+              <p className="mt-1 max-w-xl text-[11px] leading-5 text-cyan-100/70">
+                Powered by curated portfolio knowledge, designed to help recruiters and collaborators find answers faster.
+              </p>
+            ) : null}
           </div>
           <span className={cn("inline-flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1.5 text-xs font-semibold text-emerald-100", compact && "gap-1 px-2 py-1 text-[10px]")}>
             <ShieldCheck size={compact ? 12 : 14} /> Verified

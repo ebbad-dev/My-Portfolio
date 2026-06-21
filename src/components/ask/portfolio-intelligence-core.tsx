@@ -153,13 +153,31 @@ export function PortfolioIntelligenceCore({ status = "idle" }: { status?: AskCor
           <span className="core-orbit core-orbit-b" />
           <span className="core-orbit core-orbit-c" />
         </div>
-        <div ref={coreRef} className="core-nucleus relative h-44 w-44 max-[420px]:h-36 max-[420px]:w-36">
-          <span className="core-shell" />
-          <span className="core-inner" />
-          <span className="core-highlight" />
+        <div ref={coreRef} className="core-prism relative h-48 w-40 max-[420px]:h-40 max-[420px]:w-32">
           <span className="core-signal core-signal-a" />
           <span className="core-signal core-signal-b" />
+          <span className="core-prism-shadow" />
+          <span className="core-prism-face core-prism-front" />
+          <span className="core-prism-face core-prism-left" />
+          <span className="core-prism-face core-prism-right" />
+          <span className="core-prism-face core-prism-top" />
+          <span className="core-prism-edge core-prism-edge-a" />
+          <span className="core-prism-edge core-prism-edge-b" />
+          <span className="core-prism-edge core-prism-edge-c" />
+          <span className="core-prism-window" />
+          <span className="core-prism-nucleus" />
+          <span className="core-prism-scan" />
+          <span className="core-prism-node core-prism-node-a" />
+          <span className="core-prism-node core-prism-node-b" />
+          <span className="core-prism-node core-prism-node-c" />
         </div>
+      </div>
+
+      <div className="pointer-events-none absolute inset-6 z-10 hidden sm:block">
+        <span className="core-fragment core-fragment-a" />
+        <span className="core-fragment core-fragment-b" />
+        <span className="core-fragment core-fragment-c" />
+        <span className="core-fragment core-fragment-d" />
       </div>
 
       <div className="absolute inset-4 z-20 grid pointer-events-none grid-cols-2 content-between gap-2">

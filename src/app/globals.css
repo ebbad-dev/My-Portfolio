@@ -458,7 +458,7 @@ html[data-theme="light"] .project-visual-shell [class*="bg-slate-950/"] {
 }
 
 .core-orbit-stack,
-.core-nucleus {
+.core-prism {
   transform-style: preserve-3d;
   will-change: transform;
 }
@@ -486,41 +486,202 @@ html[data-theme="light"] .project-visual-shell [class*="bg-slate-950/"] {
   border-color: rgba(59, 130, 246, 0.22);
 }
 
-.core-shell,
-.core-inner,
-.core-highlight,
+.core-prism-shadow,
+.core-prism-face,
+.core-prism-edge,
+.core-prism-window,
+.core-prism-nucleus,
+.core-prism-scan,
+.core-prism-node,
+.core-fragment,
 .core-signal {
   position: absolute;
-  border-radius: 999px;
 }
 
-.core-shell {
-  inset: 0;
-  border: 1px solid rgba(207, 250, 254, 0.34);
+.core-prism-shadow {
+  inset: 13% 4% 6%;
+  border-radius: 34% 34% 26% 26%;
+  background: radial-gradient(ellipse at center, rgba(34, 211, 238, 0.28), transparent 58%);
+  filter: blur(20px);
+  transform: translateY(28px) scaleX(1.18);
+}
+
+.core-prism-face {
+  border: 1px solid rgba(207, 250, 254, 0.26);
   background:
-    radial-gradient(circle at 34% 26%, rgba(255, 255, 255, 0.86), transparent 10%),
-    radial-gradient(circle at 46% 42%, rgba(34, 211, 238, 0.72), rgba(14, 165, 233, 0.34) 24%, rgba(15, 23, 42, 0.88) 66%);
+    linear-gradient(145deg, rgba(255, 255, 255, 0.16), transparent 24%),
+    linear-gradient(160deg, rgba(34, 211, 238, 0.38), rgba(59, 130, 246, 0.16) 44%, rgba(139, 92, 246, 0.22));
   box-shadow:
-    0 0 55px rgba(34, 211, 238, 0.32),
-    inset 0 0 32px rgba(139, 92, 246, 0.22),
-    inset 0 0 68px rgba(2, 6, 23, 0.62);
+    inset 0 0 28px rgba(34, 211, 238, 0.18),
+    inset 0 0 52px rgba(2, 6, 23, 0.58),
+    0 0 44px rgba(34, 211, 238, 0.24);
+  backdrop-filter: blur(10px);
 }
 
-.core-inner {
-  inset: 21%;
-  background: radial-gradient(circle at 50% 50%, rgba(34, 211, 238, 0.96), rgba(139, 92, 246, 0.42) 48%, transparent 70%);
-  filter: blur(1px);
+.core-prism-front {
+  inset: 5% 8% 8%;
+  clip-path: polygon(50% 0, 92% 22%, 82% 100%, 18% 100%, 8% 22%);
+}
+
+.core-prism-left {
+  inset: 13% 53% 13% 0;
+  clip-path: polygon(100% 0, 100% 100%, 18% 82%, 0 24%);
+  opacity: 0.62;
+  transform: translateX(-2px) skewY(-4deg);
+}
+
+.core-prism-right {
+  inset: 13% 0 13% 53%;
+  clip-path: polygon(0 0, 100% 24%, 82% 82%, 0 100%);
+  opacity: 0.58;
+  transform: translateX(2px) skewY(4deg);
+}
+
+.core-prism-top {
+  inset: 0 16% 70%;
+  clip-path: polygon(50% 0, 100% 58%, 50% 100%, 0 58%);
+  opacity: 0.74;
+}
+
+.core-prism-edge {
+  width: 2px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(236, 254, 255, 0.95), rgba(34, 211, 238, 0.54), rgba(139, 92, 246, 0.18));
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.62);
+  transform-origin: top;
+}
+
+.core-prism-edge-a {
+  left: 50%;
+  top: 3%;
+  height: 86%;
+}
+
+.core-prism-edge-b {
+  left: 14%;
+  top: 20%;
+  height: 74%;
+  transform: rotate(-6deg);
+}
+
+.core-prism-edge-c {
+  right: 14%;
+  top: 20%;
+  height: 74%;
+  transform: rotate(6deg);
+}
+
+.core-prism-window {
+  inset: 34% 22% 34%;
+  border: 1px solid rgba(34, 211, 238, 0.32);
+  border-radius: 1.25rem;
+  background:
+    linear-gradient(90deg, rgba(34, 211, 238, 0.1), rgba(139, 92, 246, 0.12)),
+    rgba(2, 6, 23, 0.38);
+  box-shadow: inset 0 0 20px rgba(34, 211, 238, 0.12);
+}
+
+.core-prism-nucleus {
+  inset: 39% 38%;
+  border-radius: 999px;
+  background: radial-gradient(circle at 38% 30%, #ecfeff, #22d3ee 22%, #8b5cf6 62%, transparent 72%);
+  box-shadow:
+    0 0 24px rgba(34, 211, 238, 0.8),
+    0 0 44px rgba(139, 92, 246, 0.34);
   animation: corePulse 3.8s ease-in-out infinite;
 }
 
-.core-highlight {
-  inset: 13% 18% 58% 24%;
-  background: linear-gradient(120deg, rgba(255, 255, 255, 0.72), transparent);
-  opacity: 0.62;
-  filter: blur(1px);
+.core-prism-scan {
+  inset: 18% 18% 12%;
+  clip-path: polygon(50% 0, 92% 22%, 82% 100%, 18% 100%, 8% 22%);
+  background: linear-gradient(180deg, transparent 0 42%, rgba(34, 211, 238, 0.28) 48%, transparent 56% 100%);
+  animation: coreScan 4.6s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+
+.core-prism-node {
+  height: 0.48rem;
+  width: 0.48rem;
+  border-radius: 999px;
+  background: #67e8f9;
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.88);
+}
+
+.core-prism-node-a {
+  left: 25%;
+  top: 30%;
+}
+
+.core-prism-node-b {
+  right: 24%;
+  top: 50%;
+}
+
+.core-prism-node-c {
+  bottom: 18%;
+  left: 48%;
+}
+
+.core-fragment {
+  height: 2.2rem;
+  width: 5.8rem;
+  border: 1px solid rgba(34, 211, 238, 0.16);
+  border-radius: 1rem;
+  background: rgba(15, 23, 42, 0.52);
+  box-shadow: 0 0 24px rgba(34, 211, 238, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.core-fragment::before,
+.core-fragment::after {
+  position: absolute;
+  content: "";
+  border-radius: 999px;
+}
+
+.core-fragment::before {
+  left: 0.75rem;
+  top: 0.78rem;
+  height: 0.42rem;
+  width: 0.42rem;
+  background: #22d3ee;
+  box-shadow: 0 0 14px rgba(34, 211, 238, 0.75);
+}
+
+.core-fragment::after {
+  left: 1.6rem;
+  right: 0.8rem;
+  top: 0.92rem;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(34, 211, 238, 0.62), transparent);
+}
+
+.core-fragment-a {
+  left: 4%;
+  top: 24%;
+  transform: rotate(-6deg);
+}
+
+.core-fragment-b {
+  right: 3%;
+  top: 18%;
+  transform: rotate(5deg);
+}
+
+.core-fragment-c {
+  bottom: 24%;
+  left: 8%;
+  transform: rotate(4deg);
+}
+
+.core-fragment-d {
+  bottom: 19%;
+  right: 7%;
+  transform: rotate(-5deg);
 }
 
 .core-signal {
+  border-radius: 1.35rem;
   border: 1px solid rgba(34, 211, 238, 0.24);
 }
 
@@ -1033,6 +1194,18 @@ section[id] {
   }
 }
 
+@keyframes coreScan {
+  0%,
+  100% {
+    opacity: 0.16;
+    transform: translateY(-18%);
+  }
+  50% {
+    opacity: 0.72;
+    transform: translateY(18%);
+  }
+}
+
 @keyframes coreSignal {
   0% {
     opacity: 0.34;
@@ -1086,7 +1259,8 @@ section[id] {
   .core-panel::after,
   .core-chip,
   .core-avatar::after,
-  .core-inner,
+  .core-prism-nucleus,
+  .core-prism-scan,
   .core-signal,
   .premium-particles span {
     animation: none;
