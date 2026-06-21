@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { PremiumRobotSkeleton } from "@/components/ask/premium-robot-skeleton";
 
 export const DynamicSkillGlobe = dynamic(() => import("@/components/home/skill-globe").then((module) => module.SkillGlobe), {
   ssr: false,
@@ -24,4 +25,9 @@ export const DynamicAskEbbad = dynamic(() => import("@/components/home/ask-ebbad
       Ask Ebbad is getting ready. The floating chat button is available anytime.
     </div>
   ),
+});
+
+export const DynamicAskEbbadRobot = dynamic(() => import("@/components/ask/ask-ebbad-robot").then((module) => module.AskEbbadRobot), {
+  ssr: false,
+  loading: () => <PremiumRobotSkeleton />,
 });

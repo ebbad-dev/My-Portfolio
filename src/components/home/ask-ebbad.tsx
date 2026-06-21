@@ -5,13 +5,14 @@ import { Bot, CheckCircle2, RotateCcw, Send, ShieldCheck, Sparkles } from "lucid
 import { chatbotKnowledge } from "@/data/site";
 import { chatbotModes, type ChatbotMode } from "@/lib/chatbot";
 import { cn } from "@/lib/utils";
+import type { AskRobotStatus } from "@/components/ask/types";
 
 type ChatMessage = {
   role: "assistant" | "user";
   text: string;
 };
 
-export function AskEbbad({ compact = false }: { compact?: boolean }) {
+export function AskEbbad({ compact = false, onStatusChange }: { compact?: boolean; onStatusChange?: (status: AskRobotStatus) => void }) {
   const [mode, setMode] = useState<ChatbotMode>("Recruiter Mode");
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,6 +22,7 @@ export function AskEbbad({ compact = false }: { compact?: boolean }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const messagesRef = useRef<HTMLDivElement>(null);
   const latestMessageRef = useRef<HTMLDivElement>(null);
+  const statusTimerRef = useRef<number | null>(null);
 
   const promptGroups = useMemo(() => chatbotKnowledge.promptGroups || [{ label: "Suggested", prompts: chatbotKnowledge.suggestedPrompts }], []);
   const compactPrompts = useMemo(() => promptGroups.flatMap((group) => group.prompts).slice(0, 6), [promptGroups]);
@@ -36,10 +38,18 @@ export function AskEbbad({ compact = false }: { compact?: boolean }) {
     return () => window.cancelAnimationFrame(frame);
   }, [messages, loading]);
 
+  useEffect(() => {
+    return () => {
+      if (statusTimerRef.current) window.clearTimeout(statusTimerRef.current);
+    };
+  }, []);
+
   const submit = async (text = input) => {
     const prompt = text.trim();
     if (!prompt || loading) return;
     setLoading(true);
+    onStatusChange?.("thinking");
+    if (statusTimerRef.current) window.clearTimeout(statusTimerRef.current);
     setMessages((current) => [...current, { role: "user", text: prompt }]);
     setInput("");
     try {
@@ -51,8 +61,11 @@ export function AskEbbad({ compact = false }: { compact?: boolean }) {
       if (!response.ok) throw new Error("Chat request failed");
       const result = (await response.json()) as { message?: string };
       setMessages((current) => [...current, { role: "assistant", text: result.message || chatbotKnowledge.fallback }]);
+      onStatusChange?.("success");
+      statusTimerRef.current = window.setTimeout(() => onStatusChange?.("idle"), 1800);
     } catch {
       setMessages((current) => [...current, { role: "assistant", text: `Connection note: ${chatbotKnowledge.fallback}` }]);
+      onStatusChange?.("idle");
     } finally {
       setLoading(false);
       window.setTimeout(() => inputRef.current?.focus(), 0);
@@ -100,6 +113,7 @@ export function AskEbbad({ compact = false }: { compact?: boolean }) {
           type="button"
           onClick={() => {
             setMessages([{ role: "assistant", text: "Chat reset. Ask me about Ebbad, projects, testimonials, skills, contact, or availability." }]);
+            onStatusChange?.("idle");
             inputRef.current?.focus();
           }}
           className={cn("ml-auto shrink-0 rounded-full border border-white/10 p-2 text-slate-400 transition hover:border-cyan-300/35 hover:bg-white/10 hover:text-white", compact && "p-1.5")}

@@ -411,6 +411,105 @@ html[data-theme="light"] .project-visual-shell [class*="bg-slate-950/"] {
     linear-gradient(180deg, rgba(165, 243, 252, 1), rgba(96, 165, 250, 0.92), rgba(167, 139, 250, 0.95));
 }
 
+.robot-panel {
+  transform: translateZ(0);
+}
+
+.robot-panel::after {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background:
+    linear-gradient(115deg, transparent 8%, rgba(255, 255, 255, 0.09) 32%, transparent 48%),
+    radial-gradient(circle at 50% 42%, rgba(34, 211, 238, 0.16), transparent 24rem);
+  opacity: 0.58;
+  mix-blend-mode: screen;
+  animation: robotPanelShine 7.5s ease-in-out infinite;
+}
+
+.robot-orbit-field {
+  background-image:
+    radial-gradient(circle at 15% 18%, rgba(34, 211, 238, 0.65) 0 2px, transparent 3px),
+    radial-gradient(circle at 82% 22%, rgba(139, 92, 246, 0.5) 0 2px, transparent 3px),
+    radial-gradient(circle at 64% 82%, rgba(34, 211, 238, 0.45) 0 2px, transparent 3px),
+    linear-gradient(120deg, transparent 0 30%, rgba(34, 211, 238, 0.14) 30.4%, transparent 31% 62%, rgba(139, 92, 246, 0.12) 62.4%, transparent 63%),
+    repeating-radial-gradient(circle at 50% 48%, transparent 0 68px, rgba(34, 211, 238, 0.16) 69px, transparent 70px);
+}
+
+.robot-status-chip {
+  animation: robotChipFloat 5.6s ease-in-out infinite;
+}
+
+.robot-status-chip:nth-child(2) {
+  animation-delay: -1.4s;
+}
+
+.robot-status-chip:nth-child(3) {
+  animation-delay: -2.6s;
+}
+
+.robot-status-chip:nth-child(4) {
+  animation-delay: -3.8s;
+}
+
+.robot-avatar::after {
+  position: absolute;
+  inset: -28%;
+  content: "";
+  background: conic-gradient(from 90deg, transparent, rgba(34, 211, 238, 0.34), rgba(139, 92, 246, 0.28), transparent);
+  opacity: 0.45;
+  animation: robotAvatarSpin 6s linear infinite;
+}
+
+.robot-avatar > * {
+  z-index: 1;
+}
+
+.robot-avatar-thinking {
+  box-shadow:
+    0 0 20px rgba(139, 92, 246, 0.28),
+    0 0 34px rgba(34, 211, 238, 0.14);
+}
+
+.robot-avatar-success {
+  box-shadow:
+    0 0 20px rgba(52, 211, 153, 0.28),
+    0 0 34px rgba(34, 211, 238, 0.14);
+}
+
+.robot-static {
+  animation: robotStaticFloat 4.8s ease-in-out infinite;
+}
+
+.robot-static::after {
+  position: absolute;
+  inset: 2.4rem;
+  content: "";
+  border: 1px solid rgba(34, 211, 238, 0.22);
+  border-radius: inherit;
+  box-shadow:
+    0 0 36px rgba(34, 211, 238, 0.18),
+    inset 0 0 28px rgba(139, 92, 246, 0.12);
+}
+
+.robot-static-thinking {
+  filter: drop-shadow(0 0 26px rgba(139, 92, 246, 0.26));
+}
+
+.robot-static-success {
+  filter: drop-shadow(0 0 26px rgba(52, 211, 153, 0.24));
+}
+
+html[data-theme="light"] .robot-panel {
+  background: rgba(248, 251, 255, 0.72);
+}
+
+html[data-theme="light"] .robot-status-chip {
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.72);
+}
+
 .section-shell {
   position: relative;
   z-index: 1;
@@ -816,6 +915,44 @@ section[id] {
   }
 }
 
+@keyframes robotPanelShine {
+  0%,
+  100% {
+    opacity: 0.38;
+    transform: translateX(-14%);
+  }
+  48% {
+    opacity: 0.72;
+    transform: translateX(14%);
+  }
+}
+
+@keyframes robotChipFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -6px, 0);
+  }
+}
+
+@keyframes robotAvatarSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes robotStaticFloat {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.015);
+  }
+}
+
 @keyframes caretBlink {
   0%,
   100% {
@@ -855,6 +992,10 @@ section[id] {
   .project-orbit,
   .project-flow-line,
   .project-node-pulse,
+  .robot-panel::after,
+  .robot-status-chip,
+  .robot-avatar::after,
+  .robot-static,
   .premium-particles span {
     animation: none;
   }

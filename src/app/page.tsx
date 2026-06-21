@@ -8,7 +8,7 @@ import { CodeRepoButton } from "@/components/ui/code-repo-button";
 import { PremiumTypewriter } from "@/components/ui/premium-typewriter";
 import { ArchiveSection } from "@/components/home/archive-section";
 import { SkillConstellation } from "@/components/home/skill-constellation";
-import { DynamicAskEbbad } from "@/components/home/dynamic-islands";
+import { AskEbbadSection } from "@/components/home/ask-ebbad-section";
 import { ScrollJourneyLine } from "@/components/system/scroll-journey-line";
 import { BackToTop } from "@/components/system/back-to-top";
 import { SectionReveal } from "@/components/system/section-reveal";
@@ -315,10 +315,10 @@ export default function Home() {
       </section>
 
       <section id="ask-ebbad" data-section-id="ask-ebbad" className="section-shell">
-        <SectionHeader eyebrow="Ask Ebbad" title="A local portfolio guide with strict knowledge rules.">
-          It answers from approved portfolio content only and falls back when a detail is not available.
+        <SectionHeader eyebrow="Ask Ebbad" title="A premium portfolio guide with strict knowledge rules.">
+          Ask about projects, skills, resume, availability, and contact details. It answers from approved portfolio content only.
         </SectionHeader>
-        <DynamicAskEbbad />
+        <AskEbbadSection />
       </section>
 
       <section id="contact" data-section-id="contact" className="section-shell">
