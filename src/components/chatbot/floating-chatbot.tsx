@@ -48,7 +48,7 @@ export function FloatingChatbot() {
             onMouseDown={close}
           >
             <motion.div
-              className="flex h-[min(760px,calc(100dvh-1rem))] w-full max-w-[26rem] flex-col sm:h-[min(780px,calc(100dvh-1.5rem))] md:max-w-[30rem]"
+              className="flex h-[calc(100dvh-0.75rem)] w-full max-w-[23rem] flex-col sm:h-[min(700px,calc(100dvh-1.5rem))] md:max-w-[27rem]"
               initial={{ y: 24, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 24, opacity: 0 }}

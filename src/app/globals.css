@@ -370,6 +370,14 @@ html[data-theme="light"] .project-visual-shell [class*="bg-slate-950/"] {
   color: transparent;
 }
 
+.scrollbar-none {
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
 .section-shell {
   position: relative;
   z-index: 1;

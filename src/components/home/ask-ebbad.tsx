@@ -21,6 +21,7 @@ export function AskEbbad({ compact = false }: { compact?: boolean }) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const promptGroups = useMemo(() => chatbotKnowledge.promptGroups || [{ label: "Suggested", prompts: chatbotKnowledge.suggestedPrompts }], []);
+  const compactPrompts = useMemo(() => promptGroups.flatMap((group) => group.prompts).slice(0, 6), [promptGroups]);
 
   const submit = async (text = input) => {
     const prompt = text.trim();
@@ -47,33 +48,33 @@ export function AskEbbad({ compact = false }: { compact?: boolean }) {
 
   return (
     <div className={cn("glass-panel overflow-hidden rounded-3xl p-0", compact && "flex min-h-0 flex-1 flex-col rounded-[1.35rem]")}>
-      <div className={cn("shrink-0 border-b border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.16),transparent_38%),rgba(2,6,23,0.28)]", compact ? "p-3 sm:p-4" : "p-5")}>
-        <div className={cn("flex flex-wrap items-start justify-between gap-4", compact && "gap-2")}>
+      <div className={cn("shrink-0 border-b border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.16),transparent_38%),rgba(2,6,23,0.28)]", compact ? "p-2.5 sm:p-3" : "p-5")}>
+        <div className={cn("flex flex-wrap items-start justify-between gap-4", compact && "items-center gap-2")}>
           <div>
-            <p className={cn("mono-label", compact && "text-[10px]")}>Ask Ebbad</p>
-            <h3 className={cn("mt-2 flex items-center gap-2 font-heading font-bold text-white", compact ? "text-lg sm:text-xl" : "text-2xl")}>
-              <Bot className="text-cyan-200" size={compact ? 18 : 22} /> Portfolio intelligence
+            <p className={cn("mono-label", compact && "sr-only")}>Ask Ebbad</p>
+            <h3 className={cn("mt-2 flex items-center gap-2 font-heading font-bold text-white", compact ? "mt-0 text-sm sm:text-base" : "text-2xl")}>
+              <Bot className="text-cyan-200" size={compact ? 15 : 22} /> Portfolio intelligence
             </h3>
-            <p className={cn("mt-2 max-w-xl text-sm leading-6 text-slate-400", compact && "hidden sm:block sm:text-xs sm:leading-5")}>
+            <p className={cn("mt-2 max-w-xl text-sm leading-6 text-slate-400", compact && "hidden")}>
               Recruiter-ready answers from approved portfolio data only. Unknown details fall back honestly.
             </p>
           </div>
-          <span className={cn("inline-flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1.5 text-xs font-semibold text-emerald-100", compact && "px-2 py-1 text-[10px]")}>
-            <ShieldCheck size={14} /> Verified knowledge
+          <span className={cn("inline-flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1.5 text-xs font-semibold text-emerald-100", compact && "gap-1 px-2 py-1 text-[10px]")}>
+            <ShieldCheck size={compact ? 12 : 14} /> Verified
           </span>
         </div>
       </div>
 
-      <div className={cn("p-5", compact && "flex min-h-0 flex-1 flex-col gap-3 overflow-hidden p-3 sm:p-4")}>
-        <div className={cn("flex flex-wrap items-center gap-2", compact && "shrink-0 gap-1.5")}>
+      <div className={cn("p-5", compact && "flex min-h-0 flex-1 flex-col gap-2 overflow-hidden p-2.5 sm:p-3")}>
+        <div className={cn("flex flex-wrap items-center gap-2", compact && "scrollbar-none flex-nowrap overflow-x-auto pb-1")}>
         {chatbotModes.map((item) => (
           <button
             key={item}
             type="button"
             onClick={() => setMode(item)}
             className={cn(
-              "rounded-full border px-3 py-2 text-xs font-semibold transition",
-              compact && "px-2.5 py-1.5 text-[10px] sm:text-[11px]",
+              "shrink-0 rounded-full border px-3 py-2 text-xs font-semibold transition",
+              compact && "px-2.5 py-1.5 text-[10px]",
               mode === item
                 ? "border-cyan-200 bg-cyan-300 text-slate-950 shadow-[0_0_24px_rgba(34,211,238,0.22)]"
                 : "border-white/10 bg-white/[0.05] text-slate-300 hover:border-cyan-300/35 hover:bg-white/10 hover:text-white",
@@ -88,14 +89,14 @@ export function AskEbbad({ compact = false }: { compact?: boolean }) {
             setMessages([{ role: "assistant", text: "Chat reset. Ask me about Ebbad, projects, testimonials, skills, contact, or availability." }]);
             inputRef.current?.focus();
           }}
-          className={cn("ml-auto rounded-full border border-white/10 p-2 text-slate-400 transition hover:border-cyan-300/35 hover:bg-white/10 hover:text-white", compact && "p-1.5")}
+          className={cn("ml-auto shrink-0 rounded-full border border-white/10 p-2 text-slate-400 transition hover:border-cyan-300/35 hover:bg-white/10 hover:text-white", compact && "p-1.5")}
           aria-label="Reset chat"
         >
           <RotateCcw size={16} />
         </button>
       </div>
 
-      <div className={cn("overflow-y-auto rounded-3xl border border-white/10 bg-slate-950/62 p-4", compact ? "min-h-[10rem] flex-1 rounded-2xl p-3" : "mt-5 h-72")} aria-live="polite">
+      <div className={cn("overflow-y-auto rounded-3xl border border-white/10 bg-slate-950/62 p-4", compact ? "min-h-0 flex-1 rounded-2xl p-3" : "mt-5 h-72")} aria-live="polite">
         {messages.map((message, index) => (
           <div key={`${message.role}-${index}`} className={`mb-3 flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
             <div className={cn(
@@ -116,7 +117,22 @@ export function AskEbbad({ compact = false }: { compact?: boolean }) {
         ) : null}
       </div>
 
-      <div className={cn("grid gap-3", compact ? "max-h-32 shrink-0 overflow-y-auto pr-1" : "mt-4")}>
+      {compact ? (
+        <div className="scrollbar-none flex shrink-0 gap-1.5 overflow-x-auto pb-1">
+          {compactPrompts.map((prompt) => (
+            <button
+              key={prompt}
+              type="button"
+              disabled={loading}
+              onClick={() => submit(prompt)}
+              className="shrink-0 rounded-full border border-white/10 px-2.5 py-1.5 text-[10px] text-slate-300 transition hover:border-cyan-300/40 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {prompt}
+            </button>
+          ))}
+        </div>
+      ) : (
+      <div className="mt-4 grid gap-3">
         {promptGroups.map((group) => (
           <div key={group.label} className={cn("rounded-2xl border border-white/10 bg-white/[0.025] p-3", compact && "p-2")}>
             <p className="mb-2 flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-cyan-100">
@@ -138,6 +154,7 @@ export function AskEbbad({ compact = false }: { compact?: boolean }) {
           </div>
         ))}
       </div>
+      )}
       <form
         className={cn("flex shrink-0 gap-2", compact ? "pt-0" : "mt-4")}
         onSubmit={(event) => {
