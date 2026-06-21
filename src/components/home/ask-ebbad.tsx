@@ -1,21 +1,38 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Bot, CheckCircle2, RotateCcw, Send, ShieldCheck, Sparkles } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Bot, ChevronDown, RotateCcw, Send, ShieldCheck, Sparkles } from "lucide-react";
 import { chatbotKnowledge } from "@/data/site";
 import { chatbotModes, type ChatbotMode } from "@/lib/chatbot";
 import { cn } from "@/lib/utils";
-import type { AskRobotStatus } from "@/components/ask/types";
+import type { AskCoreStatus } from "@/components/ask/types";
 
 type ChatMessage = {
   role: "assistant" | "user";
   text: string;
 };
 
-export function AskEbbad({ compact = false, onStatusChange }: { compact?: boolean; onStatusChange?: (status: AskRobotStatus) => void }) {
+const modeOptions: Array<{ label: string; value: ChatbotMode }> = [
+  { label: "Recruiter", value: "Recruiter Mode" },
+  { label: "Technical", value: "Technical Deep Dive Mode" },
+  { label: "Projects", value: "Project Guide Mode" },
+];
+
+export function AskEbbad({
+  compact = false,
+  compactPanel = false,
+  externalPrompt,
+  onStatusChange,
+}: {
+  compact?: boolean;
+  compactPanel?: boolean;
+  externalPrompt?: { id: number; text: string };
+  onStatusChange?: (status: AskCoreStatus) => void;
+}) {
   const [mode, setMode] = useState<ChatbotMode>("Recruiter Mode");
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [morePromptsOpen, setMorePromptsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
     { role: "assistant", text: "Hi, I'm Ask Ebbad. I answer from Ebbad's approved portfolio knowledge base, including projects, skills, testimonials, contact, and availability." },
   ]);
@@ -23,28 +40,14 @@ export function AskEbbad({ compact = false, onStatusChange }: { compact?: boolea
   const messagesRef = useRef<HTMLDivElement>(null);
   const latestMessageRef = useRef<HTMLDivElement>(null);
   const statusTimerRef = useRef<number | null>(null);
+  const lastExternalPromptIdRef = useRef<number | null>(null);
 
   const promptGroups = useMemo(() => chatbotKnowledge.promptGroups || [{ label: "Suggested", prompts: chatbotKnowledge.suggestedPrompts }], []);
   const compactPrompts = useMemo(() => promptGroups.flatMap((group) => group.prompts).slice(0, 6), [promptGroups]);
+  const visiblePrompts = useMemo(() => promptGroups.flatMap((group) => group.prompts).slice(0, 5), [promptGroups]);
+  const hiddenPrompts = useMemo(() => promptGroups.flatMap((group) => group.prompts).slice(5), [promptGroups]);
 
-  useEffect(() => {
-    const frame = window.requestAnimationFrame(() => {
-      latestMessageRef.current?.scrollIntoView({ block: "end", behavior: "smooth" });
-      if (messagesRef.current) {
-        messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
-      }
-    });
-
-    return () => window.cancelAnimationFrame(frame);
-  }, [messages, loading]);
-
-  useEffect(() => {
-    return () => {
-      if (statusTimerRef.current) window.clearTimeout(statusTimerRef.current);
-    };
-  }, []);
-
-  const submit = async (text = input) => {
+  const submit = useCallback(async (text = input) => {
     const prompt = text.trim();
     if (!prompt || loading) return;
     setLoading(true);
@@ -70,18 +73,41 @@ export function AskEbbad({ compact = false, onStatusChange }: { compact?: boolea
       setLoading(false);
       window.setTimeout(() => inputRef.current?.focus(), 0);
     }
-  };
+  }, [input, loading, mode, onStatusChange]);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      latestMessageRef.current?.scrollIntoView({ block: "end", behavior: "smooth" });
+      if (messagesRef.current) {
+        messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+      }
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [messages, loading]);
+
+  useEffect(() => {
+    return () => {
+      if (statusTimerRef.current) window.clearTimeout(statusTimerRef.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!externalPrompt || externalPrompt.id === lastExternalPromptIdRef.current) return;
+    lastExternalPromptIdRef.current = externalPrompt.id;
+    void submit(externalPrompt.text);
+  }, [externalPrompt, submit]);
 
   return (
-    <div className={cn("glass-panel overflow-hidden rounded-3xl p-0", compact && "flex min-h-0 flex-1 flex-col rounded-[1.35rem]")}>
-      <div className={cn("shrink-0 border-b border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.16),transparent_38%),rgba(2,6,23,0.28)]", compact ? "p-2.5 sm:p-3" : "p-5")}>
+    <div className={cn("glass-panel min-w-0 max-w-full overflow-hidden rounded-3xl p-0", compact && "flex min-h-0 flex-1 flex-col rounded-[1.35rem]")}>
+      <div className={cn("shrink-0 border-b border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.16),transparent_38%),rgba(2,6,23,0.28)]", compact ? "p-2.5 sm:p-3" : compactPanel ? "p-4" : "p-5")}>
         <div className={cn("flex flex-wrap items-start justify-between gap-4", compact && "items-center gap-2")}>
-          <div>
+          <div className="min-w-0">
             <p className={cn("mono-label", compact && "sr-only")}>Ask Ebbad</p>
-            <h3 className={cn("mt-2 flex items-center gap-2 font-heading font-bold text-white", compact ? "mt-0 text-sm sm:text-base" : "text-2xl")}>
+            <h3 className={cn("mt-2 flex min-w-0 items-center gap-2 font-heading font-bold text-white", compact ? "mt-0 text-sm sm:text-base" : compactPanel ? "text-xl" : "text-2xl")}>
               <Bot className="text-cyan-200" size={compact ? 15 : 22} /> Portfolio intelligence
             </h3>
-            <p className={cn("mt-2 max-w-xl text-sm leading-6 text-slate-400", compact && "hidden")}>
+            <p className={cn("mt-2 max-w-xl text-sm leading-6 text-slate-400", compact && "hidden", compactPanel && "text-xs leading-5")}>
               Recruiter-ready answers from approved portfolio data only. Unknown details fall back honestly.
             </p>
           </div>
@@ -91,22 +117,22 @@ export function AskEbbad({ compact = false, onStatusChange }: { compact?: boolea
         </div>
       </div>
 
-      <div className={cn("p-5", compact && "flex min-h-0 flex-1 flex-col gap-2 overflow-hidden p-2.5 sm:p-3")}>
+      <div className={cn("min-w-0 p-5", compact && "flex min-h-0 flex-1 flex-col gap-2 overflow-hidden p-2.5 sm:p-3", compactPanel && "p-4")}>
         <div className={cn("flex flex-wrap items-center gap-2", compact && "scrollbar-none flex-nowrap overflow-x-auto pb-1")}>
-        {chatbotModes.map((item) => (
+        {(compact ? chatbotModes.map((item) => ({ label: item.replace(" Mode", ""), value: item })) : modeOptions).map((item) => (
           <button
-            key={item}
+            key={item.value}
             type="button"
-            onClick={() => setMode(item)}
+            onClick={() => setMode(item.value)}
             className={cn(
               "shrink-0 rounded-full border px-3 py-2 text-xs font-semibold transition",
               compact && "px-2.5 py-1.5 text-[10px]",
-              mode === item
+              mode === item.value
                 ? "border-cyan-200 bg-cyan-300 text-slate-950 shadow-[0_0_24px_rgba(34,211,238,0.22)]"
                 : "border-white/10 bg-white/[0.05] text-slate-300 hover:border-cyan-300/35 hover:bg-white/10 hover:text-white",
             )}
           >
-            {item}
+            {item.label}
           </button>
         ))}
         <button
@@ -125,7 +151,7 @@ export function AskEbbad({ compact = false, onStatusChange }: { compact?: boolea
 
       <div
         ref={messagesRef}
-        className={cn("chat-scrollbar overflow-y-auto rounded-3xl border border-white/10 bg-slate-950/62 p-4", compact ? "min-h-0 flex-1 rounded-2xl p-3" : "mt-5 h-72")}
+        className={cn("chat-scrollbar overflow-y-auto rounded-3xl border border-white/10 bg-slate-950/62 p-4", compact ? "min-h-0 flex-1 rounded-2xl p-3" : compactPanel ? "mt-4 h-56" : "mt-5 h-72")}
         aria-live="polite"
       >
         {messages.map((message, index) => (
@@ -163,29 +189,56 @@ export function AskEbbad({ compact = false, onStatusChange }: { compact?: boolea
             </button>
           ))}
         </div>
-      ) : (
-      <div className="mt-4 grid gap-3">
-        {promptGroups.map((group) => (
-          <div key={group.label} className={cn("rounded-2xl border border-white/10 bg-white/[0.025] p-3", compact && "p-2")}>
-            <p className="mb-2 flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-cyan-100">
-              <CheckCircle2 size={13} /> {group.label}
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {group.prompts.map((prompt) => (
+      ) : compactPanel ? (
+        <div className="mt-3 grid gap-2">
+          <div className="flex flex-wrap gap-2">
+            {visiblePrompts.map((prompt) => (
                 <button
                   key={prompt}
                   type="button"
                   disabled={loading}
                   onClick={() => submit(prompt)}
-                  className={cn("rounded-full border border-white/10 px-3 py-1.5 text-xs text-slate-300 transition hover:border-cyan-300/40 hover:text-white disabled:cursor-not-allowed disabled:opacity-50", compact && "px-2 py-1 text-[10px]")}
+                  className="rounded-full border border-white/10 px-3 py-1.5 text-xs text-slate-300 transition hover:border-cyan-300/40 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
                 >
+                  {prompt}
+                </button>
+            ))}
+            {hiddenPrompts.length ? (
+              <button
+                type="button"
+                onClick={() => setMorePromptsOpen((value) => !value)}
+                className="inline-flex items-center gap-1 rounded-full border border-violet-300/15 px-3 py-1.5 text-xs font-semibold text-violet-100 transition hover:border-violet-300/40 hover:text-white"
+                aria-expanded={morePromptsOpen}
+              >
+                More prompts <ChevronDown size={13} className={cn("transition", morePromptsOpen && "rotate-180")} />
+              </button>
+            ) : null}
+          </div>
+          {morePromptsOpen ? (
+            <div className="flex flex-wrap gap-2 rounded-2xl border border-white/10 bg-white/[0.025] p-2">
+              {hiddenPrompts.map((prompt) => (
+                <button key={prompt} type="button" disabled={loading} onClick={() => submit(prompt)} className="rounded-full border border-white/10 px-2.5 py-1 text-[11px] text-slate-300 transition hover:border-cyan-300/40 hover:text-white disabled:cursor-not-allowed disabled:opacity-50">
                   {prompt}
                 </button>
               ))}
             </div>
-          </div>
-        ))}
-      </div>
+          ) : null}
+        </div>
+      ) : (
+        <div className="mt-4 grid gap-3">
+          {promptGroups.map((group) => (
+            <div key={group.label} className="rounded-2xl border border-white/10 bg-white/[0.025] p-3">
+              <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-cyan-100">{group.label}</p>
+              <div className="flex flex-wrap gap-2">
+                {group.prompts.map((prompt) => (
+                  <button key={prompt} type="button" disabled={loading} onClick={() => submit(prompt)} className="rounded-full border border-white/10 px-3 py-1.5 text-xs text-slate-300 transition hover:border-cyan-300/40 hover:text-white disabled:cursor-not-allowed disabled:opacity-50">
+                    {prompt}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       )}
       <form
         className={cn("flex shrink-0 gap-2", compact ? "pt-0" : "mt-4")}

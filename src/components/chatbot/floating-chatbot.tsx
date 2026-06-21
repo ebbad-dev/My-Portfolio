@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { MessageSquare, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { RobotAvatar } from "@/components/ask/robot-avatar";
+import { IntelligenceCoreAvatar } from "@/components/ask/intelligence-core-avatar";
 import { DynamicAskEbbad } from "@/components/home/dynamic-islands";
 
 export function FloatingChatbot() {
@@ -31,14 +31,16 @@ export function FloatingChatbot() {
 
   return (
     <>
-      <button
-        ref={triggerRef}
-        onClick={() => setOpen(true)}
-        className="fixed bottom-4 right-4 z-50 inline-flex h-12 w-12 items-center justify-center gap-2 rounded-full bg-brand-gradient text-sm font-semibold text-white shadow-glow sm:bottom-5 sm:right-5 sm:w-auto sm:px-4 sm:py-2.5"
-        aria-label="Open Ask Ebbad chatbot"
-      >
-        <MessageSquare size={18} /> <span className="hidden sm:inline">Ask Ebbad</span>
-      </button>
+      {!open ? (
+        <button
+          ref={triggerRef}
+          onClick={() => setOpen(true)}
+          className="fixed bottom-[calc(env(safe-area-inset-bottom)+1.25rem)] right-4 z-50 inline-flex h-11 w-11 items-center justify-center gap-2 rounded-full bg-brand-gradient text-sm font-semibold text-white shadow-glow sm:right-5 sm:h-12 sm:w-auto sm:px-4 sm:py-2.5"
+          aria-label="Open Ask Ebbad chatbot"
+        >
+          <MessageSquare size={18} /> <span className="hidden sm:inline">Ask Ebbad</span>
+        </button>
+      ) : null}
       <AnimatePresence>
         {open ? (
           <motion.div
@@ -57,7 +59,7 @@ export function FloatingChatbot() {
             >
               <div className="mb-2 flex h-12 shrink-0 items-center justify-between rounded-2xl border border-white/10 bg-slate-950/90 px-3 py-2 sm:h-14 sm:rounded-3xl sm:px-4">
                 <span className="flex min-w-0 items-center gap-2">
-                  <RobotAvatar compact />
+                  <IntelligenceCoreAvatar compact />
                   <span className="min-w-0">
                     <span className="block truncate font-heading text-sm font-semibold text-white sm:text-base">Ask Ebbad</span>
                     <span className="hidden items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-cyan-100 sm:flex">

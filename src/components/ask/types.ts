@@ -1,1 +1,1 @@
-export type AskRobotStatus = "idle" | "thinking" | "success";
+export type AskCoreStatus = "idle" | "thinking" | "success";

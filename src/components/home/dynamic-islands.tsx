@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { PremiumRobotSkeleton } from "@/components/ask/premium-robot-skeleton";
+import { IntelligenceCoreSkeleton } from "@/components/ask/intelligence-core-skeleton";
 
 export const DynamicSkillGlobe = dynamic(() => import("@/components/home/skill-globe").then((module) => module.SkillGlobe), {
   ssr: false,
@@ -27,7 +27,7 @@ export const DynamicAskEbbad = dynamic(() => import("@/components/home/ask-ebbad
   ),
 });
 
-export const DynamicAskEbbadRobot = dynamic(() => import("@/components/ask/ask-ebbad-robot").then((module) => module.AskEbbadRobot), {
+export const DynamicPortfolioIntelligenceCore = dynamic(() => import("@/components/ask/portfolio-intelligence-core").then((module) => module.PortfolioIntelligenceCore), {
   ssr: false,
-  loading: () => <PremiumRobotSkeleton />,
+  loading: () => <IntelligenceCoreSkeleton />,
 });

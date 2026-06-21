@@ -582,7 +582,7 @@ export const chatbotKnowledge = {
     {
       triggers: ["github", "repository", "code"],
       answer:
-        "Ebbad's GitHub profile is linked in the portfolio, and available project code is shown only when the public repository has code. The top navigation also links to the portfolio repository as Star Repository.",
+        "Ebbad's GitHub profile is linked in the portfolio, and available project code is shown only when the public repository has code. The top navigation also links to the portfolio repository as View Source.",
     },
     {
       triggers: ["resume", "cv"],

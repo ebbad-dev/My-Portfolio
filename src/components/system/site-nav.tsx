@@ -52,7 +52,7 @@ export function SiteNav() {
               className="hidden items-center gap-2 rounded-full border border-cyan-300/15 bg-white/[0.04] px-3 py-2 text-xs font-semibold text-slate-200 transition hover:-translate-y-0.5 hover:border-cyan-300/45 hover:bg-cyan-300/10 hover:text-white md:inline-flex"
               data-cursor-label="Open"
             >
-              <Github size={14} /> Star Repository
+              <Github size={14} /> View Source
             </a>
           ) : null}
           <button className="rounded-full border border-white/10 bg-white/[0.04] p-2 text-slate-100 md:hidden" onClick={() => setOpen((value) => !value)} aria-label="Toggle menu">
