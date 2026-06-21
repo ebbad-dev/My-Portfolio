@@ -46,26 +46,26 @@ export function AskEbbad({ compact = false }: { compact?: boolean }) {
   };
 
   return (
-    <div className="glass-panel overflow-hidden rounded-3xl p-0">
-      <div className="border-b border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.16),transparent_38%),rgba(2,6,23,0.28)] p-5">
-        <div className="flex flex-wrap items-start justify-between gap-4">
+    <div className={cn("glass-panel overflow-hidden rounded-3xl p-0", compact && "flex min-h-0 flex-1 flex-col rounded-[1.35rem]")}>
+      <div className={cn("shrink-0 border-b border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.16),transparent_38%),rgba(2,6,23,0.28)]", compact ? "p-3 sm:p-4" : "p-5")}>
+        <div className={cn("flex flex-wrap items-start justify-between gap-4", compact && "gap-2")}>
           <div>
-            <p className="mono-label">Ask Ebbad</p>
-            <h3 className="mt-2 flex items-center gap-2 font-heading text-2xl font-bold text-white">
-              <Bot className="text-cyan-200" size={22} /> Portfolio intelligence
+            <p className={cn("mono-label", compact && "text-[10px]")}>Ask Ebbad</p>
+            <h3 className={cn("mt-2 flex items-center gap-2 font-heading font-bold text-white", compact ? "text-lg sm:text-xl" : "text-2xl")}>
+              <Bot className="text-cyan-200" size={compact ? 18 : 22} /> Portfolio intelligence
             </h3>
-            <p className="mt-2 max-w-xl text-sm leading-6 text-slate-400">
+            <p className={cn("mt-2 max-w-xl text-sm leading-6 text-slate-400", compact && "hidden sm:block sm:text-xs sm:leading-5")}>
               Recruiter-ready answers from approved portfolio data only. Unknown details fall back honestly.
             </p>
           </div>
-          <span className="inline-flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1.5 text-xs font-semibold text-emerald-100">
+          <span className={cn("inline-flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1.5 text-xs font-semibold text-emerald-100", compact && "px-2 py-1 text-[10px]")}>
             <ShieldCheck size={14} /> Verified knowledge
           </span>
         </div>
       </div>
 
-      <div className="p-5">
-        <div className="flex flex-wrap items-center gap-2">
+      <div className={cn("p-5", compact && "flex min-h-0 flex-1 flex-col gap-3 overflow-hidden p-3 sm:p-4")}>
+        <div className={cn("flex flex-wrap items-center gap-2", compact && "shrink-0 gap-1.5")}>
         {chatbotModes.map((item) => (
           <button
             key={item}
@@ -73,6 +73,7 @@ export function AskEbbad({ compact = false }: { compact?: boolean }) {
             onClick={() => setMode(item)}
             className={cn(
               "rounded-full border px-3 py-2 text-xs font-semibold transition",
+              compact && "px-2.5 py-1.5 text-[10px] sm:text-[11px]",
               mode === item
                 ? "border-cyan-200 bg-cyan-300 text-slate-950 shadow-[0_0_24px_rgba(34,211,238,0.22)]"
                 : "border-white/10 bg-white/[0.05] text-slate-300 hover:border-cyan-300/35 hover:bg-white/10 hover:text-white",
@@ -87,18 +88,19 @@ export function AskEbbad({ compact = false }: { compact?: boolean }) {
             setMessages([{ role: "assistant", text: "Chat reset. Ask me about Ebbad, projects, testimonials, skills, contact, or availability." }]);
             inputRef.current?.focus();
           }}
-          className="ml-auto rounded-full border border-white/10 p-2 text-slate-400 transition hover:border-cyan-300/35 hover:bg-white/10 hover:text-white"
+          className={cn("ml-auto rounded-full border border-white/10 p-2 text-slate-400 transition hover:border-cyan-300/35 hover:bg-white/10 hover:text-white", compact && "p-1.5")}
           aria-label="Reset chat"
         >
           <RotateCcw size={16} />
         </button>
       </div>
 
-      <div className={`mt-5 overflow-y-auto rounded-3xl border border-white/10 bg-slate-950/62 p-4 ${compact ? "h-[340px]" : "h-72"}`} aria-live="polite">
+      <div className={cn("overflow-y-auto rounded-3xl border border-white/10 bg-slate-950/62 p-4", compact ? "min-h-[10rem] flex-1 rounded-2xl p-3" : "mt-5 h-72")} aria-live="polite">
         {messages.map((message, index) => (
           <div key={`${message.role}-${index}`} className={`mb-3 flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
             <div className={cn(
               "max-w-[86%] rounded-2xl px-4 py-3 text-sm leading-6 shadow-[0_12px_34px_rgba(0,0,0,0.18)]",
+              compact && "max-w-[94%] px-3 py-2 text-xs leading-5 sm:text-sm",
               message.role === "user"
                 ? "bg-cyan-300 text-slate-950"
                 : "border border-white/10 bg-white/[0.06] text-slate-200",
@@ -114,9 +116,9 @@ export function AskEbbad({ compact = false }: { compact?: boolean }) {
         ) : null}
       </div>
 
-      <div className="mt-4 grid gap-3">
+      <div className={cn("grid gap-3", compact ? "max-h-32 shrink-0 overflow-y-auto pr-1" : "mt-4")}>
         {promptGroups.map((group) => (
-          <div key={group.label} className="rounded-2xl border border-white/10 bg-white/[0.025] p-3">
+          <div key={group.label} className={cn("rounded-2xl border border-white/10 bg-white/[0.025] p-3", compact && "p-2")}>
             <p className="mb-2 flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-cyan-100">
               <CheckCircle2 size={13} /> {group.label}
             </p>
@@ -127,7 +129,7 @@ export function AskEbbad({ compact = false }: { compact?: boolean }) {
                   type="button"
                   disabled={loading}
                   onClick={() => submit(prompt)}
-                  className="rounded-full border border-white/10 px-3 py-1.5 text-xs text-slate-300 transition hover:border-cyan-300/40 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                  className={cn("rounded-full border border-white/10 px-3 py-1.5 text-xs text-slate-300 transition hover:border-cyan-300/40 hover:text-white disabled:cursor-not-allowed disabled:opacity-50", compact && "px-2 py-1 text-[10px]")}
                 >
                   {prompt}
                 </button>
@@ -137,7 +139,7 @@ export function AskEbbad({ compact = false }: { compact?: boolean }) {
         ))}
       </div>
       <form
-        className="mt-4 flex gap-2"
+        className={cn("flex shrink-0 gap-2", compact ? "pt-0" : "mt-4")}
         onSubmit={(event) => {
           event.preventDefault();
           submit();
@@ -148,10 +150,10 @@ export function AskEbbad({ compact = false }: { compact?: boolean }) {
           value={input}
           onChange={(event) => setInput(event.target.value)}
           disabled={loading}
-          className="min-w-0 flex-1 rounded-full border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-cyan-300/45 disabled:cursor-not-allowed disabled:opacity-60"
+          className={cn("min-w-0 flex-1 rounded-full border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-cyan-300/45 disabled:cursor-not-allowed disabled:opacity-60", compact && "px-3 py-2.5 text-xs sm:text-sm")}
           placeholder="Ask about Ebbad's projects, testimonials, or contact..."
         />
-        <button disabled={loading || !input.trim()} className="grid h-12 w-12 place-items-center rounded-full bg-brand-gradient text-white transition disabled:cursor-not-allowed disabled:opacity-50" aria-label="Send message">
+        <button disabled={loading || !input.trim()} className={cn("grid h-12 w-12 place-items-center rounded-full bg-brand-gradient text-white transition disabled:cursor-not-allowed disabled:opacity-50", compact && "h-10 w-10")} aria-label="Send message">
           <Send size={18} />
         </button>
       </form>
