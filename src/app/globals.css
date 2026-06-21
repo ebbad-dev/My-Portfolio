@@ -378,6 +378,25 @@ html[data-theme="light"] .project-visual-shell [class*="bg-slate-950/"] {
   display: none;
 }
 
+.chat-prompt-strip {
+  scrollbar-color: rgba(103, 232, 249, 0.44) transparent;
+  scrollbar-width: thin;
+}
+
+.chat-prompt-strip::-webkit-scrollbar {
+  height: 0.35rem;
+}
+
+.chat-prompt-strip::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.3);
+}
+
+.chat-prompt-strip::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(34, 211, 238, 0.55), rgba(139, 92, 246, 0.55));
+}
+
 .chat-scrollbar {
   scrollbar-color: rgba(103, 232, 249, 0.62) rgba(15, 23, 42, 0.38);
   scrollbar-width: thin;
@@ -471,6 +490,51 @@ html[data-theme="light"] .project-visual-shell [class*="bg-slate-950/"] {
     0 22px 70px rgba(0, 0, 0, 0.28),
     0 0 48px rgba(52, 211, 153, 0.18),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.ask-assistant-clicked {
+  box-shadow:
+    0 22px 70px rgba(0, 0, 0, 0.28),
+    0 0 54px rgba(34, 211, 238, 0.28),
+    0 0 40px rgba(139, 92, 246, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.welcome-launch-bg {
+  background:
+    radial-gradient(circle at 50% 34%, rgba(34, 211, 238, 0.16), transparent 32rem),
+    radial-gradient(circle at 68% 70%, rgba(139, 92, 246, 0.16), transparent 28rem),
+    linear-gradient(120deg, transparent 0 32%, rgba(34, 211, 238, 0.07) 32.4%, transparent 33% 66%, rgba(139, 92, 246, 0.07) 66.4%, transparent 67%),
+    linear-gradient(rgba(148, 163, 184, 0.034) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.034) 1px, transparent 1px);
+  background-size: auto, auto, auto, 42px 42px, 42px 42px;
+  animation: welcomeGridDrift 12s ease-in-out infinite;
+}
+
+.welcome-launch-card::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  background:
+    linear-gradient(120deg, transparent 10%, rgba(255, 255, 255, 0.09) 36%, transparent 56%),
+    radial-gradient(circle at 50% 0%, rgba(34, 211, 238, 0.18), transparent 42%);
+  opacity: 0.72;
+  animation: welcomeCardShine 6.5s ease-in-out infinite;
+}
+
+.welcome-launch-particles span {
+  position: absolute;
+  left: calc(8% + (var(--i) * 5.2%));
+  top: calc(12% + ((var(--i) * 37) % 72) * 1%);
+  height: 0.28rem;
+  width: 0.28rem;
+  border-radius: 999px;
+  background: #67e8f9;
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.72);
+  opacity: 0.32;
+  animation: welcomeParticleFloat 6s ease-in-out infinite;
+  animation-delay: calc(var(--i) * -0.28s);
 }
 
 .core-panel {
@@ -1240,6 +1304,40 @@ section[id] {
   }
 }
 
+@keyframes welcomeGridDrift {
+  0%,
+  100% {
+    background-position: center, center, center, 0 0, 0 0;
+  }
+  50% {
+    background-position: center, center, center, 18px -12px, -14px 16px;
+  }
+}
+
+@keyframes welcomeCardShine {
+  0%,
+  100% {
+    opacity: 0.48;
+    transform: translateX(-12%);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateX(10%);
+  }
+}
+
+@keyframes welcomeParticleFloat {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: translate3d(0, 0, 0) scale(0.84);
+  }
+  50% {
+    opacity: 0.72;
+    transform: translate3d(12px, -20px, 0) scale(1.18);
+  }
+}
+
 @keyframes coreChipFloat {
   0%,
   100% {
@@ -1331,6 +1429,9 @@ section[id] {
   .project-flow-line,
   .project-node-pulse,
   .ask-assistant-card::before,
+  .welcome-launch-bg,
+  .welcome-launch-card::before,
+  .welcome-launch-particles span,
   .core-panel::after,
   .core-chip,
   .core-avatar::after,

@@ -42,6 +42,7 @@ export function AskEbbad({
   ]);
   const inputRef = useRef<HTMLInputElement>(null);
   const messagesRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const statusTimerRef = useRef<number | null>(null);
   const lastExternalPromptIdRef = useRef<number | null>(null);
 
@@ -88,6 +89,7 @@ export function AskEbbad({
       if (messagesRef.current) {
         const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         messagesRef.current.scrollTo({ top: messagesRef.current.scrollHeight, behavior: reduceMotion ? "auto" : "smooth" });
+        messagesEndRef.current?.scrollIntoView({ block: "end", behavior: reduceMotion ? "auto" : "smooth" });
       }
     });
 
@@ -107,7 +109,7 @@ export function AskEbbad({
   }, [externalPrompt, submit]);
 
   return (
-    <div className={cn("ask-console glass-panel min-w-0 max-w-full overflow-hidden rounded-3xl p-0", compact && "flex min-h-0 flex-1 flex-col rounded-[1.35rem]")}>
+    <div className={cn("ask-console glass-panel min-w-0 max-w-full overflow-hidden rounded-3xl p-0", compact && "flex h-full min-h-0 flex-1 flex-col rounded-[1.35rem]")}>
       {showHeader ? (
       <div className={cn("shrink-0 border-b border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.16),transparent_38%),rgba(2,6,23,0.28)]", compact ? "p-2.5 sm:p-3" : compactPanel ? "p-4" : "p-5")}>
         <div className={cn("flex flex-wrap items-start justify-between gap-4", compact && "items-center gap-2")}>
@@ -135,14 +137,14 @@ export function AskEbbad({
       </div>
       ) : null}
 
-      <div className={cn("min-w-0 p-5", compact && "flex min-h-0 flex-1 flex-col gap-2 overflow-hidden p-2.5 sm:p-3", compactPanel && "p-4")}>
+      <div className={cn("min-w-0 p-5", compact && "flex h-full min-h-0 flex-1 flex-col gap-2 overflow-hidden p-2.5 sm:p-3", compactPanel && "p-4")}>
         <div className={cn(compactPanel && !compact ? "grid min-w-0 gap-4 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,0.58fr)]" : "contents")}>
           {compactPanel && !compact ? (
             <div className="min-w-0 max-w-full overflow-hidden">
               <DynamicAskAssistantAvatar status={assistantStatus} />
             </div>
           ) : null}
-          <div className="flex min-w-0 max-w-full flex-col">
+          <div className="flex min-w-0 max-w-full flex-1 flex-col overflow-hidden">
         <div className={cn("flex flex-wrap items-center gap-2", compact && "scrollbar-none flex-nowrap overflow-x-auto pb-1")}>
         {modeOptions.map((item) => (
           <button
@@ -197,10 +199,11 @@ export function AskEbbad({
             <Sparkles size={15} className="animate-pulse" /> Ask Ebbad is checking the knowledge base...
           </div>
         ) : null}
+        <div ref={messagesEndRef} aria-hidden="true" />
       </div>
 
       {compact ? (
-        <div className="scrollbar-none flex shrink-0 gap-1.5 overflow-x-auto pb-1">
+        <div className="chat-prompt-strip flex shrink-0 gap-1.5 overflow-x-auto pb-1">
           {compactPrompts.map((prompt) => (
             <button
               key={prompt}
@@ -278,6 +281,7 @@ export function AskEbbad({
           disabled={loading}
           className={cn("min-w-0 flex-1 rounded-full border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-cyan-300/45 disabled:cursor-not-allowed disabled:opacity-60", compact && "px-3 py-2.5 text-xs sm:text-sm")}
           placeholder="Ask about Ebbad's projects, testimonials, or contact..."
+          aria-label="Ask Ebbad a question"
         />
         <button disabled={loading || !input.trim()} className={cn("grid h-12 w-12 place-items-center rounded-full bg-brand-gradient text-white transition disabled:cursor-not-allowed disabled:opacity-50", compact && "h-10 w-10")} aria-label="Send message">
           <Send size={18} />

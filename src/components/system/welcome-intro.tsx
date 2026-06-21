@@ -1,95 +1,106 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Play, X } from "lucide-react";
-import { useEffect, useState } from "react";
-import { siteConfig } from "@/data/site";
+import { ArrowRight, Sparkles } from "lucide-react";
+import type { CSSProperties } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function WelcomeIntro() {
-  const [visible, setVisible] = useState(false);
-  const [videoOpen, setVideoOpen] = useState(false);
+  const [visible, setVisible] = useState(true);
   const reduce = useReducedMotion();
+  const enterRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (sessionStorage.getItem("ebbad-intro-seen") === "true") return;
-    const introTimer = window.setTimeout(() => setVisible(true), 0);
-    return () => window.clearTimeout(introTimer);
+    const hasHash = window.location.hash.length > 0;
+    let shouldShow = true;
+    try {
+      if (hasHash || sessionStorage.getItem("ebbad-intro-seen") === "true") {
+        shouldShow = false;
+      }
+    } catch {
+      if (hasHash) {
+        shouldShow = false;
+      }
+    }
+
+    if (!shouldShow) {
+      const timer = window.setTimeout(() => setVisible(false), 0);
+      return () => window.clearTimeout(timer);
+    }
+
+    window.requestAnimationFrame(() => enterRef.current?.focus({ preventScroll: true }));
   }, []);
 
   const enter = () => {
-    sessionStorage.setItem("ebbad-intro-seen", "true");
+    try {
+      sessionStorage.setItem("ebbad-intro-seen", "true");
+    } catch {
+      // If storage is unavailable, still let the user enter normally.
+    }
     setVisible(false);
+    window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "auto" }));
   };
 
-  return (
-    <>
-      <AnimatePresence>
-        {visible ? (
-          <motion.div
-            className="fixed inset-0 z-[110] grid place-items-center bg-[#05070d]/95 p-4 backdrop-blur-2xl"
-            initial={reduce ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <div className="glass-panel relative w-full max-w-3xl overflow-hidden rounded-3xl p-8 text-center">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.18),transparent_48%)]" />
-              <div className="relative">
-                <p className="mono-label">EbbadOS boot sequence</p>
-                <h2 className="mt-5 font-heading text-6xl font-bold text-white">Hello.</h2>
-                <p className="mt-4 text-2xl text-slate-200">I&apos;m Ebbad Ur Rehman.</p>
-                <p className="mx-auto mt-5 max-w-2xl leading-8 text-slate-300">
-                  Welcome to my engineering portfolio. Jump straight into the projects, skills, demos, and systems I&apos;m building.
-                </p>
-                <div className="mt-8 flex flex-wrap justify-center gap-3">
-                  <button onClick={enter} className="rounded-full bg-brand-gradient px-6 py-3 font-semibold text-white shadow-glow">
-                    Enter Portfolio
-                  </button>
-                  {siteConfig.introVideoAvailable ? (
-                    <button onClick={() => setVideoOpen(true)} className="inline-flex min-h-12 items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-6 py-3 font-semibold text-slate-100 transition hover:border-cyan-300/40 hover:bg-white/[0.08]">
-                      <Play size={17} /> Watch Intro
-                    </button>
-                  ) : null}
-                  <button onClick={enter} className="rounded-full px-6 py-3 font-semibold text-slate-400 hover:text-white">
-                    Skip Intro
-                  </button>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
+  useEffect(() => {
+    if (!visible) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape" || event.key === "Enter") {
+        event.preventDefault();
+        enter();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [visible]);
 
-      <AnimatePresence>
-        {videoOpen && siteConfig.introVideoAvailable ? (
-          <motion.div className="fixed inset-0 z-[130] grid place-items-center bg-slate-950/85 p-4 backdrop-blur" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <div className="glass-panel w-full max-w-4xl rounded-3xl p-5">
-              <div className="mb-4 flex items-center justify-between gap-4">
-                <div>
-                  <p className="mono-label">Intro video</p>
-                  <p className="mt-1 text-sm text-slate-400">A quick guided tour of Ebbad&apos;s work and focus areas.</p>
-                </div>
-                <button onClick={() => setVideoOpen(false)} className="rounded-full p-2 text-slate-400 hover:bg-white/10 hover:text-white" aria-label="Close intro video">
-                  <X size={20} />
-                </button>
+  return (
+    <AnimatePresence>
+      {visible ? (
+        <motion.div
+          className="fixed inset-0 z-[110] grid place-items-center overflow-hidden bg-[#05070d] p-4 text-white"
+          initial={reduce ? false : { opacity: 1 }}
+          animate={{ opacity: 1 }}
+          exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 1.015 }}
+          transition={{ duration: reduce ? 0.12 : 0.42, ease: "easeOut" }}
+        >
+          <div className="welcome-launch-bg absolute inset-0" aria-hidden="true" />
+          <div className="welcome-launch-particles absolute inset-0" aria-hidden="true">
+            {Array.from({ length: 18 }).map((_, index) => (
+              <span key={index} style={{ "--i": index } as CSSProperties} />
+            ))}
+          </div>
+          <motion.div
+            className="welcome-launch-card glass-panel relative w-full max-w-2xl overflow-hidden rounded-[2rem] border border-cyan-300/20 p-6 text-center shadow-[0_34px_110px_rgba(0,0,0,0.45)] sm:p-8"
+            initial={reduce ? false : { opacity: 0.96, y: 10, scale: 0.985 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={reduce ? { opacity: 0 } : { opacity: 0, y: -10, scale: 0.985 }}
+            transition={{ duration: reduce ? 0.12 : 0.55, ease: "easeOut" }}
+          >
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.18),transparent_44%),radial-gradient(circle_at_75%_70%,rgba(139,92,246,0.16),transparent_42%)]" />
+            <div className="relative">
+              <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl border border-cyan-300/25 bg-cyan-300/10 shadow-[0_0_38px_rgba(34,211,238,0.22)]">
+                <Sparkles className="text-cyan-100" size={24} />
               </div>
-              <video controls playsInline preload="metadata" className="aspect-video w-full rounded-2xl border border-white/10 bg-slate-950" poster={siteConfig.profileImagePath}>
-                <source src={siteConfig.introVideoPath} type="video/mp4" />
-              </video>
-              <div className="mt-4 flex flex-wrap justify-end gap-3">
-                <button
-                  onClick={() => {
-                    setVideoOpen(false);
-                    enter();
-                  }}
-                  className="rounded-full bg-brand-gradient px-5 py-2.5 text-sm font-semibold text-white shadow-glow"
-                >
-                  Enter Portfolio
-                </button>
-              </div>
+              <p className="mono-label mt-5">EbbadOS launch card</p>
+              <h2 className="mt-4 font-heading text-[clamp(2.25rem,7vw,4.5rem)] font-bold leading-[0.95] text-white">
+                Welcome to Ebbad&apos;s Portfolio
+              </h2>
+              <p className="mt-4 font-heading text-xl font-semibold text-cyan-100 sm:text-2xl">Full-Stack &bull; AI &bull; Databases &bull; Systems</p>
+              <p className="mx-auto mt-4 max-w-xl leading-7 text-slate-300">
+                Explore projects, demos, case studies, skills, and Ask Ebbad.
+              </p>
+              <button
+                ref={enterRef}
+                onClick={enter}
+                className="mt-7 inline-flex min-h-12 items-center gap-2 rounded-full bg-brand-gradient px-6 py-3 font-semibold text-white shadow-glow transition hover:-translate-y-0.5 hover:shadow-[0_0_42px_rgba(34,211,238,0.35)] focus:outline-none focus:ring-2 focus:ring-cyan-200 focus:ring-offset-2 focus:ring-offset-slate-950"
+              >
+                Enter Portfolio <ArrowRight size={17} />
+              </button>
+              <p className="mt-5 text-xs font-medium text-slate-500">Built with Next.js, TypeScript, Three.js, and curiosity.</p>
             </div>
           </motion.div>
-        ) : null}
-      </AnimatePresence>
-    </>
+        </motion.div>
+      ) : null}
+    </AnimatePresence>
   );
 }

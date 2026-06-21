@@ -12,6 +12,8 @@ type PointerTarget = {
   active: boolean;
 };
 
+type AssistantExpression = AskCoreStatus | "clicked";
+
 function useReducedMotion() {
   const [reduced, setReduced] = useState(false);
 
@@ -33,14 +35,17 @@ function AssistantScene({
   compact,
 }: {
   pointer: React.MutableRefObject<PointerTarget>;
-  status: AskCoreStatus;
+  status: AssistantExpression;
   reducedMotion: boolean;
   compact: boolean;
 }) {
   const headRef = useRef<THREE.Group>(null);
   const haloRef = useRef<THREE.Group>(null);
+  const leftEyeRef = useRef<THREE.Mesh>(null);
+  const rightEyeRef = useRef<THREE.Mesh>(null);
   const leftPupilRef = useRef<THREE.Mesh>(null);
   const rightPupilRef = useRef<THREE.Mesh>(null);
+  const smileRef = useRef<THREE.Mesh>(null);
   const particlesRef = useRef<THREE.Points>(null);
   const smooth = useRef({ x: 0, y: 0 });
   const particleBase = useMemo(() => {
@@ -79,12 +84,14 @@ function AssistantScene({
     const time = clock.elapsedTime;
     const thinking = status === "thinking";
     const success = status === "success";
+    const clicked = status === "clicked";
+    const blink = !reducedMotion && time % 4.4 > 4.22 ? 0.12 : 1;
 
     if (headRef.current) {
       headRef.current.rotation.y = x * 0.28;
       headRef.current.rotation.x = -y * 0.18;
-      headRef.current.position.y = (reducedMotion ? 0 : Math.sin(time * 1.35) * 0.035) + (success ? 0.035 : 0);
-      const scale = thinking ? 1 + Math.sin(time * 5) * 0.018 : 1;
+      headRef.current.position.y = (reducedMotion ? 0 : Math.sin(time * 1.35) * 0.035) + (success || clicked ? 0.035 : 0);
+      const scale = clicked ? 1.035 : thinking ? 1 + Math.sin(time * 5) * 0.018 : 1;
       headRef.current.scale.setScalar(scale);
     }
 
@@ -96,8 +103,19 @@ function AssistantScene({
 
     const pupilX = x * 0.045;
     const pupilY = -y * 0.035;
-    if (leftPupilRef.current) leftPupilRef.current.position.set(-0.28 + pupilX, 0.14 + pupilY, 0.548);
-    if (rightPupilRef.current) rightPupilRef.current.position.set(0.28 + pupilX, 0.14 + pupilY, 0.548);
+    if (leftEyeRef.current) leftEyeRef.current.scale.set(1, blink * (clicked ? 1.12 : 1), 0.32);
+    if (rightEyeRef.current) rightEyeRef.current.scale.set(1, blink * (clicked ? 1.12 : 1), 0.32);
+    if (leftPupilRef.current) {
+      leftPupilRef.current.position.set(-0.28 + pupilX, 0.14 + pupilY, 0.548);
+      leftPupilRef.current.scale.setScalar(clicked ? 1.15 : 1);
+    }
+    if (rightPupilRef.current) {
+      rightPupilRef.current.position.set(0.28 + pupilX, 0.14 + pupilY, 0.548);
+      rightPupilRef.current.scale.setScalar(clicked ? 1.15 : 1);
+    }
+    if (smileRef.current) {
+      smileRef.current.scale.set(clicked || success ? 1.16 : 1, clicked ? 0.2 : 0.16, 0.1);
+    }
 
     if (particlesRef.current && !reducedMotion) {
       const attribute = particlesRef.current.geometry.getAttribute("position") as THREE.BufferAttribute;
@@ -142,29 +160,37 @@ function AssistantScene({
           <sphereGeometry args={[0.82, 48, 32]} />
           <meshPhysicalMaterial color="#dffbff" transparent opacity={0.38} roughness={0.18} metalness={0.14} clearcoat={1} transmission={0.3} thickness={0.42} />
         </mesh>
+        <mesh position={[0, 0.98, 0.02]} rotation={[0, 0, 0.25]}>
+          <capsuleGeometry args={[0.035, 0.32, 8, 16]} />
+          <meshStandardMaterial color="#67e8f9" emissive="#22d3ee" emissiveIntensity={0.85} roughness={0.22} />
+        </mesh>
+        <mesh position={[0.13, 1.16, 0.08]}>
+          <sphereGeometry args={[0.065, 18, 12]} />
+          <meshStandardMaterial color="#a5f3fc" emissive="#22d3ee" emissiveIntensity={1.6} />
+        </mesh>
         <mesh scale={[0.9, 0.54, 0.2]} position={[0, 0.08, 0.45]}>
           <sphereGeometry args={[0.64, 48, 24]} />
           <meshStandardMaterial color="#03111f" roughness={0.24} metalness={0.18} emissive="#061827" emissiveIntensity={0.75} />
         </mesh>
-        <mesh position={[-0.28, 0.15, 0.535]} scale={[1, 1, 0.32]}>
+        <mesh ref={leftEyeRef} position={[-0.28, 0.15, 0.535]} scale={[1, 1, 0.32]}>
           <sphereGeometry args={[0.105, 28, 18]} />
-          <meshStandardMaterial color="#14f1dc" emissive="#14f1dc" emissiveIntensity={status === "thinking" ? 2.8 : 1.75} />
+          <meshStandardMaterial color="#14f1dc" emissive="#14f1dc" emissiveIntensity={status === "thinking" ? 2.8 : status === "clicked" ? 2.45 : 1.75} />
         </mesh>
         <mesh ref={leftPupilRef} position={[-0.28, 0.14, 0.548]} scale={[1, 1, 0.3]}>
           <sphereGeometry args={[0.046, 18, 12]} />
           <meshBasicMaterial color="#052b32" />
         </mesh>
-        <mesh position={[0.28, 0.15, 0.535]} scale={[1, 1, 0.32]}>
+        <mesh ref={rightEyeRef} position={[0.28, 0.15, 0.535]} scale={[1, 1, 0.32]}>
           <sphereGeometry args={[0.105, 28, 18]} />
-          <meshStandardMaterial color="#14f1dc" emissive="#14f1dc" emissiveIntensity={status === "thinking" ? 2.8 : 1.75} />
+          <meshStandardMaterial color="#14f1dc" emissive="#14f1dc" emissiveIntensity={status === "thinking" ? 2.8 : status === "clicked" ? 2.45 : 1.75} />
         </mesh>
         <mesh ref={rightPupilRef} position={[0.28, 0.14, 0.548]} scale={[1, 1, 0.3]}>
           <sphereGeometry args={[0.046, 18, 12]} />
           <meshBasicMaterial color="#052b32" />
         </mesh>
-        <mesh position={[0, -0.15, 0.548]} rotation={[0, 0, 0]} scale={[1, 0.16, 0.1]}>
+        <mesh ref={smileRef} position={[0, -0.15, 0.548]} rotation={[0, 0, 0]} scale={[1, 0.16, 0.1]}>
           <torusGeometry args={[0.22, 0.018, 10, 48, Math.PI]} />
-          <meshBasicMaterial color={status === "success" ? "#34d399" : "#22d3ee"} transparent opacity={0.9} />
+          <meshBasicMaterial color={status === "success" || status === "clicked" ? "#34d399" : "#22d3ee"} transparent opacity={0.94} />
         </mesh>
         <mesh position={[0, -0.82, 0.02]} scale={[0.68, 0.38, 0.42]}>
           <sphereGeometry args={[0.62, 40, 20]} />
@@ -180,9 +206,11 @@ function AssistantScene({
 }
 
 export function AskAssistantAvatar({ status = "idle", compact = false }: { status?: AskCoreStatus; compact?: boolean }) {
-  const shellRef = useRef<HTMLDivElement>(null);
+  const shellRef = useRef<HTMLButtonElement>(null);
   const pointer = useRef<PointerTarget>({ x: 0, y: 0, active: false });
+  const [clicked, setClicked] = useState(false);
   const reducedMotion = useReducedMotion();
+  const expression: AssistantExpression = clicked ? "clicked" : status;
 
   useEffect(() => {
     const shell = shellRef.current;
@@ -210,16 +238,25 @@ export function AskAssistantAvatar({ status = "idle", compact = false }: { statu
     };
   }, []);
 
+  useEffect(() => {
+    if (!clicked) return;
+    const timer = window.setTimeout(() => setClicked(false), 850);
+    return () => window.clearTimeout(timer);
+  }, [clicked]);
+
   return (
-    <div
+    <button
+      type="button"
       ref={shellRef}
       className={cn(
-        "ask-assistant-card relative isolate min-w-0 max-w-full overflow-hidden rounded-3xl border border-cyan-300/15 bg-slate-950/70",
+        "ask-assistant-card relative isolate min-w-0 max-w-full overflow-hidden rounded-3xl border border-cyan-300/15 bg-slate-950/70 text-left focus:outline-none focus:ring-2 focus:ring-cyan-200/70",
         compact ? "h-12 w-12 rounded-2xl" : "h-[clamp(11rem,24vw,15.5rem)] w-full",
-        status === "thinking" && "ask-assistant-thinking",
-        status === "success" && "ask-assistant-success",
+        expression === "thinking" && "ask-assistant-thinking",
+        expression === "success" && "ask-assistant-success",
+        expression === "clicked" && "ask-assistant-clicked",
       )}
-      aria-label="Ask Ebbad assistant avatar"
+      onClick={() => setClicked(true)}
+      aria-label="Interact with Ask Ebbad assistant avatar"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_var(--assistant-x,50%)_var(--assistant-y,48%),rgba(34,211,238,0.26),transparent_42%),radial-gradient(circle_at_72%_72%,rgba(139,92,246,0.2),transparent_48%)]" />
       {!compact ? (
@@ -237,12 +274,12 @@ export function AskAssistantAvatar({ status = "idle", compact = false }: { statu
         dpr={[1, 1.45]}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       >
-        <AssistantScene pointer={pointer} status={status} reducedMotion={reducedMotion} compact={compact} />
+        <AssistantScene pointer={pointer} status={expression} reducedMotion={reducedMotion} compact={compact} />
       </Canvas>
       <div className="pointer-events-none absolute inset-x-4 bottom-3 hidden items-center justify-center gap-2 rounded-full border border-white/10 bg-slate-950/58 px-3 py-1.5 text-[10px] font-semibold text-slate-300 backdrop-blur sm:flex">
         <span className="h-1.5 w-1.5 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.9)]" />
         Ask Ebbad AI Console
       </div>
-    </div>
+    </button>
   );
 }
