@@ -440,6 +440,29 @@ html[data-theme="light"] .project-visual-shell [class*="bg-slate-950/"] {
   scroll-margin: 0;
 }
 
+.ask-ebbad-glyph::before,
+.ask-ebbad-glyph::after {
+  position: absolute;
+  content: "";
+  pointer-events: none;
+}
+
+.ask-ebbad-glyph::before {
+  inset: -32%;
+  background:
+    conic-gradient(from 120deg, transparent, rgba(34, 211, 238, 0.38), rgba(139, 92, 246, 0.32), transparent),
+    radial-gradient(circle at 50% 50%, rgba(34, 211, 238, 0.26), transparent 58%);
+  opacity: 0.7;
+  animation: coreAvatarSpin 8s linear infinite;
+}
+
+.ask-ebbad-glyph::after {
+  inset: 0.28rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: radial-gradient(circle at 50% 24%, rgba(255, 255, 255, 0.12), transparent 42%);
+}
+
 .ask-assistant-card {
   contain: layout paint;
   --assistant-x: 50%;
@@ -1429,6 +1452,7 @@ section[id] {
   .project-flow-line,
   .project-node-pulse,
   .ask-assistant-card::before,
+  .ask-ebbad-glyph::before,
   .welcome-launch-bg,
   .welcome-launch-card::before,
   .welcome-launch-particles span,

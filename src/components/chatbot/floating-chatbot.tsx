@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { MessageSquare, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { DynamicAskAssistantAvatar } from "@/components/ask/dynamic-assistant-avatar";
+import { AskEbbadIcon } from "@/components/ask/ask-ebbad-icon";
 import { DynamicAskEbbad } from "@/components/home/dynamic-islands";
 
 export function FloatingChatbot() {
@@ -72,7 +72,7 @@ export function FloatingChatbot() {
             >
               <div className="mb-2 flex h-12 shrink-0 items-center justify-between rounded-2xl border border-white/10 bg-slate-950/90 px-3 py-2 shadow-[0_18px_50px_rgba(0,0,0,0.22)] sm:h-[3.25rem] sm:rounded-3xl sm:px-4">
                 <span className="flex min-w-0 items-center gap-2">
-                  <DynamicAskAssistantAvatar compact />
+                  <AskEbbadIcon className="h-10 w-10 rounded-[1rem]" />
                   <span className="min-w-0">
                     <span className="block truncate font-heading text-sm font-semibold text-white sm:text-base">Ask Ebbad</span>
                     <span className="hidden items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-cyan-100 sm:flex">
