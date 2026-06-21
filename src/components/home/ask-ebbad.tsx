@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Bot, CheckCircle2, RotateCcw, Send, ShieldCheck, Sparkles } from "lucide-react";
 import { chatbotKnowledge } from "@/data/site";
 import { chatbotModes, type ChatbotMode } from "@/lib/chatbot";
@@ -19,9 +19,22 @@ export function AskEbbad({ compact = false }: { compact?: boolean }) {
     { role: "assistant", text: "Hi, I'm Ask Ebbad. I answer from Ebbad's approved portfolio knowledge base, including projects, skills, testimonials, contact, and availability." },
   ]);
   const inputRef = useRef<HTMLInputElement>(null);
+  const messagesRef = useRef<HTMLDivElement>(null);
+  const latestMessageRef = useRef<HTMLDivElement>(null);
 
   const promptGroups = useMemo(() => chatbotKnowledge.promptGroups || [{ label: "Suggested", prompts: chatbotKnowledge.suggestedPrompts }], []);
   const compactPrompts = useMemo(() => promptGroups.flatMap((group) => group.prompts).slice(0, 6), [promptGroups]);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      latestMessageRef.current?.scrollIntoView({ block: "end", behavior: "smooth" });
+      if (messagesRef.current) {
+        messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+      }
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [messages, loading]);
 
   const submit = async (text = input) => {
     const prompt = text.trim();
@@ -96,7 +109,11 @@ export function AskEbbad({ compact = false }: { compact?: boolean }) {
         </button>
       </div>
 
-      <div className={cn("overflow-y-auto rounded-3xl border border-white/10 bg-slate-950/62 p-4", compact ? "min-h-0 flex-1 rounded-2xl p-3" : "mt-5 h-72")} aria-live="polite">
+      <div
+        ref={messagesRef}
+        className={cn("chat-scrollbar overflow-y-auto rounded-3xl border border-white/10 bg-slate-950/62 p-4", compact ? "min-h-0 flex-1 rounded-2xl p-3" : "mt-5 h-72")}
+        aria-live="polite"
+      >
         {messages.map((message, index) => (
           <div key={`${message.role}-${index}`} className={`mb-3 flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
             <div className={cn(
@@ -115,6 +132,7 @@ export function AskEbbad({ compact = false }: { compact?: boolean }) {
             <Sparkles size={15} className="animate-pulse" /> Ask Ebbad is checking the knowledge base...
           </div>
         ) : null}
+        <div ref={latestMessageRef} aria-hidden="true" />
       </div>
 
       {compact ? (
