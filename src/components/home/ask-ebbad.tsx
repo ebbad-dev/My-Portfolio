@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Bot, ChevronDown, RotateCcw, Send, ShieldCheck, Sparkles } from "lucide-react";
+import { DynamicAskAssistantAvatar } from "@/components/ask/dynamic-assistant-avatar";
 import { chatbotKnowledge } from "@/data/site";
-import { chatbotModes, type ChatbotMode } from "@/lib/chatbot";
+import { type ChatbotMode } from "@/lib/chatbot";
 import { cn } from "@/lib/utils";
 import type { AskCoreStatus } from "@/components/ask/types";
 
@@ -23,35 +24,42 @@ export function AskEbbad({
   compactPanel = false,
   externalPrompt,
   onStatusChange,
+  showHeader = true,
 }: {
   compact?: boolean;
   compactPanel?: boolean;
   externalPrompt?: { id: number; text: string };
   onStatusChange?: (status: AskCoreStatus) => void;
+  showHeader?: boolean;
 }) {
   const [mode, setMode] = useState<ChatbotMode>("Recruiter Mode");
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [morePromptsOpen, setMorePromptsOpen] = useState(false);
+  const [assistantStatus, setAssistantStatus] = useState<AskCoreStatus>("idle");
   const [messages, setMessages] = useState<ChatMessage[]>([
     { role: "assistant", text: "Hi, I'm Ask Ebbad. I answer from Ebbad's approved portfolio knowledge base, including projects, skills, testimonials, contact, and availability." },
   ]);
   const inputRef = useRef<HTMLInputElement>(null);
   const messagesRef = useRef<HTMLDivElement>(null);
-  const latestMessageRef = useRef<HTMLDivElement>(null);
   const statusTimerRef = useRef<number | null>(null);
   const lastExternalPromptIdRef = useRef<number | null>(null);
 
   const promptGroups = useMemo(() => chatbotKnowledge.promptGroups || [{ label: "Suggested", prompts: chatbotKnowledge.suggestedPrompts }], []);
-  const compactPrompts = useMemo(() => promptGroups.flatMap((group) => group.prompts).slice(0, 6), [promptGroups]);
+  const compactPrompts = useMemo(() => promptGroups.flatMap((group) => group.prompts).slice(0, 5), [promptGroups]);
   const visiblePrompts = useMemo(() => promptGroups.flatMap((group) => group.prompts).slice(0, 5), [promptGroups]);
   const hiddenPrompts = useMemo(() => promptGroups.flatMap((group) => group.prompts).slice(5), [promptGroups]);
+
+  const updateAssistantStatus = useCallback((status: AskCoreStatus) => {
+    setAssistantStatus(status);
+    onStatusChange?.(status);
+  }, [onStatusChange]);
 
   const submit = useCallback(async (text = input) => {
     const prompt = text.trim();
     if (!prompt || loading) return;
     setLoading(true);
-    onStatusChange?.("thinking");
+    updateAssistantStatus("thinking");
     if (statusTimerRef.current) window.clearTimeout(statusTimerRef.current);
     setMessages((current) => [...current, { role: "user", text: prompt }]);
     setInput("");
@@ -64,22 +72,22 @@ export function AskEbbad({
       if (!response.ok) throw new Error("Chat request failed");
       const result = (await response.json()) as { message?: string };
       setMessages((current) => [...current, { role: "assistant", text: result.message || chatbotKnowledge.fallback }]);
-      onStatusChange?.("success");
-      statusTimerRef.current = window.setTimeout(() => onStatusChange?.("idle"), 1800);
+      updateAssistantStatus("success");
+      statusTimerRef.current = window.setTimeout(() => updateAssistantStatus("idle"), 1800);
     } catch {
       setMessages((current) => [...current, { role: "assistant", text: `Connection note: ${chatbotKnowledge.fallback}` }]);
-      onStatusChange?.("idle");
+      updateAssistantStatus("idle");
     } finally {
       setLoading(false);
-      window.setTimeout(() => inputRef.current?.focus(), 0);
+      window.setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 0);
     }
-  }, [input, loading, mode, onStatusChange]);
+  }, [input, loading, mode, updateAssistantStatus]);
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
-      latestMessageRef.current?.scrollIntoView({ block: "end", behavior: "smooth" });
       if (messagesRef.current) {
-        messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        messagesRef.current.scrollTo({ top: messagesRef.current.scrollHeight, behavior: reduceMotion ? "auto" : "smooth" });
       }
     });
 
@@ -99,10 +107,13 @@ export function AskEbbad({
   }, [externalPrompt, submit]);
 
   return (
-    <div className={cn("glass-panel min-w-0 max-w-full overflow-hidden rounded-3xl p-0", compact && "flex min-h-0 flex-1 flex-col rounded-[1.35rem]")}>
+    <div className={cn("ask-console glass-panel min-w-0 max-w-full overflow-hidden rounded-3xl p-0", compact && "flex min-h-0 flex-1 flex-col rounded-[1.35rem]")}>
+      {showHeader ? (
       <div className={cn("shrink-0 border-b border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.16),transparent_38%),rgba(2,6,23,0.28)]", compact ? "p-2.5 sm:p-3" : compactPanel ? "p-4" : "p-5")}>
         <div className={cn("flex flex-wrap items-start justify-between gap-4", compact && "items-center gap-2")}>
-          <div className="min-w-0">
+          <div className="flex min-w-0 items-start gap-3">
+            {compact ? <DynamicAskAssistantAvatar status={assistantStatus} compact /> : null}
+            <div className="min-w-0">
             <p className={cn("mono-label", compact && "sr-only")}>Ask Ebbad</p>
             <h3 className={cn("mt-2 flex min-w-0 items-center gap-2 font-heading font-bold text-white", compact ? "mt-0 text-sm sm:text-base" : compactPanel ? "text-xl" : "text-2xl")}>
               <Bot className="text-cyan-200" size={compact ? 15 : 22} /> Portfolio intelligence
@@ -115,16 +126,25 @@ export function AskEbbad({
                 Powered by curated portfolio knowledge, designed to help recruiters and collaborators find answers faster.
               </p>
             ) : null}
+            </div>
           </div>
           <span className={cn("inline-flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1.5 text-xs font-semibold text-emerald-100", compact && "gap-1 px-2 py-1 text-[10px]")}>
             <ShieldCheck size={compact ? 12 : 14} /> Verified
           </span>
         </div>
       </div>
+      ) : null}
 
       <div className={cn("min-w-0 p-5", compact && "flex min-h-0 flex-1 flex-col gap-2 overflow-hidden p-2.5 sm:p-3", compactPanel && "p-4")}>
+        <div className={cn(compactPanel && !compact ? "grid min-w-0 gap-4 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,0.58fr)]" : "contents")}>
+          {compactPanel && !compact ? (
+            <div className="min-w-0 max-w-full overflow-hidden">
+              <DynamicAskAssistantAvatar status={assistantStatus} />
+            </div>
+          ) : null}
+          <div className="flex min-w-0 max-w-full flex-col">
         <div className={cn("flex flex-wrap items-center gap-2", compact && "scrollbar-none flex-nowrap overflow-x-auto pb-1")}>
-        {(compact ? chatbotModes.map((item) => ({ label: item.replace(" Mode", ""), value: item })) : modeOptions).map((item) => (
+        {modeOptions.map((item) => (
           <button
             key={item.value}
             type="button"
@@ -144,8 +164,8 @@ export function AskEbbad({
           type="button"
           onClick={() => {
             setMessages([{ role: "assistant", text: "Chat reset. Ask me about Ebbad, projects, testimonials, skills, contact, or availability." }]);
-            onStatusChange?.("idle");
-            inputRef.current?.focus();
+            updateAssistantStatus("idle");
+            inputRef.current?.focus({ preventScroll: true });
           }}
           className={cn("ml-auto shrink-0 rounded-full border border-white/10 p-2 text-slate-400 transition hover:border-cyan-300/35 hover:bg-white/10 hover:text-white", compact && "p-1.5")}
           aria-label="Reset chat"
@@ -177,7 +197,6 @@ export function AskEbbad({
             <Sparkles size={15} className="animate-pulse" /> Ask Ebbad is checking the knowledge base...
           </div>
         ) : null}
-        <div ref={latestMessageRef} aria-hidden="true" />
       </div>
 
       {compact ? (
@@ -264,6 +283,8 @@ export function AskEbbad({
           <Send size={18} />
         </button>
       </form>
+          </div>
+        </div>
       </div>
     </div>
   );

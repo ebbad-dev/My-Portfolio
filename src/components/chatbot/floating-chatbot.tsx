@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { MessageSquare, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { IntelligenceCoreAvatar } from "@/components/ask/intelligence-core-avatar";
+import { DynamicAskAssistantAvatar } from "@/components/ask/dynamic-assistant-avatar";
 import { DynamicAskEbbad } from "@/components/home/dynamic-islands";
 
 export function FloatingChatbot() {
@@ -13,11 +13,11 @@ export function FloatingChatbot() {
 
   useEffect(() => {
     if (!open) return;
-    closeRef.current?.focus();
+    closeRef.current?.focus({ preventScroll: true });
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setOpen(false);
-        window.setTimeout(() => triggerRef.current?.focus(), 0);
+        window.setTimeout(() => triggerRef.current?.focus({ preventScroll: true }), 0);
       }
     };
     window.addEventListener("keydown", onKey);
@@ -26,7 +26,7 @@ export function FloatingChatbot() {
 
   const close = () => {
     setOpen(false);
-    window.setTimeout(() => triggerRef.current?.focus(), 0);
+    window.setTimeout(() => triggerRef.current?.focus({ preventScroll: true }), 0);
   };
 
   return (
@@ -59,7 +59,7 @@ export function FloatingChatbot() {
             >
               <div className="mb-2 flex h-12 shrink-0 items-center justify-between rounded-2xl border border-white/10 bg-slate-950/90 px-3 py-2 sm:h-14 sm:rounded-3xl sm:px-4">
                 <span className="flex min-w-0 items-center gap-2">
-                  <IntelligenceCoreAvatar compact />
+                  <DynamicAskAssistantAvatar compact />
                   <span className="min-w-0">
                     <span className="block truncate font-heading text-sm font-semibold text-white sm:text-base">Ask Ebbad</span>
                     <span className="hidden items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-cyan-100 sm:flex">
@@ -72,7 +72,7 @@ export function FloatingChatbot() {
                   <X size={18} />
                 </button>
               </div>
-              <DynamicAskEbbad compact />
+              <DynamicAskEbbad compact showHeader={false} />
             </motion.div>
           </motion.div>
         ) : null}

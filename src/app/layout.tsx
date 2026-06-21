@@ -12,6 +12,7 @@ import { SmoothScroll } from "@/components/system/smooth-scroll";
 import { WelcomeIntro } from "@/components/system/welcome-intro";
 import { FloatingChatbot } from "@/components/chatbot/floating-chatbot";
 import { ActiveSectionProvider } from "@/hooks/useActiveSection";
+import { InitialScrollGuard } from "@/components/system/initial-scroll-guard";
 
 const heading = Space_Grotesk({
   subsets: ["latin"],
@@ -119,6 +120,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
           <SiteNav />
           <SocialDock />
           <CommandPalette />
+          <InitialScrollGuard />
           <SmoothScroll />
           <WelcomeIntro />
           <FloatingChatbot />

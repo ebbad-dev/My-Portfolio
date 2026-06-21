@@ -1,7 +1,6 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { IntelligenceCoreSkeleton } from "@/components/ask/intelligence-core-skeleton";
 
 export const DynamicSkillGlobe = dynamic(() => import("@/components/home/skill-globe").then((module) => module.SkillGlobe), {
   ssr: false,
@@ -25,9 +24,4 @@ export const DynamicAskEbbad = dynamic(() => import("@/components/home/ask-ebbad
       Ask Ebbad is getting ready. The floating chat button is available anytime.
     </div>
   ),
-});
-
-export const DynamicPortfolioIntelligenceCore = dynamic(() => import("@/components/ask/portfolio-intelligence-core").then((module) => module.PortfolioIntelligenceCore), {
-  ssr: false,
-  loading: () => <IntelligenceCoreSkeleton />,
 });
