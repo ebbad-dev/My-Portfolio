@@ -138,7 +138,7 @@ export function AskEbbad({
       ) : null}
 
       <div className={cn("min-w-0 p-5", compact && "flex h-full min-h-0 flex-1 flex-col gap-2 overflow-hidden p-2.5 sm:p-3", compactPanel && "p-4")}>
-        <div className={cn(compactPanel && !compact ? "grid min-w-0 gap-4 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,0.58fr)]" : "contents")}>
+        <div className={cn(compactPanel && !compact ? "grid min-w-0 items-stretch gap-4 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]" : "contents")}>
           {compactPanel && !compact ? (
             <div className="min-w-0 max-w-full overflow-hidden">
               <DynamicAskAssistantAvatar status={assistantStatus} />
