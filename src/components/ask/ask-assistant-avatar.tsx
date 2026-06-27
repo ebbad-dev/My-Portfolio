@@ -173,8 +173,8 @@ function AssistantModel({
   const haloRef = useRef<THREE.Group>(null);
   const leftEyeRef = useRef<THREE.Mesh>(null);
   const rightEyeRef = useRef<THREE.Mesh>(null);
-  const leftPupilRef = useRef<THREE.Mesh>(null);
-  const rightPupilRef = useRef<THREE.Mesh>(null);
+  const leftPupilRef = useRef<THREE.Group>(null);
+  const rightPupilRef = useRef<THREE.Group>(null);
   const smileRef = useRef<THREE.Mesh>(null);
   const chestCoreRef = useRef<THREE.Mesh>(null);
   const smooth = useRef({ x: 0, y: 0 });
@@ -213,12 +213,12 @@ function AssistantModel({
       haloRef.current.rotation.y = x * 0.12;
     }
 
-    const pupilX = x * 0.034;
-    const pupilY = -y * 0.022;
+    const pupilX = THREE.MathUtils.clamp(x * (compact ? 0.025 : 0.042), compact ? -0.025 : -0.042, compact ? 0.025 : 0.042);
+    const pupilY = THREE.MathUtils.clamp(-y * (compact ? 0.016 : 0.026), compact ? -0.016 : -0.026, compact ? 0.016 : 0.026);
     if (leftEyeRef.current) leftEyeRef.current.scale.set(1.08, blink * (clicked ? 1.08 : success ? 1.04 : 1), 0.28);
     if (rightEyeRef.current) rightEyeRef.current.scale.set(1.08, blink * (clicked ? 1.08 : success ? 1.04 : 1), 0.28);
-    if (leftPupilRef.current) leftPupilRef.current.position.set(-0.31 + pupilX, 0.18 + pupilY, 0.69);
-    if (rightPupilRef.current) rightPupilRef.current.position.set(0.31 + pupilX, 0.18 + pupilY, 0.69);
+    if (leftPupilRef.current) leftPupilRef.current.position.set(-0.31 + pupilX, 0.18 + pupilY, 0.715);
+    if (rightPupilRef.current) rightPupilRef.current.position.set(0.31 + pupilX, 0.18 + pupilY, 0.715);
 
     if (smileRef.current) {
       smileRef.current.scale.set(clicked || success ? 1.08 : attentive ? 1.02 : 0.96, clicked ? 0.12 : success ? 0.11 : 0.1, 0.08);
@@ -292,28 +292,40 @@ function AssistantModel({
 
         <mesh ref={leftEyeRef} position={[-0.31, 0.18, 0.675]} scale={[1.04, 0.78, 0.28]}>
           <sphereGeometry args={[0.108, 34, 20]} />
-          <meshPhysicalMaterial color={eyeColor} emissive={eyeColor} emissiveIntensity={status === "thinking" ? 1.85 : status === "clicked" ? 1.65 : 1.28} roughness={0.08} metalness={0.06} clearcoat={1} transparent opacity={0.9} />
+          <meshPhysicalMaterial color={eyeColor} emissive={eyeColor} emissiveIntensity={status === "thinking" ? 1.7 : status === "clicked" ? 1.55 : 1.18} roughness={0.06} metalness={0.08} clearcoat={1} transparent opacity={0.9} />
         </mesh>
-        <mesh ref={leftPupilRef} position={[-0.31, 0.18, 0.69]} scale={[0.78, 0.78, 0.24]}>
-          <sphereGeometry args={[0.044, 18, 12]} />
-          <meshBasicMaterial color="#04242d" />
-        </mesh>
-        <mesh position={[-0.34, 0.225, 0.75]} scale={[0.22, 0.18, 0.08]}>
-          <sphereGeometry args={[0.026, 14, 10]} />
-          <meshBasicMaterial color="#a5f3fc" transparent opacity={0.32} />
-        </mesh>
+        <group ref={leftPupilRef} position={[-0.31, 0.18, 0.715]}>
+          <mesh scale={[1, 0.82, 0.18]}>
+            <sphereGeometry args={[0.05, 28, 16]} />
+            <meshStandardMaterial color="#031821" emissive="#0a5c66" emissiveIntensity={0.42} roughness={0.16} metalness={0.22} />
+          </mesh>
+          <mesh scale={[1.1, 0.88, 0.08]}>
+            <torusGeometry args={[0.057, 0.0055, 8, 40]} />
+            <meshBasicMaterial color="#67e8f9" transparent opacity={0.44} />
+          </mesh>
+          <mesh position={[-0.017, 0.018, 0.028]} scale={[0.42, 0.34, 0.12]}>
+            <sphereGeometry args={[0.018, 14, 10]} />
+            <meshBasicMaterial color="#dffbff" transparent opacity={0.68} />
+          </mesh>
+        </group>
         <mesh ref={rightEyeRef} position={[0.31, 0.18, 0.675]} scale={[1.04, 0.78, 0.28]}>
           <sphereGeometry args={[0.108, 34, 20]} />
-          <meshPhysicalMaterial color={eyeColor} emissive={eyeColor} emissiveIntensity={status === "thinking" ? 1.85 : status === "clicked" ? 1.65 : 1.28} roughness={0.08} metalness={0.06} clearcoat={1} transparent opacity={0.9} />
+          <meshPhysicalMaterial color={eyeColor} emissive={eyeColor} emissiveIntensity={status === "thinking" ? 1.7 : status === "clicked" ? 1.55 : 1.18} roughness={0.06} metalness={0.08} clearcoat={1} transparent opacity={0.9} />
         </mesh>
-        <mesh ref={rightPupilRef} position={[0.31, 0.18, 0.69]} scale={[0.78, 0.78, 0.24]}>
-          <sphereGeometry args={[0.044, 18, 12]} />
-          <meshBasicMaterial color="#04242d" />
-        </mesh>
-        <mesh position={[0.28, 0.225, 0.75]} scale={[0.22, 0.18, 0.08]}>
-          <sphereGeometry args={[0.026, 14, 10]} />
-          <meshBasicMaterial color="#a5f3fc" transparent opacity={0.32} />
-        </mesh>
+        <group ref={rightPupilRef} position={[0.31, 0.18, 0.715]}>
+          <mesh scale={[1, 0.82, 0.18]}>
+            <sphereGeometry args={[0.05, 28, 16]} />
+            <meshStandardMaterial color="#031821" emissive="#0a5c66" emissiveIntensity={0.42} roughness={0.16} metalness={0.22} />
+          </mesh>
+          <mesh scale={[1.1, 0.88, 0.08]}>
+            <torusGeometry args={[0.057, 0.0055, 8, 40]} />
+            <meshBasicMaterial color="#67e8f9" transparent opacity={0.44} />
+          </mesh>
+          <mesh position={[-0.017, 0.018, 0.028]} scale={[0.42, 0.34, 0.12]}>
+            <sphereGeometry args={[0.018, 14, 10]} />
+            <meshBasicMaterial color="#dffbff" transparent opacity={0.68} />
+          </mesh>
+        </group>
         <mesh ref={smileRef} position={[0, -0.115, 0.69]} rotation={[0, 0, Math.PI]} scale={[0.96, 0.1, 0.08]}>
           <torusGeometry args={[0.2, 0.011, 10, 60, Math.PI]} />
           <meshBasicMaterial color={status === "success" || status === "clicked" ? "#34d399" : "#22d3ee"} transparent opacity={0.62} />
