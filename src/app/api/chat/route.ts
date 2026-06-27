@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { chatbotModes, getChatbotAnswer } from "@/lib/chatbot";
 
+export const runtime = "nodejs";
+
 const chatSchema = z.object({
   message: z.string().min(1).max(800),
   mode: z.enum(chatbotModes).default("Recruiter Mode"),

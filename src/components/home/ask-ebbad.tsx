@@ -38,7 +38,7 @@ export function AskEbbad({
   const [morePromptsOpen, setMorePromptsOpen] = useState(false);
   const [assistantStatus, setAssistantStatus] = useState<AskCoreStatus>("idle");
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: "assistant", text: "Hi, I'm Ask Ebbad. I answer from Ebbad's approved portfolio knowledge base, including projects, skills, testimonials, contact, and availability." },
+    { role: "assistant", text: "Hi, I'm Ask Ebbad. I answer from approved portfolio data, the resume PDF facts, and project case studies only." },
   ]);
   const inputRef = useRef<HTMLInputElement>(null);
   const messagesRef = useRef<HTMLDivElement>(null);
@@ -125,7 +125,7 @@ export function AskEbbad({
             </p>
             {compactPanel ? (
               <p className="mt-1 max-w-xl text-[11px] leading-5 text-cyan-100/70">
-                Powered by curated portfolio knowledge, designed to help recruiters and collaborators find answers faster.
+                Powered by portfolio data, resume facts, and case-study content for recruiter questions.
               </p>
             ) : null}
             </div>
@@ -165,7 +165,7 @@ export function AskEbbad({
         <button
           type="button"
           onClick={() => {
-            setMessages([{ role: "assistant", text: "Chat reset. Ask me about Ebbad, projects, testimonials, skills, contact, or availability." }]);
+            setMessages([{ role: "assistant", text: "Chat reset. Ask me about Ebbad, project case studies, resume highlights, skills, contact, or availability." }]);
             updateAssistantStatus("idle");
             inputRef.current?.focus({ preventScroll: true });
           }}
@@ -280,7 +280,7 @@ export function AskEbbad({
           onChange={(event) => setInput(event.target.value)}
           disabled={loading}
           className={cn("min-w-0 flex-1 rounded-full border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-cyan-300/45 disabled:cursor-not-allowed disabled:opacity-60", compact && "px-3 py-2.5 text-xs sm:text-sm")}
-          placeholder="Ask about Ebbad's projects, testimonials, or contact..."
+          placeholder="Ask about projects, resume, skills, or contact..."
           aria-label="Ask Ebbad a question"
         />
         <button disabled={loading || !input.trim()} className={cn("grid h-12 w-12 place-items-center rounded-full bg-brand-gradient text-white transition disabled:cursor-not-allowed disabled:opacity-50", compact && "h-10 w-10")} aria-label="Send message">

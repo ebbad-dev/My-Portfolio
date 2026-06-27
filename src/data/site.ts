@@ -502,10 +502,13 @@ export const demoData = {
 };
 
 export const chatbotKnowledge = {
-  fallback: "I do not have that exact detail yet, but you can contact Ebbad directly through the contact section.",
+  fallback:
+    "I do not have that exact detail in the approved portfolio, case-study, or resume data. Please contact Ebbad directly for specifics.",
   suggestedPrompts: [
     "Who is Ebbad?",
     "Show me his best projects",
+    "What are his resume highlights?",
+    "What skills are project-backed?",
     "What is ProctorAI?",
     "What is TeleTrack?",
     "What is MirrorMind?",
@@ -517,77 +520,15 @@ export const chatbotKnowledge = {
   promptGroups: [
     {
       label: "Recruiter",
-      prompts: ["Who is Ebbad?", "Is Ebbad available for internships?", "What do testimonials say?"],
+      prompts: ["Who is Ebbad?", "What are his resume highlights?", "Is Ebbad available for internships?", "What do testimonials say?"],
     },
     {
       label: "Projects",
-      prompts: ["Show me his best projects", "What is TeleTrack?", "Tell me about the Student Management API"],
+      prompts: ["Show me his best projects", "What is TeleTrack?", "What is ProctorAI?", "Tell me about the Student Management API"],
     },
     {
       label: "Contact",
-      prompts: ["How can I contact him?", "What is his GitHub?", "Can I view his resume?"],
-    },
-  ],
-  answers: [
-    {
-      triggers: ["who", "ebbad", "study"],
-      answer:
-        "Ebbad Ur Rehman is a Software Engineering student at COMSATS University Islamabad, Lahore Campus. He builds full-stack applications, AI-powered tools, database systems, backend APIs, computer vision projects, and interactive software products.",
-    },
-    {
-      triggers: ["strongest", "projects", "featured"],
-      answer:
-        "His featured projects are ProctorAI, TeleTrack Enterprise, and MirrorMind. They show work across AI, computer vision, databases, system design, and reasoning-based product thinking.",
-    },
-    {
-      triggers: ["proctor", "proctorai"],
-      answer:
-        "ProctorAI is an AI-powered exam monitoring system using computer vision, audio signals, browser activity, risk scoring, evidence logging, and reporting to support online exam integrity.",
-    },
-    {
-      triggers: ["teletrack", "network"],
-      answer:
-        "TeleTrack Enterprise is a database and network monitoring project for managing devices, facilities, technicians, alerts, incidents, audit logs, SLA tracking, and uptime reporting.",
-    },
-    {
-      triggers: ["mirror", "mirrormind", "debate", "reasoning"],
-      answer:
-        "MirrorMind is an AI-powered debate and self-reflection platform that turns opinions into structured argument maps, hidden assumptions, evidence gaps, counterarguments, and reasoning reports.",
-    },
-    {
-      triggers: ["skill", "technical", "stack"],
-      answer:
-        "Ebbad works with Python, Java, C++, SQL, JavaScript, TypeScript, React, Next.js, Node.js, Express.js, Flask, FastAPI concepts, MySQL, SQL Server, SQLite, OpenCV, REST APIs, Git, GitHub, and related tools.",
-    },
-    {
-      triggers: ["student management", "student api", "student result", "result api", "nexvis", "irfan", "masood"],
-      answer:
-        "Dr. Irfan Masood, Director at NexVis Tech, said Ebbad developed a robust and well-structured Student Management API, quickly understood requirements, delivered clean scalable code, and communicated professionally throughout the project.",
-    },
-    {
-      triggers: ["internship", "available", "hire", "collaboration"],
-      answer:
-        "Yes. The portfolio presents Ebbad as open to internships, collaborations, freelance work, and technical project opportunities.",
-    },
-    {
-      triggers: ["testimonial", "testimonials", "reference", "feedback", "saad", "sarah", "upwork", "client"],
-      answer:
-        "The portfolio includes three public testimonials: Saad Faisal from Sanestix praised Ebbad's curiosity, ownership, thoughtful questions, and communication; Dr. Irfan Masood from NexVis Tech praised his Student Management API work; and Sarah Rehman, an Upwork client, praised his responsiveness, detail orientation, timeline delivery, and problem solving.",
-    },
-    {
-      triggers: ["professionalism", "communication", "timeline", "responsive", "expectations", "reliable"],
-      answer:
-        "Client feedback highlights Ebbad's communication, responsiveness, professionalism, ability to understand requirements quickly, and delivery of reliable work within agreed timelines.",
-    },
-    {
-      triggers: ["github", "repository", "code"],
-      answer:
-        "Ebbad's GitHub profile is linked in the portfolio, and available project code is shown only when the public repository has code. The top navigation also links to the portfolio repository as View Source.",
-    },
-    {
-      triggers: ["resume", "cv"],
-      answer:
-        "The portfolio includes a resume link that opens the PDF at /resume/ebbad-resume.pdf in a new tab.",
+      prompts: ["How can I contact him?", "What skills are project-backed?", "What is his GitHub?", "Can I view his resume?"],
     },
   ],
 };
