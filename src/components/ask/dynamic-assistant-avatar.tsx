@@ -15,12 +15,16 @@ function AssistantAvatarFallback({ compact = false }: { compact?: boolean }) {
       aria-hidden="true"
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(34,211,238,0.24),transparent_44%),radial-gradient(circle_at_70%_68%,rgba(139,92,246,0.2),transparent_48%)]" />
-      <div className="absolute left-1/2 top-[42%] h-24 w-24 -translate-x-1/2 -translate-y-1/2 rounded-[36%] border border-cyan-200/25 bg-cyan-200/10 shadow-[0_0_38px_rgba(34,211,238,0.24)]" />
+      <div className="absolute inset-x-4 top-4 flex justify-between gap-3">
+        <span className="h-6 w-24 rounded-full border border-cyan-300/16 bg-slate-950/54" />
+        <span className="h-6 w-28 rounded-full border border-cyan-300/16 bg-slate-950/54" />
+      </div>
+      <div className="absolute left-1/2 top-[42%] h-20 w-20 -translate-x-1/2 -translate-y-1/2 rounded-[36%] border border-cyan-200/20 bg-cyan-200/8 shadow-[0_0_38px_rgba(34,211,238,0.2)]" />
       {!compact ? (
-        <div className="absolute inset-x-5 bottom-5 rounded-2xl border border-cyan-300/14 bg-slate-950/52 p-3">
-          <div className="h-2 w-2/3 rounded-full bg-cyan-200/35" />
-          <div className="mt-3 h-1.5 rounded-full bg-white/8">
-            <div className="h-full w-2/3 rounded-full bg-[linear-gradient(90deg,#22d3ee,#60a5fa,#8b5cf6)]" />
+        <div className="absolute inset-x-7 bottom-4 rounded-full border border-cyan-300/12 bg-slate-950/38 px-3 py-2">
+          <div className="h-1.5 w-2/5 rounded-full bg-cyan-200/24" />
+          <div className="mt-1.5 h-1 rounded-full bg-white/[0.06]">
+            <div className="h-full w-3/5 rounded-full bg-[linear-gradient(90deg,#22d3ee,#60a5fa,#8b5cf6)]" />
           </div>
         </div>
       ) : null}
