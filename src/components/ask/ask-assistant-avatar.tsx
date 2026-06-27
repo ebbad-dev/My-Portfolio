@@ -28,6 +28,25 @@ function useReducedMotion() {
   return reduced;
 }
 
+function useElementVisibility<T extends HTMLElement>(ref: MutableRefObject<T | null>) {
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element || !("IntersectionObserver" in window)) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      { rootMargin: "160px", threshold: 0.02 },
+    );
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, [ref]);
+
+  return visible;
+}
+
 function SignalParticles({
   pointer,
   reducedMotion,
@@ -401,6 +420,7 @@ export function AskAssistantAvatar({ status = "idle", compact = false }: { statu
   const pointer = useRef<PointerTarget>({ x: 0, y: 0, active: false });
   const [clicked, setClicked] = useState(false);
   const reducedMotion = useReducedMotion();
+  const isVisible = useElementVisibility(shellRef);
   const expression: AssistantExpression = clicked ? "clicked" : status;
 
   useEffect(() => {
@@ -479,7 +499,7 @@ export function AskAssistantAvatar({ status = "idle", compact = false }: { statu
         className="pointer-events-none absolute inset-0"
         camera={{ position: [0, compact ? 0.02 : -0.04, compact ? 4.55 : 4.82], fov: compact ? 40 : 34 }}
         dpr={[1, 1.45]}
-        frameloop="always"
+        frameloop={isVisible && !reducedMotion ? "always" : "demand"}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       >
         <AssistantScene pointer={pointer} status={expression} reducedMotion={reducedMotion} compact={compact} />

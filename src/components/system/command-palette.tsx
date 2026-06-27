@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight, Command, Search, X } from "lucide-react";
 import { isUsableHref } from "@/lib/utils";
 import { projects, siteConfig, socials } from "@/data/site";
@@ -14,6 +14,7 @@ type Action = {
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const dialogRef = useRef<HTMLDivElement>(null);
   const github = socials.find((social) => social.kind === "github" && isUsableHref(social.href));
   const linkedin = socials.find((social) => social.kind === "linkedin" && isUsableHref(social.href));
   const email = socials.find((social) => social.kind === "email" && isUsableHref(social.href));
@@ -43,10 +44,25 @@ export function CommandPalette() {
         setOpen(true);
       }
       if (event.key === "Escape") setOpen(false);
+      if (open && event.key === "Tab") {
+        const focusable = dialogRef.current?.querySelectorAll<HTMLElement>(
+          "a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex='-1'])",
+        );
+        if (!focusable?.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [open]);
 
   const select = (action: Action) => {
     setOpen(false);
@@ -58,8 +74,8 @@ export function CommandPalette() {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-slate-950/70 p-4 backdrop-blur" role="dialog" aria-modal="true" aria-label="Command palette">
-      <div className="glass-panel mx-auto mt-24 max-w-2xl overflow-hidden rounded-3xl">
+    <div className="fixed inset-0 z-[100] bg-slate-950/70 p-4 backdrop-blur" role="dialog" aria-modal="true" aria-label="Command palette" onMouseDown={() => setOpen(false)}>
+      <div ref={dialogRef} className="glass-panel mx-auto mt-24 max-w-2xl overflow-hidden rounded-3xl" onMouseDown={(event) => event.stopPropagation()}>
         <div className="flex items-center gap-3 border-b border-white/10 px-5 py-4">
           <Search className="text-cyan-200" size={18} />
           <input

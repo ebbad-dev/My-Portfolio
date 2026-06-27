@@ -11,6 +11,17 @@ npm run dev
 
 Open `http://localhost:3000`.
 
+Useful checks before deploying:
+
+```bash
+npm run lint
+npm run typecheck
+npm run build
+npm run smoke:browser
+```
+
+`npm run smoke:browser` is an optional Playwright-based smoke test. It skips cleanly when Playwright is not installed, and writes screenshots to `test-results/portfolio-smoke` when browser tooling is available.
+
 ## Configure content
 
 - Profile, socials, skills, projects, chatbot knowledge, demos, and testimonials: `src/data/site.ts`
@@ -50,6 +61,13 @@ https://formspree.io/f/mqeogggp
 ```
 
 It sends `name`, `email`, `purpose`, and `message`, plus a subject and reply-to value. To change the provider or endpoint, edit `siteConfig.formspreeEndpoint` in `src/data/site.ts`.
+
+## Security notes
+
+- The site sends safe baseline headers through `next.config.ts`: content-type sniffing protection, strict referrer policy, frame blocking, restricted browser permissions, and HSTS.
+- `/api/chat` validates input with Zod, returns `Cache-Control: no-store`, and includes a small in-memory rate limit as defense-in-depth only. Because serverless instances are ephemeral and distributed, this is not a complete production-grade rate limiter.
+- If stronger abuse protection is needed later, add an external store or challenge layer such as Upstash, Vercel KV, or Turnstile.
+- A full Content Security Policy is intentionally not enforced in this pass. Add CSP only after testing compatibility with Next assets, Vercel Analytics, Formspree, fonts, inline theme bootstrapping, and generated OG routes.
 
 ## Real voice intro video
 

@@ -11,5 +11,6 @@ build/
 .env*.local
 *.log
 *.tsbuildinfo
+test-results/
 
 .vercel

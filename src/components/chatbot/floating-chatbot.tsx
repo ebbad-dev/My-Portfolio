@@ -11,6 +11,7 @@ export function FloatingChatbot() {
   const [askSectionVisible, setAskSectionVisible] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const section = document.getElementById("ask-ebbad");
@@ -31,6 +32,21 @@ export function FloatingChatbot() {
       if (event.key === "Escape") {
         setOpen(false);
         window.setTimeout(() => triggerRef.current?.focus({ preventScroll: true }), 0);
+      }
+      if (event.key === "Tab") {
+        const focusable = panelRef.current?.querySelectorAll<HTMLElement>(
+          "a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex='-1'])",
+        );
+        if (!focusable?.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
       }
     };
     window.addEventListener("keydown", onKey);
@@ -64,6 +80,7 @@ export function FloatingChatbot() {
             onMouseDown={close}
           >
             <motion.div
+              ref={panelRef}
               className="flex h-[min(39rem,calc(100dvh-5.5rem))] min-h-[28rem] w-full max-w-[calc(100vw-1.5rem)] flex-col md:h-[min(42rem,calc(100dvh-7.5rem))] md:max-w-[26rem] lg:max-w-[27rem]"
               initial={{ y: 24, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}

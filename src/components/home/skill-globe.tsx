@@ -2,7 +2,7 @@
 
 import { Html, OrbitControls, Stars } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type MutableRefObject } from "react";
 import { BackSide } from "three";
 import type { Group } from "three";
 import type { PortfolioSkill } from "@/data/skills";
@@ -31,7 +31,43 @@ const longitudeRotations = [
 
 const latitudeLines = [-0.72, -0.44, -0.2, 0, 0.2, 0.44, 0.72] as const;
 
+function useReducedMotionPreference() {
+  const [reduced, setReduced] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduced(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+
+  return reduced;
+}
+
+function useElementVisibility(ref: MutableRefObject<HTMLElement | null>) {
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element || !("IntersectionObserver" in window)) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      { rootMargin: "180px", threshold: 0.02 },
+    );
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, [ref]);
+
+  return visible;
+}
+
 export function SkillGlobe({ skills, selectedSkillId, visibleLimit = 14, onSelect }: SkillGlobeProps) {
+  const shellRef = useRef<HTMLDivElement | null>(null);
+  const visible = useElementVisibility(shellRef);
+  const reducedMotion = useReducedMotionPreference();
   const nodes = useMemo<SkillNode[]>(() => {
     const sorted = [...skills].sort((a, b) => (b.globePriority || 0) - (a.globePriority || 0));
     const selected = selectedSkillId ? sorted.find((skill) => skill.id === selectedSkillId) : undefined;
@@ -54,13 +90,13 @@ export function SkillGlobe({ skills, selectedSkillId, visibleLimit = 14, onSelec
   }, [selectedSkillId, skills, visibleLimit]);
 
   return (
-    <div className="glass-panel relative overflow-hidden rounded-3xl p-4 md:p-6">
+    <div ref={shellRef} className="glass-panel relative overflow-hidden rounded-3xl p-4 md:p-6">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(34,211,238,0.12),transparent_38%),radial-gradient(circle_at_62%_65%,rgba(139,92,246,0.12),transparent_42%)]" />
       <div
         className="relative h-[430px] w-full overflow-hidden rounded-3xl border border-cyan-300/10 bg-[radial-gradient(circle_at_center,rgba(34,211,238,0.18),rgba(59,130,246,0.07)_34%,rgba(2,6,23,0.95)_72%)] md:h-[540px]"
         aria-label="Interactive holographic 3D skill globe"
       >
-        <Canvas camera={{ position: [0, 0, 7.2], fov: 48 }} dpr={[1, 1.6]} gl={{ antialias: true, alpha: true }}>
+        <Canvas camera={{ position: [0, 0, 7.2], fov: 48 }} dpr={[1, 1.6]} frameloop={visible && !reducedMotion ? "always" : "demand"} gl={{ antialias: true, alpha: true }}>
           <ambientLight intensity={0.48} />
           <directionalLight position={[3.5, 4.8, 5]} intensity={2.25} color="#E0F7FF" />
           <pointLight position={[4, 1.8, 4]} intensity={38} color="#22D3EE" />

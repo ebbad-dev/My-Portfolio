@@ -60,7 +60,7 @@ export default function Home() {
                 <ButtonLink href="#demos">Try Demos</ButtonLink>
                 <ButtonLink href="#ask-ebbad">Ask Ebbad</ButtonLink>
                 <ButtonLink href={siteConfig.resumePath} available={siteConfig.resumeAvailable} unavailableLabel="Resume not added yet" openInNewTab>
-                  Download Resume
+                  View Resume
                 </ButtonLink>
                 <ButtonLink href="#contact">Contact Me</ButtonLink>
               </div>
@@ -93,7 +93,7 @@ export default function Home() {
               </div>
               <div className="mt-6 flex flex-wrap gap-3">
                 <ButtonLink href="#projects" variant="primary">View Top Projects</ButtonLink>
-                <ButtonLink href={siteConfig.resumePath} available={siteConfig.resumeAvailable} unavailableLabel="Resume not added yet" openInNewTab>Download Resume</ButtonLink>
+                <ButtonLink href={siteConfig.resumePath} available={siteConfig.resumeAvailable} unavailableLabel="Resume not added yet" openInNewTab>View Resume</ButtonLink>
                 <ButtonLink href="#contact">Contact Me</ButtonLink>
               </div>
             </div>

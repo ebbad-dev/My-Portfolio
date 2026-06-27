@@ -8,10 +8,10 @@ import { siteConfig } from "@/data/site";
 type FormState = "idle" | "loading" | "success" | "error";
 
 const contactSchema = z.object({
-  name: z.string().trim().min(2, "Please enter your name."),
-  email: z.string().trim().email("Please enter a valid email address."),
+  name: z.string().trim().min(2, "Please enter your name.").max(120, "Please keep your name under 120 characters."),
+  email: z.string().trim().email("Please enter a valid email address.").max(254, "Please enter a shorter email address."),
   purpose: z.string().trim().min(2, "Please choose a purpose."),
-  message: z.string().trim().min(10, "Please write a slightly longer message."),
+  message: z.string().trim().min(10, "Please write a slightly longer message.").max(2000, "Please keep the message under 2,000 characters."),
   website: z.string().max(0),
 });
 
@@ -73,11 +73,11 @@ export function ContactForm() {
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="grid gap-2 text-sm text-slate-300">
           Name
-          <input name="name" required minLength={2} className="rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-white outline-none transition placeholder:text-slate-600 focus:border-cyan-300/45 focus:bg-cyan-300/[0.04] focus:shadow-[0_0_22px_rgba(34,211,238,0.1)]" placeholder="Your name" />
+          <input name="name" required minLength={2} maxLength={120} className="rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-white outline-none transition placeholder:text-slate-600 focus:border-cyan-300/45 focus:bg-cyan-300/[0.04] focus:shadow-[0_0_22px_rgba(34,211,238,0.1)]" placeholder="Your name" />
         </label>
         <label className="grid gap-2 text-sm text-slate-300">
           Email
-          <input name="email" required type="email" className="rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-white outline-none transition placeholder:text-slate-600 focus:border-cyan-300/45 focus:bg-cyan-300/[0.04] focus:shadow-[0_0_22px_rgba(34,211,238,0.1)]" placeholder="you@example.com" />
+          <input name="email" required type="email" maxLength={254} className="rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-white outline-none transition placeholder:text-slate-600 focus:border-cyan-300/45 focus:bg-cyan-300/[0.04] focus:shadow-[0_0_22px_rgba(34,211,238,0.1)]" placeholder="you@example.com" />
         </label>
       </div>
       <label className="mt-4 grid gap-2 text-sm text-slate-300">
@@ -92,7 +92,7 @@ export function ContactForm() {
       </label>
       <label className="mt-4 grid gap-2 text-sm text-slate-300">
         Message
-        <textarea name="message" required minLength={10} rows={5} className="resize-none rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-white outline-none transition placeholder:text-slate-600 focus:border-cyan-300/45 focus:bg-cyan-300/[0.04] focus:shadow-[0_0_22px_rgba(34,211,238,0.1)]" placeholder="Share the opportunity, project idea, or what you want to discuss." />
+        <textarea name="message" required minLength={10} maxLength={2000} rows={5} className="resize-none rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-white outline-none transition placeholder:text-slate-600 focus:border-cyan-300/45 focus:bg-cyan-300/[0.04] focus:shadow-[0_0_22px_rgba(34,211,238,0.1)]" placeholder="Share the opportunity, project idea, or what you want to discuss." />
       </label>
       <button disabled={state === "loading"} className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-brand-gradient px-6 font-semibold text-white shadow-[0_0_28px_rgba(34,211,238,0.14)] transition hover:-translate-y-0.5 hover:shadow-glow active:translate-y-0 disabled:opacity-60 sm:w-auto">
         <Send size={18} />

@@ -184,7 +184,7 @@ function SkillGlobeUpgrade({ skills, selectedSkillId, visibleLimit, onSelect }: 
           setState("ready");
         }
       } catch (error) {
-        console.error("Skill globe failed to load", error);
+        if (process.env.NODE_ENV === "development") console.error("Skill globe failed to load", error);
         if (!cancelled) setState("error");
       }
     };
@@ -325,7 +325,7 @@ class SkillGlobeBoundary extends Component<{ children: ReactNode; onError: () =>
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    console.error("Skill globe runtime error", error, info);
+    if (process.env.NODE_ENV === "development") console.error("Skill globe runtime error", error, info);
     this.props.onError();
   }
 

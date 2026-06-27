@@ -432,11 +432,27 @@ function FilterButton({ active, children, onClick }: { active: boolean; children
 
 function DemoModal({ title, children, onClose }: { title: string; children: ReactNode; onClose: () => void }) {
   const closeRef = useRef<HTMLButtonElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     closeRef.current?.focus();
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
+      if (event.key === "Tab") {
+        const focusable = modalRef.current?.querySelectorAll<HTMLElement>(
+          "a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex='-1'])",
+        );
+        if (!focusable?.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -444,7 +460,7 @@ function DemoModal({ title, children, onClose }: { title: string; children: Reac
 
   return (
     <div className="fixed inset-0 z-[90] grid place-items-center bg-slate-950/72 p-4 backdrop-blur" role="dialog" aria-modal="true" aria-label={title} onMouseDown={onClose}>
-      <div className="glass-panel max-w-lg rounded-3xl p-6" onMouseDown={(event) => event.stopPropagation()}>
+      <div ref={modalRef} className="glass-panel max-w-lg rounded-3xl p-6" onMouseDown={(event) => event.stopPropagation()}>
         <div className="flex items-center justify-between gap-4">
           <h3 className="font-heading text-2xl font-bold text-white">{title}</h3>
           <button ref={closeRef} onClick={onClose} className="rounded-full border border-white/10 p-2 text-slate-300 hover:text-white" aria-label="Close report preview">

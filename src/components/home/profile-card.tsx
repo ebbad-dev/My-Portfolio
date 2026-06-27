@@ -26,7 +26,7 @@ export function ProfileCard() {
             <div className="absolute inset-0 grid place-items-center bg-slate-950/92 text-center">
               <div>
                 <UserRound className="mx-auto text-cyan-200" size={64} />
-                <p className="mt-4 px-6 text-sm leading-6 text-slate-300">Profile image placeholder. Add a real image at public/images/profile/profile-1.jpeg.</p>
+                <p className="mt-4 px-6 text-sm leading-6 text-slate-300">Profile portrait is temporarily unavailable. The rest of the portfolio is still ready to explore.</p>
               </div>
             </div>
           ) : null}
