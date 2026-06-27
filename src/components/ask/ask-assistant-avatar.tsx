@@ -98,7 +98,7 @@ function SignalParticles({
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
-      <pointsMaterial size={compact ? 0.028 : 0.032} color="#67e8f9" transparent opacity={compact ? 0.72 : 0.5} depthWrite={false} />
+      <pointsMaterial size={compact ? 0.028 : 0.032} color="#67e8f9" transparent opacity={compact ? 0.72 : 0.38} depthWrite={false} />
     </points>
   );
 }
@@ -178,15 +178,21 @@ function AssistantModel({
   const smileRef = useRef<THREE.Mesh>(null);
   const chestCoreRef = useRef<THREE.Mesh>(null);
   const smooth = useRef({ x: 0, y: 0 });
+  const eyeSmooth = useRef({ x: 0, y: 0 });
 
   useFrame(({ clock }) => {
     const targetX = pointer.current.active && !reducedMotion ? pointer.current.x : 0;
     const targetY = pointer.current.active && !reducedMotion ? pointer.current.y : 0;
     smooth.current.x += (targetX - smooth.current.x) * 0.075;
     smooth.current.y += (targetY - smooth.current.y) * 0.075;
+    const eyeDamping = pointer.current.active && !reducedMotion ? 0.17 : 0.11;
+    eyeSmooth.current.x += (targetX - eyeSmooth.current.x) * eyeDamping;
+    eyeSmooth.current.y += (targetY - eyeSmooth.current.y) * eyeDamping;
 
     const x = smooth.current.x;
     const y = smooth.current.y;
+    const eyeX = eyeSmooth.current.x;
+    const eyeY = eyeSmooth.current.y;
     const time = clock.elapsedTime;
     const thinking = status === "thinking";
     const success = status === "success";
@@ -213,8 +219,8 @@ function AssistantModel({
       haloRef.current.rotation.y = x * 0.12;
     }
 
-    const pupilX = THREE.MathUtils.clamp(x * (compact ? 0.025 : 0.042), compact ? -0.025 : -0.042, compact ? 0.025 : 0.042);
-    const pupilY = THREE.MathUtils.clamp(-y * (compact ? 0.016 : 0.026), compact ? -0.016 : -0.026, compact ? 0.016 : 0.026);
+    const pupilX = THREE.MathUtils.clamp(eyeX * (compact ? 0.035 : 0.058), compact ? -0.035 : -0.058, compact ? 0.035 : 0.058);
+    const pupilY = THREE.MathUtils.clamp(-eyeY * (compact ? 0.022 : 0.038), compact ? -0.022 : -0.038, compact ? 0.022 : 0.038);
     if (leftEyeRef.current) leftEyeRef.current.scale.set(1.08, blink * (clicked ? 1.08 : success ? 1.04 : 1), 0.28);
     if (rightEyeRef.current) rightEyeRef.current.scale.set(1.08, blink * (clicked ? 1.08 : success ? 1.04 : 1), 0.28);
     if (leftPupilRef.current) leftPupilRef.current.position.set(-0.31 + pupilX, 0.18 + pupilY, 0.715);
@@ -292,38 +298,46 @@ function AssistantModel({
 
         <mesh ref={leftEyeRef} position={[-0.31, 0.18, 0.675]} scale={[1.04, 0.78, 0.28]}>
           <sphereGeometry args={[0.108, 34, 20]} />
-          <meshPhysicalMaterial color={eyeColor} emissive={eyeColor} emissiveIntensity={status === "thinking" ? 1.7 : status === "clicked" ? 1.55 : 1.18} roughness={0.06} metalness={0.08} clearcoat={1} transparent opacity={0.9} />
+          <meshPhysicalMaterial color={eyeColor} emissive={eyeColor} emissiveIntensity={status === "thinking" ? 1.55 : status === "clicked" ? 1.45 : 1.02} roughness={0.05} metalness={0.1} clearcoat={1} transparent opacity={0.86} />
+        </mesh>
+        <mesh position={[-0.31, 0.18, 0.711]} scale={[1.08, 0.82, 0.08]}>
+          <torusGeometry args={[0.083, 0.0045, 10, 56]} />
+          <meshBasicMaterial color="#8ef8ff" transparent opacity={0.34} />
         </mesh>
         <group ref={leftPupilRef} position={[-0.31, 0.18, 0.715]}>
-          <mesh scale={[1, 0.82, 0.18]}>
-            <sphereGeometry args={[0.05, 28, 16]} />
-            <meshStandardMaterial color="#031821" emissive="#0a5c66" emissiveIntensity={0.42} roughness={0.16} metalness={0.22} />
+          <mesh scale={[1, 0.82, 0.2]}>
+            <sphereGeometry args={[0.056, 30, 18]} />
+            <meshStandardMaterial color="#020d16" emissive="#083f48" emissiveIntensity={0.5} roughness={0.12} metalness={0.28} />
           </mesh>
-          <mesh scale={[1.1, 0.88, 0.08]}>
-            <torusGeometry args={[0.057, 0.0055, 8, 40]} />
-            <meshBasicMaterial color="#67e8f9" transparent opacity={0.44} />
+          <mesh scale={[1.12, 0.88, 0.08]}>
+            <torusGeometry args={[0.064, 0.006, 8, 44]} />
+            <meshBasicMaterial color="#22d3ee" transparent opacity={0.56} />
           </mesh>
-          <mesh position={[-0.017, 0.018, 0.028]} scale={[0.42, 0.34, 0.12]}>
-            <sphereGeometry args={[0.018, 14, 10]} />
-            <meshBasicMaterial color="#dffbff" transparent opacity={0.68} />
+          <mesh position={[-0.02, 0.021, 0.032]} scale={[0.5, 0.42, 0.14]}>
+            <sphereGeometry args={[0.019, 14, 10]} />
+            <meshBasicMaterial color="#f0fdff" transparent opacity={0.82} />
           </mesh>
         </group>
         <mesh ref={rightEyeRef} position={[0.31, 0.18, 0.675]} scale={[1.04, 0.78, 0.28]}>
           <sphereGeometry args={[0.108, 34, 20]} />
-          <meshPhysicalMaterial color={eyeColor} emissive={eyeColor} emissiveIntensity={status === "thinking" ? 1.7 : status === "clicked" ? 1.55 : 1.18} roughness={0.06} metalness={0.08} clearcoat={1} transparent opacity={0.9} />
+          <meshPhysicalMaterial color={eyeColor} emissive={eyeColor} emissiveIntensity={status === "thinking" ? 1.55 : status === "clicked" ? 1.45 : 1.02} roughness={0.05} metalness={0.1} clearcoat={1} transparent opacity={0.86} />
+        </mesh>
+        <mesh position={[0.31, 0.18, 0.711]} scale={[1.08, 0.82, 0.08]}>
+          <torusGeometry args={[0.083, 0.0045, 10, 56]} />
+          <meshBasicMaterial color="#8ef8ff" transparent opacity={0.34} />
         </mesh>
         <group ref={rightPupilRef} position={[0.31, 0.18, 0.715]}>
-          <mesh scale={[1, 0.82, 0.18]}>
-            <sphereGeometry args={[0.05, 28, 16]} />
-            <meshStandardMaterial color="#031821" emissive="#0a5c66" emissiveIntensity={0.42} roughness={0.16} metalness={0.22} />
+          <mesh scale={[1, 0.82, 0.2]}>
+            <sphereGeometry args={[0.056, 30, 18]} />
+            <meshStandardMaterial color="#020d16" emissive="#083f48" emissiveIntensity={0.5} roughness={0.12} metalness={0.28} />
           </mesh>
-          <mesh scale={[1.1, 0.88, 0.08]}>
-            <torusGeometry args={[0.057, 0.0055, 8, 40]} />
-            <meshBasicMaterial color="#67e8f9" transparent opacity={0.44} />
+          <mesh scale={[1.12, 0.88, 0.08]}>
+            <torusGeometry args={[0.064, 0.006, 8, 44]} />
+            <meshBasicMaterial color="#22d3ee" transparent opacity={0.56} />
           </mesh>
-          <mesh position={[-0.017, 0.018, 0.028]} scale={[0.42, 0.34, 0.12]}>
-            <sphereGeometry args={[0.018, 14, 10]} />
-            <meshBasicMaterial color="#dffbff" transparent opacity={0.68} />
+          <mesh position={[-0.02, 0.021, 0.032]} scale={[0.5, 0.42, 0.14]}>
+            <sphereGeometry args={[0.019, 14, 10]} />
+            <meshBasicMaterial color="#f0fdff" transparent opacity={0.82} />
           </mesh>
         </group>
         <mesh ref={smileRef} position={[0, -0.115, 0.69]} rotation={[0, 0, Math.PI]} scale={[0.96, 0.1, 0.08]}>
@@ -439,7 +453,7 @@ export function AskAssistantAvatar({ status = "idle", compact = false }: { statu
       onClick={() => setClicked(true)}
       aria-label="Interact with Ask Ebbad assistant avatar"
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_var(--assistant-x,50%)_var(--assistant-y,48%),rgba(34,211,238,0.3),transparent_42%),radial-gradient(circle_at_72%_74%,rgba(139,92,246,0.22),transparent_48%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_var(--assistant-x,50%)_var(--assistant-y,48%),rgba(34,211,238,0.22),transparent_44%),radial-gradient(circle_at_72%_74%,rgba(139,92,246,0.18),transparent_48%)]" />
       {!compact ? (
         <>
           <div className="pointer-events-none absolute inset-x-4 top-4 z-10 flex items-center justify-between gap-3">
