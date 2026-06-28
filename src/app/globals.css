@@ -43,6 +43,8 @@ html[data-theme="light"] {
 html {
   scroll-behavior: smooth;
   background: var(--background-main);
+  scrollbar-color: rgba(34, 211, 238, 0.72) rgba(2, 6, 23, 0.44);
+  scrollbar-width: thin;
 }
 
 body {
@@ -54,6 +56,55 @@ body {
   color: var(--text-primary);
   font-family: var(--font-body), system-ui, sans-serif;
   letter-spacing: 0;
+}
+
+* {
+  scrollbar-color: rgba(34, 211, 238, 0.62) rgba(2, 6, 23, 0.32);
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background:
+    linear-gradient(180deg, rgba(2, 6, 23, 0.36), rgba(15, 23, 42, 0.18));
+}
+
+::-webkit-scrollbar-thumb {
+  border: 1.5px solid rgba(2, 6, 23, 0.72);
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgba(34, 211, 238, 0.86), rgba(59, 130, 246, 0.78) 48%, rgba(139, 92, 246, 0.82));
+  background-clip: padding-box;
+  box-shadow:
+    0 0 14px rgba(34, 211, 238, 0.22),
+    inset 0 0 8px rgba(255, 255, 255, 0.12);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background:
+    linear-gradient(180deg, rgba(103, 232, 249, 0.95), rgba(96, 165, 250, 0.9) 48%, rgba(167, 139, 250, 0.94));
+  box-shadow:
+    0 0 18px rgba(34, 211, 238, 0.34),
+    0 0 26px rgba(139, 92, 246, 0.18),
+    inset 0 0 8px rgba(255, 255, 255, 0.16);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background:
+    linear-gradient(180deg, rgba(34, 211, 238, 1), rgba(59, 130, 246, 0.96) 45%, rgba(139, 92, 246, 1));
+  box-shadow:
+    0 0 22px rgba(34, 211, 238, 0.42),
+    0 0 30px rgba(139, 92, 246, 0.24);
+}
+
+::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
 html[data-theme="light"] body {

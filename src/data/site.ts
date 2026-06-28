@@ -57,6 +57,9 @@ export type Skill = {
   projects?: string[];
 };
 
+export const introParagraph =
+  "I build full-stack products that connect clean interfaces, reliable APIs, and practical user needs. My work spans AI-assisted tools, database-driven systems, backend workflows, and interactive product experiences. I focus on projects where engineering decisions, usability, and real-world problem solving come together.";
+
 export const siteConfig = {
   name: "Ebbad Ur Rehman",
   shortName: "Ebbad",
@@ -65,10 +68,7 @@ export const siteConfig = {
   university: "COMSATS University Islamabad, Lahore Campus",
   degree: "BS Software Engineering",
   brandLine: "Building intelligent systems from first principles.",
-  heroHeadline: "I build intelligent full-stack systems that turn ideas into real products.",
-  heroSubheadline:
-    "I work across AI-powered tools, database-backed applications, backend APIs, computer vision projects, and interactive product experiences.",
-  heroPersonalLine: "I like projects where the interface, the data, the logic, and the user problem all connect.",
+  heroIntro: introParagraph,
   seoTitle: "Ebbad Ur Rehman - Full-Stack Developer | Software Engineering Student",
   seoDescription:
     "Portfolio of Ebbad Ur Rehman, a Software Engineering student building full-stack applications, AI tools, database systems, computer vision projects, and immersive digital products.",

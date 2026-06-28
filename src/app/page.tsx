@@ -5,7 +5,6 @@ import { ProjectCard } from "@/components/home/project-card";
 import { ContactForm } from "@/components/home/contact-form";
 import { ProfileCard } from "@/components/home/profile-card";
 import { CodeRepoButton } from "@/components/ui/code-repo-button";
-import { PremiumTypewriter } from "@/components/ui/premium-typewriter";
 import { ArchiveSection } from "@/components/home/archive-section";
 import { SkillConstellation } from "@/components/home/skill-constellation";
 import { AskEbbadSection } from "@/components/home/ask-ebbad-section";
@@ -50,11 +49,7 @@ export default function Home() {
                 Software <span className="text-gradient">Engineer.</span>
               </h2>
               <p className="mono-label mt-4 text-slate-300">Full-Stack Developer / AI / ML / Databases / Systems</p>
-              <p className="mt-4 max-w-2xl text-base leading-8 text-slate-200 sm:text-lg">{siteConfig.heroHeadline}</p>
-              <p className="mt-3 max-w-2xl text-base leading-8 text-slate-300">
-                <PremiumTypewriter text={siteConfig.heroSubheadline} />
-              </p>
-              <p className="mt-3 text-sm leading-7 text-slate-400 sm:text-base">{siteConfig.heroPersonalLine}</p>
+              <p className="mt-4 max-w-2xl text-base leading-8 text-slate-200 sm:text-lg">{siteConfig.heroIntro}</p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <ButtonLink href="#projects" variant="primary">View Projects</ButtonLink>
                 <ButtonLink href="#demos">Try Demos</ButtonLink>
