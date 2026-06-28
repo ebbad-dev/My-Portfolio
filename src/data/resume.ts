@@ -13,16 +13,16 @@ export type ResumeInitiative = {
 
 export const resumeSource = {
   path: "/resume/ebbad-resume.pdf",
-  pdfLastModified: "2026-06-13",
+  pdfLastModified: "2026-06-28",
   extractedFromPdf: true,
 };
 
 export const resumeFacts = {
   headline: "Software Engineering Student",
   summary:
-    "Software Engineering student with a 3.4 CGPA, Harvard CS50 certification, and project work across full-stack AI platforms, distributed systems, and database design.",
+    "Software Engineering student with a 3.4 CGPA, Harvard CS50 certification, and project work across full-stack development, AI/ML, computer vision, distributed systems, and database design.",
   seeking:
-    "Looking to join a product-driven software team and contribute to building and scaling real-world applications.",
+    "Seeking a product-driven software team where he can contribute to reliable backend APIs, clear interfaces, and practical engineering workflows.",
   education: {
     degree: "BS Software Engineering",
     institution: "COMSATS University Islamabad, Lahore Campus",
@@ -39,7 +39,7 @@ export const resumeFacts = {
     languages: ["Python", "C/C++", "Java", "JavaScript", "TypeScript", "SQL", "HTML", "CSS"],
     frameworks: ["Node.js", "Express.js", "Flask", "FastAPI", "Django", "React", "Next.js", "PyTorch", "TensorFlow", "OpenCV"],
     databases: ["MySQL", "PostgreSQL", "MSSQL Server", "MongoDB", "SQLite", "Prisma", "PyODBC"],
-    tools: ["Git", "GitHub", "Redis", "VS Code", "Docker", "GitHub Actions", "IntelliJ IDEA"],
+    tools: ["Git", "GitHub", "Redis", "VS Code", "Docker", "GitHub Actions", "IntelliJ IDEA", "Postman", "Vercel"],
     concepts: ["OOP", "DSA", "AI/ML", "Computer Vision", "NLP", "Distributed Systems", "REST APIs", "Agile Development"],
   },
   projects: [
@@ -47,49 +47,43 @@ export const resumeFacts = {
       title: "Mirror-Mind",
       techStack: ["Next.js", "TypeScript", "Prisma", "Redis", "AI/ML"],
       bullets: [
-        "Full-stack AI debate and self-reflection platform generating visual argument maps.",
-        "Resume lists multi-provider LLM routing, Redis rate limiting, offline deterministic fallback, and PostgreSQL-ready schema.",
-        "Includes claim classification, evidence triangulation, counterargument generation, collaborative workspaces, bilingual Urdu/English mode, and PDF export.",
+        "Full-stack debate and self-reflection platform that turns opinions into visual argument maps, assumptions, evidence gaps, and counterarguments.",
+        "Resume lists multi-provider LLM routing, deterministic fallback behavior, claim classification, evidence triangulation, collaborative workspaces, bilingual Urdu/English mode, and PDF export.",
       ],
     },
     {
       title: "ProctorAI",
       techStack: ["Python", "Computer Vision", "AI/ML"],
       bullets: [
-        "Real-time AI exam proctoring app using face detection to flag suspicious behavior.",
-        "Resume lists a configurable alert pipeline with structured incident logs and an estimated 40% manual invigilation effort reduction.",
-      ],
-    },
-    {
-      title: "Netflix Console",
-      techStack: ["Python", "Flask", "SQL Server", "HTML/JS"],
-      bullets: [
-        "Netflix-inspired DBMS for subscribers, content, and watch history.",
-        "Resume lists stored procedures, triggers, views, CRUD operations, dashboard analytics, and PDF/CSV/Excel export.",
-      ],
-    },
-    {
-      title: "Distributed Banking System",
-      techStack: ["Java", "Sockets", "Multi-threading"],
-      bullets: [
-        "Multi-client concurrent banking app using socket-based client-server architecture.",
-        "Resume lists stress testing for simultaneous multi-user access with zero transaction conflicts and full data consistency.",
-      ],
-    },
-    {
-      title: "Criminal Database Management System",
-      techStack: ["SQL", "Java/C++"],
-      bullets: [
-        "Normalized relational schema with role-based access control for secure criminal record storage.",
-        "Resume lists advanced search, filtering, and report generation with a 60% average case-lookup time reduction.",
+        "AI exam monitoring prototype using webcam analysis, face detection, configurable risk scoring, structured incident logs, evidence review, and instructor-facing reporting flows.",
       ],
     },
     {
       title: "TeleTrack Enterprise",
       techStack: ["Python", "FastAPI", "PostgreSQL", "React"],
       bullets: [
-        "Network monitoring system for tracking and managing networking devices.",
-        "Resume lists a React dashboard with real-time device status, SLA monitoring, audit logs, automated reports, and an estimated 50% fault-detection improvement.",
+        "Network operations project for managing devices, technicians, facilities, alerts, incidents, audit logs, SLA tracking, and uptime-style reporting through a dashboard workflow.",
+      ],
+    },
+    {
+      title: "Student Result Management API",
+      techStack: ["Node.js", "Express.js", "MongoDB"],
+      bullets: [
+        "Backend API for student records, subjects, result entries, validation, role-aware routes, and clean CRUD workflows.",
+      ],
+    },
+    {
+      title: "Distributed Banking System",
+      techStack: ["Java", "Sockets", "Multi-threading"],
+      bullets: [
+        "Multi-client banking simulation with socket-based client-server architecture, thread management, transaction handling, and consistency-focused concurrency controls.",
+      ],
+    },
+    {
+      title: "Netflix Console / DBMS",
+      techStack: ["Python", "Flask", "SQL Server", "HTML/JS"],
+      bullets: [
+        "Netflix-inspired database system managing subscribers, content, and watch history with CRUD operations, stored procedures, triggers, views, and export-oriented reporting.",
       ],
     },
   ] satisfies ResumeProject[],
@@ -110,7 +104,7 @@ export const resumeFacts = {
       title: "Sponsorship & Volunteer Lead",
       organization: "TechnoVerse 2025",
       dates: "2025",
-      bullets: ["Spearheaded sponsorship for a 500+ attendee university tech event and secured PKR 200,000 in external funding."],
+      bullets: ["Supported sponsorship outreach for a 500+ attendee university tech event, managing stakeholder correspondence and event coordination responsibilities."],
     },
   ] satisfies ResumeInitiative[],
 };

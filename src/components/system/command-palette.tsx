@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight, Command, Search, X } from "lucide-react";
 import { isUsableHref } from "@/lib/utils";
 import { projects, siteConfig, socials } from "@/data/site";
@@ -15,6 +15,8 @@ export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const dialogRef = useRef<HTMLDivElement>(null);
+  const openerRef = useRef<HTMLElement | null>(null);
+  const restoreFocusAfterCloseRef = useRef(false);
   const github = socials.find((social) => social.kind === "github" && isUsableHref(social.href));
   const linkedin = socials.find((social) => social.kind === "linkedin" && isUsableHref(social.href));
   const email = socials.find((social) => social.kind === "email" && isUsableHref(social.href));
@@ -37,13 +39,23 @@ export function CommandPalette() {
 
   const filtered = actions.filter((action) => action.label.toLowerCase().includes(query.toLowerCase()));
 
+  const closePalette = useCallback(() => {
+    restoreFocusAfterCloseRef.current = true;
+    setOpen(false);
+  }, []);
+
+  const openPalette = useCallback(() => {
+    openerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    setOpen(true);
+  }, []);
+
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
-        setOpen(true);
+        openPalette();
       }
-      if (event.key === "Escape") setOpen(false);
+      if (event.key === "Escape") closePalette();
       if (open && event.key === "Tab") {
         const focusable = dialogRef.current?.querySelectorAll<HTMLElement>(
           "a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex='-1'])",
@@ -62,10 +74,23 @@ export function CommandPalette() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
+  }, [closePalette, open, openPalette]);
+
+  useEffect(() => {
+    if (open || !restoreFocusAfterCloseRef.current) return;
+    restoreFocusAfterCloseRef.current = false;
+    const restoreFocus = () => {
+      const fallback = document.querySelector<HTMLElement>("button[aria-label='Open command palette']");
+      const opener = openerRef.current && document.contains(openerRef.current) ? openerRef.current : fallback;
+      opener?.focus({ preventScroll: true });
+    };
+    window.requestAnimationFrame(restoreFocus);
+    const timer = window.setTimeout(restoreFocus, 120);
+    return () => window.clearTimeout(timer);
   }, [open]);
 
   const select = (action: Action) => {
-    setOpen(false);
+    closePalette();
     if (action.href.startsWith("mailto:")) window.location.assign(action.href);
     else if (action.external) window.open(action.href, "_blank", "noopener,noreferrer");
     else window.location.assign(action.href);
@@ -74,7 +99,7 @@ export function CommandPalette() {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-slate-950/70 p-4 backdrop-blur" role="dialog" aria-modal="true" aria-label="Command palette" onMouseDown={() => setOpen(false)}>
+    <div className="fixed inset-0 z-[100] bg-slate-950/70 p-4 backdrop-blur" role="dialog" aria-modal="true" aria-label="Command palette" onMouseDown={closePalette}>
       <div ref={dialogRef} className="glass-panel mx-auto mt-24 max-w-2xl overflow-hidden rounded-3xl" onMouseDown={(event) => event.stopPropagation()}>
         <div className="flex items-center gap-3 border-b border-white/10 px-5 py-4">
           <Search className="text-cyan-200" size={18} />
@@ -85,7 +110,7 @@ export function CommandPalette() {
             placeholder="Search portfolio actions..."
             className="w-full bg-transparent text-sm text-white outline-none placeholder:text-slate-500"
           />
-          <button onClick={() => setOpen(false)} className="rounded-full p-2 text-slate-400 hover:bg-white/10 hover:text-white" aria-label="Close command palette">
+          <button onClick={closePalette} className="rounded-full p-2 text-slate-400 hover:bg-white/10 hover:text-white" aria-label="Close command palette">
             <X size={18} />
           </button>
         </div>
