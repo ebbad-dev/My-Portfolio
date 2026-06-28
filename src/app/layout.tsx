@@ -123,9 +123,9 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
           <InitialScrollGuard />
           <SmoothScroll />
           <WelcomeIntro />
-          <FloatingChatbot />
           <HolographicCursor />
           {children}
+          <FloatingChatbot />
         </ActiveSectionProvider>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
         <Analytics />

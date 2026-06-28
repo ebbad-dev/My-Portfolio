@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { MessageSquare, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { AskEbbadIcon } from "@/components/ask/ask-ebbad-icon";
-import { DynamicAskEbbad } from "@/components/home/dynamic-islands";
+import { AskEbbad } from "@/components/home/ask-ebbad";
 
 export function FloatingChatbot() {
   const [open, setOpen] = useState(false);
@@ -102,7 +102,7 @@ export function FloatingChatbot() {
                   <X size={18} />
                 </button>
               </div>
-              <DynamicAskEbbad compact showHeader={false} />
+              <AskEbbad compact showHeader={false} />
             </motion.div>
           </motion.div>
         ) : null}

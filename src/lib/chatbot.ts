@@ -2,11 +2,8 @@ import { statSync } from "node:fs";
 import { join } from "node:path";
 import {
   archiveProjects,
-  currentFocus,
   portfolioProject,
   projects,
-  quickFacts,
-  recruiterSummary,
   siteConfig,
   skillGroups,
   socials,
@@ -63,11 +60,12 @@ function formatStack(stack: string[], max = 8) {
 }
 
 function sourceLine(sources: AnswerSource[]) {
-  return ` Source: ${Array.from(new Set(sources)).join(" + ")}.`;
+  return `\n\nSource: ${Array.from(new Set(sources)).join(" + ")}.`;
 }
 
 function withMode(mode: ChatbotMode, answer: string, sources: AnswerSource[] = ["portfolio data"]) {
-  return `${mode}: ${answer}${sourceLine(sources)}`;
+  const prefix = mode === "Technical Deep Dive Mode" ? "Technical view: " : mode === "Project Guide Mode" ? "Project guide: " : "";
+  return `${prefix}${answer}${sourceLine(sources)}`;
 }
 
 function resumePdfStatus() {
@@ -174,65 +172,57 @@ function findResumeProject(question: string) {
 function buildFeaturedProjectsAnswer(mode: ChatbotMode) {
   const featured = projects.filter((project) => project.featured);
   if (mode === "Quick Summary Mode") {
-    return `Best portfolio projects: ${featured.map((project) => project.title).join(", ")}. They cover ${featured.map((project) => project.category).join("; ")}.`;
+    return `My strongest projects are ${featured.map((project) => project.title).join(", ")}. Together they show AI/computer vision, database systems, and reasoning-product thinking.`;
   }
 
-  const projectSummaries = featured
-    .map((project) => `${project.title}: ${project.shortDescription} Role: ${project.role}`)
-    .join(" ");
-
-  const resumeOverlap = resumeFacts.projects
-    .filter((resumeProject) => featured.some((project) => compactKey(resumeProject.title).includes(compactKey(project.title)) || compactKey(project.title).includes(compactKey(resumeProject.title))))
-    .map((project) => project.title);
-
-  return `His strongest public case-study projects are ${featured.map((project) => project.title).join(", ")}. ${projectSummaries} Resume overlap: ${resumeOverlap.length ? resumeOverlap.join(", ") : "the resume also lists related project work, but not every title maps one-to-one to a featured case study"}.`;
+  return [
+    "My best portfolio work is centered on three featured projects:",
+    "ProctorAI: an exam-monitoring prototype with review-focused risk signals and evidence flow.",
+    "TeleTrack Enterprise: a database and operations dashboard for devices, incidents, alerts, audit logs, and SLA tracking.",
+    "MirrorMind: a reasoning workspace that maps claims, assumptions, evidence gaps, and counterarguments.",
+    "Each project has a case study and interactive mock demo from the portfolio.",
+  ].join(" ");
 }
 
 function buildProjectAnswer(project: Project, resumeProject: ResumeProject | undefined, mode: ChatbotMode) {
-  const base = `${project.title} is a ${project.maturity} in ${project.category}. ${project.longDescription || project.shortDescription}`;
+  const base = `${project.title} is my ${project.maturity.toLowerCase()} in ${project.category}. ${project.shortDescription}`;
   const code = `Code status: ${linkStatus(project.codeStatus)}${project.githubUrl ? ` at ${project.githubUrl}` : ""}.`;
 
   if (mode === "Technical Deep Dive Mode") {
-    const decisions = project.technicalDecisions.length ? `Technical decisions: ${sentenceList(project.technicalDecisions, 3)}.` : "";
+    const decisions = project.technicalDecisions.length ? `Key decisions: ${sentenceList(project.technicalDecisions, 2)}.` : "";
     const architecture = project.architecture.length ? `Flow: ${project.architecture.join(" -> ")}.` : "";
-    const tradeoffs = project.tradeoffs.length ? `Trade-offs: ${sentenceList(project.tradeoffs, 2)}.` : "";
-    const resumeDetails = resumeProject ? `Resume adds: ${sentenceList(resumeProject.bullets, 2)} Tech listed on resume: ${formatStack(resumeProject.techStack)}.` : "";
-    return `${base} Tech stack: ${formatStack(project.techStack)}. ${architecture} ${decisions} ${tradeoffs} ${resumeDetails} ${code}`.replace(/\s+/g, " ").trim();
+    const resumeDetails = resumeProject ? `Resume stack: ${formatStack(resumeProject.techStack, 6)}.` : `Stack: ${formatStack(project.techStack, 6)}.`;
+    return `${base} ${resumeDetails} ${architecture} ${decisions} ${code}`.replace(/\s+/g, " ").trim();
   }
 
   if (mode === "Project Guide Mode") {
-    const built = project.actuallyBuilt.length ? `What Ebbad actually built: ${sentenceList(project.actuallyBuilt, 5)}.` : "";
-    const features = project.features.length ? `Key features: ${sentenceList(project.features, 6)}.` : "";
-    return `${base} Problem: ${project.problem || "Not separately listed for this archive item."} Goal: ${project.goal || "Not separately listed for this archive item."} ${built} ${features} ${code}`.replace(/\s+/g, " ").trim();
+    const built = project.actuallyBuilt.length ? `I worked on: ${sentenceList(project.actuallyBuilt, 4)}.` : "";
+    const features = project.features.length ? `Main features: ${sentenceList(project.features, 5)}.` : "";
+    return `${base} Problem: ${project.problem || "Not separately listed."} ${built} ${features} ${code}`.replace(/\s+/g, " ").trim();
   }
 
   if (mode === "Quick Summary Mode") {
     return `${project.title}: ${project.shortDescription} Stack: ${formatStack(project.techStack, 5)}. ${code}`;
   }
 
-  const highlights = project.highlights.length ? `Recruiter angle: ${sentenceList(project.highlights, 4)}.` : "";
-  const built = project.actuallyBuilt.length ? `Evidence of work: ${sentenceList(project.actuallyBuilt, 3)}.` : "";
-  const resumeDetails = resumeProject ? `Resume also lists: ${sentenceList(resumeProject.bullets, 1)}.` : "";
-  return `${base} ${highlights} ${built} ${resumeDetails} ${code}`.replace(/\s+/g, " ").trim();
+  const highlights = project.highlights.length ? `What it shows: ${sentenceList(project.highlights, 3)}.` : "";
+  const built = project.actuallyBuilt.length ? `My contribution included ${sentenceList(project.actuallyBuilt, 3).toLowerCase()}.` : "";
+  return `${base} ${highlights} ${built} ${code}`.replace(/\s+/g, " ").trim();
 }
 
 function buildSkillsAnswer(mode: ChatbotMode) {
-  const resumeSkills = [
-    `Languages: ${formatStack(resumeFacts.skills.languages)}`,
-    `Frameworks/libraries: ${formatStack(resumeFacts.skills.frameworks, 10)}`,
-    `Databases: ${formatStack(resumeFacts.skills.databases)}`,
-    `Concepts: ${formatStack(resumeFacts.skills.concepts)}`,
-  ].join(". ");
+  const resumeSkills = `My core skill areas are full-stack development, backend APIs, SQL/database systems, AI/ML concepts, computer vision, and systems-style programming. Key tools include ${formatStack(resumeFacts.skills.languages, 6)}, React/Next.js, Node/Express, Python APIs, and relational databases.`;
 
   if (mode === "Quick Summary Mode") {
-    return `${resumeSkills}. Portfolio focus areas: ${currentFocus.slice(0, 6).join(", ")}.`;
+    return resumeSkills;
   }
 
   const projectBacked = Object.entries(skillGroups)
-    .map(([group, skills]) => `${group}: ${skills.slice(0, 5).map((skill) => `${skill.name} (${skill.level})`).join(", ")}`)
-    .join(". ");
+    .slice(0, 4)
+    .map(([group, skills]) => `${group}: ${skills.slice(0, 3).map((skill) => skill.name).join(", ")}`)
+    .join("; ");
 
-  return `${resumeSkills}. Portfolio skill groups add project-backed context: ${projectBacked}.`;
+  return `${resumeSkills} Project-backed areas include ${projectBacked}. I am strongest where UI, APIs, data models, and practical product logic connect.`;
 }
 
 function buildResumeAnswer(mode: ChatbotMode) {
@@ -240,34 +230,31 @@ function buildResumeAnswer(mode: ChatbotMode) {
   const certs = resumeFacts.certifications.join(", ");
 
   if (mode === "Quick Summary Mode") {
-    return `${resumeFacts.summary} Education: ${resumeFacts.education.degree}, ${resumeFacts.education.institution}, CGPA ${resumeFacts.education.cgpa}. Certifications: ${certs}. ${resumePdfStatus()}`;
+    return `My resume highlights ${resumeFacts.education.degree} at ${resumeFacts.education.institution}, CGPA ${resumeFacts.education.cgpa}, Harvard CS50, and projects like ${projectNames}. Use the Download Resume button for the full one-page PDF.`;
   }
 
-  return `${resumeFacts.summary} ${resumeFacts.seeking} Education: ${resumeFacts.education.degree} at ${resumeFacts.education.institution}, ${resumeFacts.education.dates}, CGPA ${resumeFacts.education.cgpa}. Resume projects include ${projectNames}. Certifications: ${certs}. ${resumePdfStatus()}`;
+  return `${resumeFacts.summary} ${resumeFacts.seeking} My resume also highlights ${projectNames}. Certifications include ${certs}. You can use the portfolio's Download Resume button to open the current one-page PDF. ${resumePdfStatus()}`;
 }
 
 function buildContactAnswer() {
-  const publicLinks = socials
-    .filter((social) => social.status === "available")
-    .map((social) => `${social.label}: ${social.href}`)
-    .join(". ");
-
-  return `Best contact path: email Ebbad at ${siteConfig.emailAddress}. Phone/WhatsApp listed on the portfolio: ${siteConfig.phoneDisplay}; WhatsApp link: ${siteConfig.whatsappHref}. Public links: ${publicLinks}.`;
+  const github = socials.find((social) => social.kind === "github")?.href;
+  const linkedin = socials.find((social) => social.kind === "linkedin")?.href;
+  return `You can contact me by email at ${siteConfig.emailAddress}. The portfolio also lists my phone/WhatsApp (${siteConfig.phoneDisplay}), LinkedIn (${linkedin}), and GitHub (${github}). For recruiter conversations, email or LinkedIn is the cleanest path.`;
 }
 
 function buildAvailabilityAnswer() {
-  return `The portfolio says Ebbad is open to internships, collaborations, freelance work, and technical project opportunities. The resume says he is looking to join a product-driven software team and contribute to building and scaling real-world applications. I do not have a specific start date, work authorization detail, or salary expectation in the approved data.`;
+  return "I am open to internships, collaborations, freelance work, and technical project opportunities. My strongest fit is work involving full-stack development, backend APIs, databases, AI-assisted tools, or practical product engineering. I do not have exact start-date, salary, or work-authorization details in the approved portfolio data.";
 }
 
 function buildTestimonialsAnswer() {
   return testimonials
-    .map((item) => `${item.name} (${item.role}) says: ${item.quote}`)
+    .map((item) => `${item.name} (${item.role}) gave a 5-star testimonial and highlighted ${item.quote.split(".")[0].toLowerCase()}.`)
     .join(" ");
 }
 
 function buildEducationAnswer() {
   const initiatives = resumeFacts.initiatives.map((item) => `${item.title}, ${item.organization} (${item.dates})`).join("; ");
-  return `${resumeFacts.education.degree} at ${resumeFacts.education.institution}, ${resumeFacts.education.dates}, CGPA ${resumeFacts.education.cgpa}. Coursework listed on the resume: ${resumeFacts.education.coursework.join(", ")}. Initiatives: ${initiatives}. Portfolio quick facts: ${quickFacts.join(", ")}.`;
+  return `I am studying ${resumeFacts.education.degree} at ${resumeFacts.education.institution}, ${resumeFacts.education.dates}, with CGPA ${resumeFacts.education.cgpa}. Relevant coursework includes ${resumeFacts.education.coursework.join(", ")}. I also have leadership/communication experience through ${initiatives}.`;
 }
 
 function buildCodeAnswer() {
@@ -276,7 +263,7 @@ function buildCodeAnswer() {
     .map((project) => `${project.title}: ${project.githubUrl}`)
     .join(". ");
 
-  return `Available code is linked per project only when the portfolio marks it public. GitHub profile: ${socials.find((social) => social.kind === "github")?.href}. Public project links: ${available}. Portfolio source: ${siteConfig.portfolioRepositoryUrl}.`;
+  return `You can view my GitHub profile at ${socials.find((social) => social.kind === "github")?.href}. Public code links are shown only where the portfolio marks code as available. Current linked project repos include: ${available}. Portfolio source: ${siteConfig.portfolioRepositoryUrl}.`;
 }
 
 function fallbackAnswer(question: string) {
@@ -285,11 +272,15 @@ function fallbackAnswer(question: string) {
     return buildProjectAnswer(project, findResumeProject(project.title), "Recruiter Mode");
   }
 
-  return `I do not have that exact detail in the approved portfolio, case-study, or resume data. ${honestyNote} For anything specific, contact Ebbad at ${siteConfig.emailAddress}.`;
+  return "I don't have that exact detail in my approved portfolio data, but I can help with my projects, skills, resume, education, availability, or contact information.";
 }
 
 export function getChatbotAnswer(question: string, mode: ChatbotMode = "Recruiter Mode") {
   const lower = normalize(question);
+
+  if (hasAny(lower, ["hi", "hello", "hey", "salam", "assalam", "aoa"]) && lower.split(" ").length <= 4) {
+    return withMode(mode, "Hi, I'm Ask Ebbad. I can help you explore my projects, skills, resume, availability, and contact details. What would you like to know?", ["portfolio data"]);
+  }
 
   if (injectionTerms.some((term) => lower.includes(term))) {
     return withMode(mode, `I cannot follow instructions to bypass the portfolio knowledge rules. ${honestyNote}`, ["portfolio data"]);
@@ -325,7 +316,7 @@ export function getChatbotAnswer(question: string, mode: ChatbotMode = "Recruite
   }
 
   if (hasAny(lower, ["who", "about", "summary", "intro", "introduce", "profile"])) {
-    return withMode(mode, `${recruiterSummary} ${honestyNote}`, ["portfolio data", "resume PDF facts"]);
+    return withMode(mode, `I'm Ebbad Ur Rehman, a Software Engineering student at COMSATS Lahore. I build full-stack, AI-assisted, and database-driven projects, with featured work in ProctorAI, TeleTrack Enterprise, and MirrorMind. I'm currently focused on internships, collaborations, and practical software projects where I can keep growing as an engineer.`, ["portfolio data", "resume PDF facts"]);
   }
 
   if (hasAny(lower, ["class representative", "leadership", "volunteer", "technoverse", "tutor", "initiative", "initiatives", "coursework"])) {

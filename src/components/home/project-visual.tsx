@@ -7,14 +7,15 @@ import { Project } from "@/data/site";
 import { cn } from "@/lib/utils";
 
 export function ProjectVisual({ project }: { project: Project }) {
-  if (project.slug === "teletrack-enterprise") return <TeleTrackVisual />;
-  if (project.slug === "mirrormind") return <MirrorMindVisual />;
-  return <ProctorVisual />;
+  if (project.slug === "teletrack-enterprise") return <TeleTrackVisual alt={project.thumbnailAlt} />;
+  if (project.slug === "mirrormind") return <MirrorMindVisual alt={project.thumbnailAlt} />;
+  return <ProctorVisual alt={project.thumbnailAlt} />;
 }
 
-function VisualShell({ children, accent = "cyan" }: { children: ReactNode; accent?: "cyan" | "blue" | "violet" }) {
+function VisualShell({ children, accent = "cyan", alt }: { children: ReactNode; accent?: "cyan" | "blue" | "violet"; alt?: string }) {
   return (
     <div
+      aria-label={alt || "Generated product interface mockup"}
       className={cn(
         "project-thumbnail project-visual-shell group/visual relative h-80 overflow-hidden rounded-3xl border bg-slate-950",
         accent === "violet"
@@ -31,17 +32,17 @@ function VisualShell({ children, accent = "cyan" }: { children: ReactNode; accen
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-slate-950/90 to-transparent" />
       <div className="absolute bottom-4 left-4 right-4 flex flex-wrap items-center justify-between gap-2">
         <span className="rounded-full border border-white/10 bg-slate-950/72 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-cyan-50 backdrop-blur">
-          Immersive system preview
+          Generated product mockup
         </span>
         <span className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-cyan-100 backdrop-blur">
-          Interactive portfolio demo
+          Interface concept preview
         </span>
       </div>
     </div>
   );
 }
 
-function ProctorVisual() {
+function ProctorVisual({ alt }: { alt?: string }) {
   const events = [
     ["Face lock", "Stable", "cyan"],
     ["Audio spike", "Review", "violet"],
@@ -49,7 +50,7 @@ function ProctorVisual() {
   ] as const;
 
   return (
-    <VisualShell accent="cyan">
+    <VisualShell accent="cyan" alt={alt}>
       <div className="relative h-full rounded-[1.65rem] border border-cyan-300/16 bg-slate-950/72 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur">
         <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-3">
           <div>
@@ -100,7 +101,7 @@ function ProctorVisual() {
   );
 }
 
-function TeleTrackVisual() {
+function TeleTrackVisual({ alt }: { alt?: string }) {
   const nodes = [
     ["Core", 48, 46, "bg-blue-400"],
     ["LHR-03", 22, 38, "bg-cyan-300"],
@@ -110,7 +111,7 @@ function TeleTrackVisual() {
   ] as const;
 
   return (
-    <VisualShell accent="blue">
+    <VisualShell accent="blue" alt={alt}>
       <div className="relative h-full rounded-[1.65rem] border border-blue-300/16 bg-slate-950/72 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur">
         <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-3">
           <div>
@@ -163,7 +164,7 @@ function TeleTrackVisual() {
   );
 }
 
-function MirrorMindVisual() {
+function MirrorMindVisual({ alt }: { alt?: string }) {
   const reportCards: Array<{ Icon: LucideIcon; title: string; detail: string }> = [
     { Icon: Eye, title: "Hidden assumption", detail: "Accuracy is reliable" },
     { Icon: AlertTriangle, title: "Evidence gap", detail: "No outcome data" },
@@ -171,7 +172,7 @@ function MirrorMindVisual() {
   ];
 
   return (
-    <VisualShell accent="violet">
+    <VisualShell accent="violet" alt={alt}>
       <div className="relative h-full rounded-[1.65rem] border border-violet-300/16 bg-slate-950/72 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur">
         <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-3">
           <div>

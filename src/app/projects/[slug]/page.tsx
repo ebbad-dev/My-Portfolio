@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { ArrowLeft, GitBranch, Layers, ListChecks, Route } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button-link";
 import { ProjectVisual } from "@/components/home/project-visual";
+import { ProjectScreens } from "@/components/projects/project-screens";
 import { CodeRepoButton } from "@/components/ui/code-repo-button";
 import { projects } from "@/data/site";
 
@@ -59,6 +60,8 @@ export default async function ProjectPage({ params }: Props) {
           <ProjectVisual project={project} />
         </div>
       </section>
+
+      <ProjectScreens project={project} />
 
       <section className="section-shell pt-0">
         <div className="grid gap-5 lg:grid-cols-2">

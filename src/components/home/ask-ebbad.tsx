@@ -42,7 +42,6 @@ export function AskEbbad({
   ]);
   const inputRef = useRef<HTMLInputElement>(null);
   const messagesRef = useRef<HTMLDivElement>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
   const statusTimerRef = useRef<number | null>(null);
   const lastExternalPromptIdRef = useRef<number | null>(null);
 
@@ -56,9 +55,10 @@ export function AskEbbad({
     onStatusChange?.(status);
   }, [onStatusChange]);
 
-  const submit = useCallback(async (text = input) => {
+  const submit = useCallback(async (text = input, options: { preservePageScroll?: boolean; focusInput?: boolean } = {}) => {
     const prompt = text.trim();
     if (!prompt || loading) return;
+    const pageScroll = typeof window !== "undefined" && options.preservePageScroll ? { x: window.scrollX, y: window.scrollY } : null;
     setLoading(true);
     updateAssistantStatus("thinking");
     if (statusTimerRef.current) window.clearTimeout(statusTimerRef.current);
@@ -80,7 +80,10 @@ export function AskEbbad({
       updateAssistantStatus("idle");
     } finally {
       setLoading(false);
-      window.setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 0);
+      window.setTimeout(() => {
+        if (options.focusInput !== false) inputRef.current?.focus({ preventScroll: true });
+        if (pageScroll) window.scrollTo({ left: pageScroll.x, top: pageScroll.y, behavior: "auto" });
+      }, 0);
     }
   }, [input, loading, mode, updateAssistantStatus]);
 
@@ -89,7 +92,6 @@ export function AskEbbad({
       if (messagesRef.current) {
         const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         messagesRef.current.scrollTo({ top: messagesRef.current.scrollHeight, behavior: reduceMotion ? "auto" : "smooth" });
-        messagesEndRef.current?.scrollIntoView({ block: "end", behavior: reduceMotion ? "auto" : "smooth" });
       }
     });
 
@@ -105,7 +107,7 @@ export function AskEbbad({
   useEffect(() => {
     if (!externalPrompt || externalPrompt.id === lastExternalPromptIdRef.current) return;
     lastExternalPromptIdRef.current = externalPrompt.id;
-    void submit(externalPrompt.text);
+    void submit(externalPrompt.text, { preservePageScroll: true, focusInput: false });
   }, [externalPrompt, submit]);
 
   return (
@@ -199,7 +201,6 @@ export function AskEbbad({
             <Sparkles size={15} className="animate-pulse" /> Ask Ebbad is checking the knowledge base...
           </div>
         ) : null}
-        <div ref={messagesEndRef} aria-hidden="true" />
       </div>
 
       {compact ? (
@@ -209,7 +210,10 @@ export function AskEbbad({
               key={prompt}
               type="button"
               disabled={loading}
-              onClick={() => submit(prompt)}
+              onClick={(event) => {
+                event.preventDefault();
+                void submit(prompt, { preservePageScroll: true, focusInput: false });
+              }}
               className="shrink-0 rounded-full border border-white/10 px-2.5 py-1.5 text-[10px] text-slate-300 transition hover:border-cyan-300/40 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
             >
               {prompt}
@@ -224,7 +228,10 @@ export function AskEbbad({
                   key={prompt}
                   type="button"
                   disabled={loading}
-                  onClick={() => submit(prompt)}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    void submit(prompt, { preservePageScroll: true, focusInput: false });
+                  }}
                   className="rounded-full border border-white/10 px-3 py-1.5 text-xs text-slate-300 transition hover:border-cyan-300/40 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {prompt}
@@ -244,7 +251,10 @@ export function AskEbbad({
           {morePromptsOpen ? (
             <div className="flex flex-wrap gap-2 rounded-2xl border border-white/10 bg-white/[0.025] p-2">
               {hiddenPrompts.map((prompt) => (
-                <button key={prompt} type="button" disabled={loading} onClick={() => submit(prompt)} className="rounded-full border border-white/10 px-2.5 py-1 text-[11px] text-slate-300 transition hover:border-cyan-300/40 hover:text-white disabled:cursor-not-allowed disabled:opacity-50">
+                <button key={prompt} type="button" disabled={loading} onClick={(event) => {
+                  event.preventDefault();
+                  void submit(prompt, { preservePageScroll: true, focusInput: false });
+                }} className="rounded-full border border-white/10 px-2.5 py-1 text-[11px] text-slate-300 transition hover:border-cyan-300/40 hover:text-white disabled:cursor-not-allowed disabled:opacity-50">
                   {prompt}
                 </button>
               ))}
@@ -258,7 +268,10 @@ export function AskEbbad({
               <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-cyan-100">{group.label}</p>
               <div className="flex flex-wrap gap-2">
                 {group.prompts.map((prompt) => (
-                  <button key={prompt} type="button" disabled={loading} onClick={() => submit(prompt)} className="rounded-full border border-white/10 px-3 py-1.5 text-xs text-slate-300 transition hover:border-cyan-300/40 hover:text-white disabled:cursor-not-allowed disabled:opacity-50">
+                  <button key={prompt} type="button" disabled={loading} onClick={(event) => {
+                    event.preventDefault();
+                    void submit(prompt, { preservePageScroll: true, focusInput: false });
+                  }} className="rounded-full border border-white/10 px-3 py-1.5 text-xs text-slate-300 transition hover:border-cyan-300/40 hover:text-white disabled:cursor-not-allowed disabled:opacity-50">
                     {prompt}
                   </button>
                 ))}

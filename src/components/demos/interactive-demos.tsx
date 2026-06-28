@@ -38,12 +38,16 @@ const detectionChips = ["Face Detection", "Eye Tracking", "Head Pose", "Phone De
 
 export function ProctorInteractiveDemo() {
   const [status, setStatus] = useState<"idle" | "running" | "paused">("idle");
+  const [session, setSession] = useState("CS-204 Midterm / Candidate 014");
   const [elapsed, setElapsed] = useState(0);
   const [risk, setRisk] = useState(34);
   const [filter, setFilter] = useState<EventFilter>("All");
   const [events, setEvents] = useState(proctorEventPool.slice(0, 2));
   const [selected, setSelected] = useState(proctorEventPool[0]);
   const [reportOpen, setReportOpen] = useState(false);
+  const [generatingReport, setGeneratingReport] = useState(false);
+  const [reviewedEvents, setReviewedEvents] = useState<string[]>([]);
+  const [signals, setSignals] = useState({ camera: true, audio: true, browser: true });
   const [riskHistory, setRiskHistory] = useState([34, 42, 38, 49]);
   const eventCursor = useRef(2);
 
@@ -78,8 +82,19 @@ export function ProctorInteractiveDemo() {
     setRiskHistory([34, 42, 38, 49]);
     setEvents(proctorEventPool.slice(0, 2));
     setSelected(proctorEventPool[0]);
+    setReviewedEvents([]);
+    setGeneratingReport(false);
+    setSignals({ camera: true, audio: true, browser: true });
     eventCursor.current = 2;
     setReportOpen(false);
+  };
+
+  const generateReport = () => {
+    setGeneratingReport(true);
+    window.setTimeout(() => {
+      setGeneratingReport(false);
+      setReportOpen(true);
+    }, 650);
   };
 
   return (
@@ -90,6 +105,11 @@ export function ProctorInteractiveDemo() {
         note="Demo uses mock data to show the product flow."
         actions={
           <>
+            <select value={session} onChange={(event) => setSession(event.target.value)} className="rounded-full border border-white/10 bg-slate-950/80 px-3 py-2 text-sm text-slate-200 outline-none focus:border-cyan-300/45" aria-label="Select mock exam session">
+              <option>CS-204 Midterm / Candidate 014</option>
+              <option>DBMS Quiz / Candidate 021</option>
+              <option>AI Lab Test / Candidate 008</option>
+            </select>
             <button onClick={() => setStatus("running")} className="demo-action-primary"><Play size={16} /> Start Demo Session</button>
             <button onClick={() => setStatus("paused")} className="demo-action"><Pause size={16} /> Pause</button>
             <button onClick={reset} className="demo-action"><RefreshCw size={16} /> Reset</button>
@@ -103,6 +123,7 @@ export function ProctorInteractiveDemo() {
             <h2 className="font-heading text-2xl font-bold text-white">Live Monitoring Panel</h2>
             <span className="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 font-mono text-xs text-cyan-100"><Clock size={14} /> {minutes}:{seconds}</span>
           </div>
+          <p className="mt-2 text-xs leading-6 text-slate-500">Selected mock session: {session}. This demo supports instructor review and does not automatically accuse students.</p>
           <div className="mt-5 grid gap-4 md:grid-cols-[1fr_0.75fr]">
             <div className="relative min-h-72 overflow-hidden rounded-3xl border border-cyan-300/20 bg-[radial-gradient(circle_at_center,rgba(34,211,238,0.2),transparent_58%)] p-5">
               <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent,rgba(34,211,238,0.08),transparent)]" />
@@ -123,6 +144,17 @@ export function ProctorInteractiveDemo() {
               </div>
             </div>
             <div className="grid gap-3">
+              <div className="grid grid-cols-3 gap-2">
+                {([
+                  ["camera", "Camera"],
+                  ["audio", "Audio"],
+                  ["browser", "Browser"],
+                ] as const).map(([key, label]) => (
+                  <button key={key} type="button" onClick={() => setSignals((current) => ({ ...current, [key]: !current[key] }))} className={cn("rounded-2xl border px-2 py-2 text-xs transition", signals[key] ? "border-cyan-300/35 bg-cyan-300/10 text-cyan-50" : "border-white/10 bg-white/[0.035] text-slate-500")}>
+                    {label}
+                  </button>
+                ))}
+              </div>
               <MetricCard label="Risk Score" value={risk} tone={risk > 70 ? "critical" : "normal"} />
               <MetricCard label="Critical Events" value={criticalCount} tone={criticalCount ? "critical" : "normal"} />
               <MetricCard label="Evidence Clips" value={events.length} tone="normal" />
@@ -160,6 +192,13 @@ export function ProctorInteractiveDemo() {
           <div className="mt-5 rounded-2xl border border-cyan-300/20 bg-cyan-300/10 p-4 text-sm leading-7 text-cyan-50">
             <strong>{selected.title}:</strong> {selected.detail}
           </div>
+          <button
+            type="button"
+            onClick={() => setReviewedEvents((current) => current.includes(selected.title) ? current : [...current, selected.title])}
+            className="demo-action mt-3"
+          >
+            <CheckCircle2 size={16} /> {reviewedEvents.includes(selected.title) ? "Event Reviewed" : "Mark Event Reviewed"}
+          </button>
           <div className="mt-4 grid gap-2">
             {events.slice(0, 3).map((event, index) => (
               <button
@@ -175,13 +214,14 @@ export function ProctorInteractiveDemo() {
               </button>
             ))}
           </div>
-          <button onClick={() => setReportOpen(true)} className="demo-action-primary mt-4"><FileText size={16} /> Generate Report</button>
+          <button onClick={generateReport} className="demo-action-primary mt-4"><FileText size={16} /> {generatingReport ? "Preparing Summary..." : "Generate Review Summary"}</button>
         </div>
       </div>
 
       {reportOpen ? (
         <DemoModal title="Mock ProctorAI Report" onClose={() => setReportOpen(false)}>
           <p>Risk score: {risk}. Critical events: {criticalCount}. Session duration: {minutes}:{seconds}.</p>
+          <p className="mt-3">Reviewed events: {reviewedEvents.length || 0}. Active signals: {Object.entries(signals).filter(([, enabled]) => enabled).map(([key]) => key).join(", ") || "none"}.</p>
           <p className="mt-3">Recommendation: {criticalCount > 1 ? "Instructor review recommended before accepting the attempt." : "Low manual review priority with normal evidence sampling."}</p>
           <div className="mt-5 grid gap-2 sm:grid-cols-3">
             {["Evidence", "Timeline", "Decision"].map((item) => (
@@ -217,12 +257,23 @@ export function TeletrackInteractiveDemo() {
   const [devices, setDevices] = useState(initialDevices);
   const [selectedName, setSelectedName] = useState(initialDevices[0].name);
   const [audit, setAudit] = useState(demoData.teletrack.events);
+  const [criticalOnly, setCriticalOnly] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
   const selected = devices.find((device) => device.name === selectedName) || devices[0];
-  const visible = devices.filter((device) => (filter === "All" || device.status === filter) && device.name.toLowerCase().includes(query.toLowerCase()));
+  const visible = devices.filter((device) => (filter === "All" || device.status === filter) && (!criticalOnly || device.status === "Critical") && device.name.toLowerCase().includes(query.toLowerCase()));
 
   const updateSelected = (patch: Partial<Device>, log: string) => {
     setDevices((current) => current.map((device) => (device.name === selected.name ? { ...device, ...patch } : device)));
     setAudit((current) => [log, ...current].slice(0, 6));
+  };
+
+  const refreshTelemetry = () => {
+    setRefreshing(true);
+    window.setTimeout(() => {
+      setAudit((current) => [`Telemetry refresh completed for ${devices.length} mock devices`, ...current].slice(0, 6));
+      setRefreshing(false);
+    }, 600);
   };
 
   return (
@@ -246,6 +297,11 @@ export function TeletrackInteractiveDemo() {
             {(["All", "Online", "Offline", "Critical"] as const).map((item) => (
               <FilterButton key={item} active={filter === item} onClick={() => setFilter(item)}>{item}</FilterButton>
             ))}
+            <button type="button" onClick={() => setCriticalOnly((value) => !value)} className={cn("rounded-full border px-3 py-1.5 text-xs transition", criticalOnly ? "border-violet-300/45 bg-violet-400/10 text-violet-50" : "border-white/10 text-slate-400 hover:text-white")}>
+              Critical only
+            </button>
+            <button type="button" onClick={refreshTelemetry} className="demo-action"><RefreshCw size={16} /> {refreshing ? "Refreshing..." : "Live Pulse"}</button>
+            <button type="button" onClick={() => setReportOpen(true)} className="demo-action-primary"><FileText size={16} /> Export Report</button>
           </div>
           <div className="mt-5 overflow-hidden rounded-3xl border border-white/10">
             {visible.map((device) => (
@@ -294,6 +350,13 @@ export function TeletrackInteractiveDemo() {
           </div>
         </div>
       </div>
+      {reportOpen ? (
+        <DemoModal title="Mock TeleTrack Operations Report" onClose={() => setReportOpen(false)}>
+          <p>Portfolio demo report: {onlineDevices[1]} online devices, {criticalAlerts[1]} critical alerts, {activeIncidents[1]} active incidents, and {slaCompliance[1]} SLA compliance.</p>
+          <p className="mt-3">Selected device: {selected.name}. Current technician: {selected.technician}. Incident state: {selected.incident}.</p>
+          <p className="mt-3">This is a mock export preview for showing product flow, not a live telemetry backend.</p>
+        </DemoModal>
+      ) : null}
       <div className="glass-panel rounded-3xl p-5">
         <h2 className="font-heading text-2xl font-bold text-white">Audit Log Timeline</h2>
         <div className="mt-4 grid gap-3">
@@ -320,6 +383,8 @@ export function MirrorMindInteractiveDemo() {
   const [analyzing, setAnalyzing] = useState(false);
   const [analyzed, setAnalyzed] = useState(true);
   const [selectedNode, setSelectedNode] = useState("Claim");
+  const [reasoningMode, setReasoningMode] = useState<"Balanced" | "Evidence" | "Counterpoints">("Balanced");
+  const [saved, setSaved] = useState(false);
 
   const riskScore = useMemo(() => {
     const strongWords = ["always", "all", "must", "never"];
@@ -333,6 +398,7 @@ export function MirrorMindInteractiveDemo() {
       setAnalyzing(false);
       setAnalyzed(true);
       setSelectedNode("Claim");
+      setSaved(false);
     }, 850);
   };
 
@@ -347,14 +413,23 @@ export function MirrorMindInteractiveDemo() {
             </button>
           ))}
         </div>
+        <div className="mt-3 flex flex-wrap gap-2" aria-label="Reasoning mode">
+          {(["Balanced", "Evidence", "Counterpoints"] as const).map((mode) => (
+            <button key={mode} type="button" onClick={() => setReasoningMode(mode)} className={cn("rounded-full border px-3 py-1.5 text-xs transition", reasoningMode === mode ? "border-cyan-300/45 bg-cyan-300/10 text-cyan-50" : "border-white/10 text-slate-400 hover:text-white")}>
+              {mode}
+            </button>
+          ))}
+        </div>
         <textarea value={input} onChange={(event) => setInput(event.target.value)} rows={7} className="mt-4 w-full resize-none rounded-3xl border border-white/10 bg-white/[0.04] p-5 leading-8 text-slate-200 outline-none focus:border-cyan-300/45" />
         <div className="mt-4 flex flex-wrap gap-2">
           <button onClick={analyze} className="demo-action-primary"><Send size={16} /> {analyzing ? "Analyzing..." : "Analyze Argument"}</button>
-          <button onClick={() => { setInput(data.input); setAnalyzed(true); setSelectedNode("Claim"); }} className="demo-action"><RefreshCw size={16} /> Reset Example</button>
+          <button onClick={() => { setInput(data.input); setAnalyzed(true); setSelectedNode("Claim"); setReasoningMode("Balanced"); setSaved(false); }} className="demo-action"><RefreshCw size={16} /> Reset Example</button>
+          <button onClick={() => { setSelectedNode("Evidence Gaps"); setSaved(true); }} className="demo-action"><FileText size={16} /> Save Reflection</button>
         </div>
         <div className="mt-5 rounded-2xl border border-violet-300/20 bg-violet-400/10 p-4">
           <p className="font-mono text-xs uppercase tracking-wider text-violet-100">Reasoning Risk</p>
           <p className="mt-2 font-heading text-3xl font-bold text-white">{analyzing ? "Analyzing reasoning structure..." : `${riskScore}/100`}</p>
+          <p className="mt-2 text-sm text-slate-400">Mode: {reasoningMode}. {saved ? "Reflection summary saved locally in this demo state." : "Run or save a mock reflection summary."}</p>
         </div>
       </div>
       <div className="grid gap-5">
@@ -369,7 +444,7 @@ export function MirrorMindInteractiveDemo() {
             ))}
           </div>
           <p className="mt-4 rounded-2xl bg-white/[0.05] p-4 text-sm leading-7 text-slate-300">
-            {analyzed ? nodeDetail(selectedNode, input) : "Run analysis to inspect reasoning nodes."}
+            {analyzed ? nodeDetail(selectedNode, input, reasoningMode) : "Run analysis to inspect reasoning nodes."}
           </p>
         </div>
         <Panel title="Hidden Assumptions" icon={<Eye />} items={data.assumptions} />
@@ -380,6 +455,7 @@ export function MirrorMindInteractiveDemo() {
           <p className="mt-4 rounded-2xl border border-cyan-300/20 bg-cyan-300/10 p-4 text-sm leading-7 text-cyan-50">
             Suggested improvement: narrow the claim, add evidence, name the trade-offs, and explain when the idea should not be used.
           </p>
+          <button type="button" onClick={() => setSelectedNode("Reasons")} className="demo-action mt-4"><BarChart3 size={16} /> Compare Counterpoints</button>
           <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.04] p-4">
             <p className="font-mono text-xs uppercase tracking-[0.12em] text-violet-100">Mock report preview</p>
             <div className="mt-3 grid gap-2">
@@ -396,11 +472,11 @@ export function MirrorMindInteractiveDemo() {
   );
 }
 
-function nodeDetail(node: string, input: string) {
+function nodeDetail(node: string, input: string, mode = "Balanced") {
   if (node === "Claim") return `Main claim detected: "${input.slice(0, 115)}${input.length > 115 ? "..." : ""}"`;
-  if (node === "Reasons") return "The reasoning depends on expected benefits, but it needs clearer evidence and boundaries.";
+  if (node === "Reasons") return mode === "Counterpoints" ? "The strongest counterpoint is that the claim needs boundaries, failure cases, and comparison with alternatives." : "The reasoning depends on expected benefits, but it needs clearer evidence and boundaries.";
   if (node === "Assumptions") return "This argument assumes the solution works equally well for every user and context.";
-  return "Evidence gaps include measurable outcomes, privacy impact, failure cases, and comparison with alternatives.";
+  return mode === "Evidence" ? "Evidence gaps include measurable outcomes, source quality, privacy impact, and before/after comparison." : "Evidence gaps include measurable outcomes, privacy impact, failure cases, and comparison with alternatives.";
 }
 
 function DemoHeader({ label, title, note, actions }: { label: string; title: string; note: string; actions: ReactNode }) {
