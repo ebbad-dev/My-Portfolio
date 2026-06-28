@@ -207,7 +207,11 @@ const initialDevices: Device[] = [
 ];
 
 export function TeletrackInteractiveDemo() {
-  const [onlineDevices, criticalAlerts, activeIncidents, slaCompliance] = demoData.teletrack.metrics;
+  const metricValue = (label: string, fallback: string) => demoData.teletrack.metrics.find(([name]) => name === label)?.[1] || fallback;
+  const onlineDevices = ["Online Devices", metricValue("Online Devices", "116")] as const;
+  const criticalAlerts = ["Critical Alerts", metricValue("Critical Alerts", "3")] as const;
+  const activeIncidents = ["Active Incidents", metricValue("Active Incidents", "7")] as const;
+  const slaCompliance = ["SLA Compliance", metricValue("SLA Compliance", "94%")] as const;
   const [filter, setFilter] = useState<"All" | DeviceStatus>("All");
   const [query, setQuery] = useState("");
   const [devices, setDevices] = useState(initialDevices);
