@@ -35,6 +35,20 @@ npm run smoke:browser
 
 Missing links and assets are handled with clean unavailable states. Raw placeholder values are never shown publicly.
 
+## Ask Ebbad AI configuration
+
+Ask Ebbad uses approved portfolio/resume/project data first. It works without any external AI key through deterministic fallback answers.
+
+Optional OpenRouter enhancement:
+
+```env
+ASK_EBBAD_AI_PROVIDER=openrouter
+OPENROUTER_API_KEY=your_openrouter_key
+OPENROUTER_MODEL=meta-llama/llama-3.1-8b-instruct:free
+```
+
+Keep `OPENROUTER_API_KEY` server-side only. Do not expose it through `NEXT_PUBLIC_*`, commit it to git, or place it in frontend code. If OpenRouter is unavailable or the key is missing, `/api/chat` falls back to the deterministic approved-data answer.
+
 ## Features
 
 - First-visit welcome intro with session memory
@@ -65,7 +79,7 @@ It sends `name`, `email`, `purpose`, and `message`, plus a subject and reply-to 
 ## Security notes
 
 - The site sends safe baseline headers through `next.config.ts`: content-type sniffing protection, strict referrer policy, frame blocking, restricted browser permissions, and HSTS.
-- `/api/chat` validates input with Zod, returns `Cache-Control: no-store`, and includes a small in-memory rate limit as defense-in-depth only. Because serverless instances are ephemeral and distributed, this is not a complete production-grade rate limiter.
+- `/api/chat` validates input with Zod, returns `Cache-Control: no-store`, keeps the OpenRouter provider server-side only, and includes a small in-memory rate limit as defense-in-depth only. Because serverless instances are ephemeral and distributed, this is not a complete production-grade rate limiter.
 - If stronger abuse protection is needed later, add an external store or challenge layer such as Upstash, Vercel KV, or Turnstile.
 - A full Content Security Policy is intentionally not enforced in this pass. Add CSP only after testing compatibility with Next assets, Vercel Analytics, Formspree, fonts, inline theme bootstrapping, and generated OG routes.
 
@@ -93,7 +107,7 @@ Full-stack systems, AI tools, databases, backend APIs, computer vision, and inte
 
 ## Chatbot knowledge guide
 
-Update `chatbotKnowledge` in `src/data/site.ts`. Keep answers short, honest, and sourced from the portfolio. Unknown questions should keep using the fallback answer.
+Update `chatbotKnowledge` in `src/data/site.ts` for UI prompts and `src/lib/chatbot.ts` for deterministic intent/context behavior. Keep answers short, honest, and sourced from the portfolio. Unknown questions should keep using the fallback answer.
 
 ## Image replacement guide
 

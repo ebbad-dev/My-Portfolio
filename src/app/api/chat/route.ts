@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { chatbotModes, getChatbotAnswer } from "@/lib/chatbot";
+import { chatbotModes, getHybridChatbotAnswer } from "@/lib/chatbot";
 
 export const runtime = "nodejs";
 
@@ -58,8 +58,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Please send a valid question." }, { status: 400, headers: jsonHeaders });
   }
 
+  const result = await getHybridChatbotAnswer(parsed.data.message, parsed.data.mode);
+
   return NextResponse.json({
-    message: getChatbotAnswer(parsed.data.message, parsed.data.mode),
+    message: result.message,
+    answer: result.answer,
+    intent: result.intent,
+    source: result.source,
   }, { headers: jsonHeaders });
 }
 

@@ -13,6 +13,7 @@ import { BackToTop } from "@/components/system/back-to-top";
 import { SectionReveal } from "@/components/system/section-reveal";
 import { LivingJourneyDock } from "@/components/navigation/living-journey-dock";
 import { PremiumParticles } from "@/components/effects/premium-particles";
+import { PremiumTypewriter } from "@/components/ui/premium-typewriter";
 import {
   journey,
   nonTechnicalSkills,
@@ -49,7 +50,9 @@ export default function Home() {
                 Software <span className="text-gradient">Engineer.</span>
               </h2>
               <p className="mono-label mt-4 text-slate-300">Full-Stack Developer / AI / ML / Databases / Systems</p>
-              <p className="mt-4 max-w-2xl text-base leading-8 text-slate-200 sm:text-lg">{siteConfig.heroIntro}</p>
+              <p className="mt-4 max-w-2xl text-base leading-8 text-slate-200 sm:text-lg">
+                <PremiumTypewriter text={siteConfig.heroIntro} delay={380} speed={15} />
+              </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <ButtonLink href="#projects" variant="primary">View Projects</ButtonLink>
                 <ButtonLink href="#demos">Try Demos</ButtonLink>
