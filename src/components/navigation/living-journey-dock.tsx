@@ -88,8 +88,8 @@ export function LivingJourneyDock() {
                   {isActive ? <span className="absolute inset-[-5px] rounded-full border border-cyan-300/25" /> : null}
                   <Icon size={17} aria-hidden="true" />
                 </span>
-                <span className="hidden max-w-[5.2rem] truncate font-mono text-[10px] uppercase tracking-[0.08em] sm:block">{section.shortLabel}</span>
-                <span className="pointer-events-none absolute -top-9 hidden whitespace-nowrap rounded-full border border-cyan-300/20 bg-slate-950/92 px-3 py-1 text-xs font-semibold text-cyan-50 opacity-0 shadow-[0_0_24px_rgba(34,211,238,0.12)] transition group-hover:opacity-100 group-focus-visible:opacity-100 lg:block">
+                <span aria-hidden="true" className="hidden max-w-[5.2rem] truncate font-mono text-[10px] uppercase tracking-[0.08em] sm:block">{section.shortLabel}</span>
+                <span aria-hidden="true" className="pointer-events-none absolute -top-9 hidden whitespace-nowrap rounded-full border border-cyan-300/20 bg-slate-950/92 px-3 py-1 text-xs font-semibold text-cyan-50 opacity-0 shadow-[0_0_24px_rgba(34,211,238,0.12)] transition group-hover:opacity-100 group-focus-visible:opacity-100 lg:block">
                   {section.label}
                 </span>
               </button>

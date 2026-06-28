@@ -207,6 +207,7 @@ const initialDevices: Device[] = [
 ];
 
 export function TeletrackInteractiveDemo() {
+  const [onlineDevices, criticalAlerts, activeIncidents, slaCompliance] = demoData.teletrack.metrics;
   const [filter, setFilter] = useState<"All" | DeviceStatus>("All");
   const [query, setQuery] = useState("");
   const [devices, setDevices] = useState(initialDevices);
@@ -223,10 +224,10 @@ export function TeletrackInteractiveDemo() {
   return (
     <div className="grid gap-5">
       <div className="grid gap-4 md:grid-cols-4">
-        <MetricCard label="Online Devices" value={devices.filter((device) => device.status === "Online").length} tone="normal" />
-        <MetricCard label="Critical Alerts" value={devices.filter((device) => device.status === "Critical").length} tone="critical" />
-        <MetricCard label="Open Incidents" value={devices.filter((device) => device.incident === "Open").length} tone="critical" />
-        <MetricCard label="Avg SLA" value={`${Math.round(devices.reduce((sum, device) => sum + device.sla, 0) / devices.length)}%`} tone="normal" />
+        <MetricCard label={onlineDevices[0]} value={onlineDevices[1]} tone="normal" />
+        <MetricCard label={criticalAlerts[0]} value={criticalAlerts[1]} tone="critical" />
+        <MetricCard label={activeIncidents[0]} value={activeIncidents[1]} tone="critical" />
+        <MetricCard label={slaCompliance[0]} value={slaCompliance[1]} tone="normal" />
       </div>
       <div className="grid gap-5 lg:grid-cols-[1fr_0.9fr]">
         <div className="glass-panel rounded-3xl p-5">

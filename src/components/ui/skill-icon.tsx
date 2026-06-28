@@ -57,11 +57,10 @@ export function SkillIcon({ skill, large = false, className, iconClassName }: Sk
         config.render({ width: iconSize, height: iconSize, color: skill.color, className: iconClassName })
       ) : (
         <span
-          className={cn("grid h-[72%] w-[72%] place-items-center rounded-xl text-center font-heading font-black leading-none tracking-tight", iconClassName)}
+          className={cn("skill-icon-text grid h-[72%] w-[72%] place-items-center rounded-xl text-center font-heading font-black leading-none tracking-tight", large ? "text-sm" : "text-[10px]", iconClassName)}
           style={{ background: config.bg, color: config.fg }}
-        >
-          <span className={large ? "text-sm" : "text-[10px]"}>{config.label}</span>
-        </span>
+          data-label={config.label}
+        />
       )}
     </span>
   );

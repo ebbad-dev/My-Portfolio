@@ -140,6 +140,10 @@ a {
     background 240ms ease;
 }
 
+.skill-icon-text::before {
+  content: attr(data-label);
+}
+
 html[data-theme="light"] .glass-panel {
   border-color: rgba(15, 23, 42, 0.12);
   background:

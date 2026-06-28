@@ -127,6 +127,7 @@ export function SkillConstellation() {
             <button
               key={skill.id}
               onClick={() => selectSkill(skill)}
+              aria-label={`${skill.name}, ${skill.level}, ${skill.projectCount || 0} projects`}
               className={cn(
                 "group flex min-h-20 items-center gap-3 rounded-2xl border p-3 text-left transition duration-300 hover:-translate-y-0.5",
                 selected?.id === skill.id
@@ -298,6 +299,7 @@ function SkillFallbackGrid({ skills, selectedSkillId, onSelect, compact = false,
             key={skill.id}
             type="button"
             onClick={() => onSelect(skill)}
+            aria-label={`${skill.name}, ${skill.level}`}
             className={cn(
               "flex min-h-16 items-center gap-3 rounded-2xl border p-3 text-left transition duration-300",
               active
@@ -308,7 +310,7 @@ function SkillFallbackGrid({ skills, selectedSkillId, onSelect, compact = false,
             <SkillIcon skill={skill} />
             <span className="min-w-0">
               <span className="block truncate text-sm font-semibold text-white">{skill.name}</span>
-              <span className="mt-1 block truncate text-xs text-slate-400">{skill.level}</span>
+              <span className="mt-1 block truncate text-xs text-slate-400">Level: {skill.level}</span>
             </span>
           </button>
         );

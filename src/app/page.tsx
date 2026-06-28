@@ -115,7 +115,7 @@ export default function Home() {
       </section>
 
       <section id="about" className="section-shell">
-        <SectionHeader eyebrow="About Me" title="I like projects where the interface, database, logic, and user problem all connect.">
+        <SectionHeader eyebrow="About Me" title="I turn project ideas into usable, testable systems.">
           I&apos;m a Software Engineering student at COMSATS Lahore. My work sits where product interfaces, data models, backend logic, and intelligent workflows meet.
         </SectionHeader>
         <div className="grid gap-6 lg:grid-cols-[1fr_0.9fr]">
