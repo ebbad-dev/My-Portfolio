@@ -20,9 +20,9 @@ export const resumeSource = {
 export const resumeFacts = {
   headline: "Software Engineering Student",
   summary:
-    "Software Engineering student with a 3.4 CGPA, Harvard CS50 certification, and project work across full-stack development, AI/ML, computer vision, distributed systems, and database design.",
+    "Software Engineering student with hands-on experience building full-stack, AI-assisted, and database-driven systems using Python, JavaScript/TypeScript, Node.js, React, SQL, and modern backend workflows.",
   seeking:
-    "Seeking a product-driven software team where he can contribute to reliable backend APIs, clear interfaces, and practical engineering workflows.",
+    "Focused on practical engineering problems with foundations in DSA, OOP, DBMS, APIs, computer vision, and system design.",
   education: {
     degree: "BS Software Engineering",
     institution: "COMSATS University Islamabad, Lahore Campus",
@@ -47,43 +47,43 @@ export const resumeFacts = {
       title: "Mirror-Mind",
       techStack: ["Next.js", "TypeScript", "Prisma", "Redis", "AI/ML"],
       bullets: [
-        "Full-stack debate and self-reflection platform that turns opinions into visual argument maps, assumptions, evidence gaps, and counterarguments.",
-        "Resume lists multi-provider LLM routing, deterministic fallback behavior, claim classification, evidence triangulation, collaborative workspaces, bilingual Urdu/English mode, and PDF export.",
+        "Built a debate and self-reflection platform that converts opinions into argument maps, assumptions, evidence gaps, and counterarguments.",
+        "Implemented LLM routing concepts, deterministic fallback behavior, bilingual mode, collaborative workspaces, and PDF export workflows.",
       ],
     },
     {
       title: "ProctorAI",
       techStack: ["Python", "Computer Vision", "AI/ML"],
       bullets: [
-        "AI exam monitoring prototype using webcam analysis, face detection, configurable risk scoring, structured incident logs, evidence review, and instructor-facing reporting flows.",
+        "Developed an exam monitoring prototype with webcam analysis, face detection, configurable risk scoring, evidence review, and instructor reporting flows.",
       ],
     },
     {
       title: "TeleTrack Enterprise",
       techStack: ["Python", "FastAPI", "PostgreSQL", "React"],
       bullets: [
-        "Network operations project for managing devices, technicians, facilities, alerts, incidents, audit logs, SLA tracking, and uptime-style reporting through a dashboard workflow.",
+        "Designed a network operations system for devices, technicians, facilities, alerts, incidents, audit logs, SLA tracking, and uptime-style reporting.",
       ],
     },
     {
       title: "Student Result Management API",
       techStack: ["Node.js", "Express.js", "MongoDB"],
       bullets: [
-        "Backend API for student records, subjects, result entries, validation, role-aware routes, and clean CRUD workflows.",
+        "Created a backend API for student records, subjects, result entries, validation, role-aware routes, and maintainable academic CRUD workflows.",
       ],
     },
     {
       title: "Distributed Banking System",
       techStack: ["Java", "Sockets", "Multi-threading"],
       bullets: [
-        "Multi-client banking simulation with socket-based client-server architecture, thread management, transaction handling, and consistency-focused concurrency controls.",
+        "Implemented a multi-client banking simulation with socket-based client-server architecture, thread management, and consistency-focused transaction handling.",
       ],
     },
     {
-      title: "Netflix Console / DBMS",
+      title: "Netflix Console DBMS",
       techStack: ["Python", "Flask", "SQL Server", "HTML/JS"],
       bullets: [
-        "Netflix-inspired database system managing subscribers, content, and watch history with CRUD operations, stored procedures, triggers, views, and export-oriented reporting.",
+        "Modeled a Netflix-inspired database system for subscribers, content, and watch history with CRUD workflows, stored procedures, triggers, views, and reporting exports.",
       ],
     },
   ] satisfies ResumeProject[],
@@ -98,13 +98,13 @@ export const resumeFacts = {
       title: "Class Representative",
       organization: "COMSATS University Lahore",
       dates: "2024-Present",
-      bullets: ["Elected cohort representative for 60+ students, coordinating student-faculty communication and administrative processes."],
+      bullets: ["Represent 60+ students by coordinating student-faculty communication and supporting administrative processes."],
     },
     {
       title: "Sponsorship & Volunteer Lead",
       organization: "TechnoVerse 2025",
       dates: "2025",
-      bullets: ["Supported sponsorship outreach for a 500+ attendee university tech event, managing stakeholder correspondence and event coordination responsibilities."],
+      bullets: ["Supported sponsorship outreach for a 500+ attendee university tech event through stakeholder communication and event coordination."],
     },
   ] satisfies ResumeInitiative[],
 };
