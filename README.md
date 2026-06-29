@@ -1,137 +1,333 @@
-# Ebbad Ur Rehman Portfolio
+# Ebbad Portfolio
 
-An immersive Next.js portfolio for Ebbad Ur Rehman, built with TypeScript, Tailwind CSS, Framer Motion, Three.js, Formspree, and optional Vercel Analytics.
+Premium recruiter-focused portfolio for **Ebbad Ur Rehman**, built as an interactive personal operating system for projects, skills, resume, testimonials, demos, and AI-assisted portfolio guidance.
 
-## Run locally
+[Live Portfolio](https://ebbad-portfolio.vercel.app) | [Source Code](https://github.com/ebbad-dev/My-Portfolio) | [GitHub Profile](https://github.com/ebbad-dev) | [LinkedIn](https://www.linkedin.com/in/ebbad-ur-rehman/)
+
+## Overview
+
+This portfolio is designed to do more than display a static profile. It gives recruiters and collaborators a fast, polished way to understand Ebbad's engineering direction through:
+
+- a cinematic identity-first hero;
+- recruiter snapshot and resume access;
+- featured project case studies;
+- honest interactive mock demos;
+- a premium 3D skill globe;
+- testimonials;
+- command palette navigation;
+- contact flow;
+- Ask Ebbad, a server-side portfolio assistant powered by approved portfolio data with optional OpenRouter enhancement.
+
+The visual direction is a dark glassmorphism system called **Midnight Cyber Luxe**: cyan, blue, violet, subtle glow, motion, 3D depth, and restrained futuristic polish.
+
+## Live Status
+
+- Production: `https://ebbad-portfolio.vercel.app`
+- Deployment: Vercel
+- Main branch: `main`
+- Resume path: `/resume/ebbad-resume.pdf`
+- Contact provider: Formspree
+- Ask Ebbad AI provider: OpenRouter with deterministic fallback
+
+## Core Features
+
+### Portfolio Experience
+
+- Responsive Next.js App Router portfolio
+- Premium hero with smooth typewriter intro
+- Recruiter-first snapshot section
+- Project archive with code availability states
+- Case study pages for featured work
+- Interactive mock demo pages for featured projects
+- Command palette with `Ctrl/Cmd + K`
+- Vertical social dock and mobile-friendly social placement
+- Custom premium scrollbar and reduced-motion support
+- SEO metadata, sitemap, robots, Open Graph, and Twitter card support
+
+### Featured Projects
+
+The portfolio highlights three primary projects:
+
+1. **ProctorAI**  
+   AI/computer vision exam-monitoring prototype with review-focused risk signals, evidence flow, and instructor reporting concepts.
+
+2. **TeleTrack Enterprise**  
+   Database and network-operations system for devices, technicians, alerts, incidents, audit logs, SLA tracking, and topology views.
+
+3. **MirrorMind**  
+   AI/debate reasoning workspace that maps opinions into claims, assumptions, evidence gaps, counterarguments, and structured reports.
+
+Additional archive projects include Student Result Management API, Netflix Console DBMS, Plagiarism Detector, Distributed Banking System, and Criminal Database Management System.
+
+### Ask Ebbad
+
+Ask Ebbad is a portfolio assistant that answers from approved portfolio, resume, project, contact, and testimonial data.
+
+It uses a hybrid architecture:
+
+- deterministic local answers for safe, known portfolio facts;
+- strict fallback behavior for unknown or out-of-scope prompts;
+- optional OpenRouter generation for richer answers;
+- server-side-only API key handling;
+- bounded response length;
+- Zod request validation;
+- no-store API responses;
+- small in-memory rate limiting as defense in depth.
+
+The assistant must not invent clients, private facts, fake metrics, salaries, production claims, or project outcomes.
+
+### Resume
+
+The resume is a one-page ATS-friendly PDF:
+
+- normal selectable text;
+- clean headings;
+- no images, icons, columns, or text boxes;
+- clickable email, LinkedIn, GitHub, portfolio, and project links;
+- available at `public/resume/ebbad-resume.pdf`.
+
+## Tech Stack
+
+| Area | Tools |
+| --- | --- |
+| Framework | Next.js App Router, React |
+| Language | TypeScript |
+| Styling | Tailwind CSS, global CSS tokens |
+| Motion | Framer Motion, CSS animations |
+| 3D | Three.js, React Three Fiber, Drei |
+| Icons | Lucide React, local SVG skill icons |
+| Validation | Zod |
+| Contact | Formspree |
+| AI assistant | OpenRouter API with deterministic fallback |
+| Deployment | Vercel |
+| QA | ESLint, TypeScript, Playwright smoke test |
+
+## Project Structure
+
+```text
+src/
+  app/
+    api/chat/              Ask Ebbad API route
+    demos/[slug]/          Interactive demo routes
+    projects/[slug]/       Case study routes
+    globals.css            Theme, scrollbar, motion, global styling
+    layout.tsx             Metadata, fonts, shell
+    page.tsx               Main portfolio page
+  components/
+    home/                  Homepage sections and project surfaces
+    navigation/            Nav, command palette, journey dock
+    system/                Scroll line, active section, utilities
+    ui/                    Reusable UI primitives and visual systems
+  data/
+    site.ts                Profile, socials, projects, skills, demos, testimonials
+    resume.ts              Extracted resume facts for chatbot and UI
+  lib/
+    chatbot.ts             Deterministic + OpenRouter Ask Ebbad logic
+    utils.ts               Shared helpers
+public/
+  images/                  Profile and project visuals
+  resume/                  ATS resume PDF
+  videos/                  Intro video asset, currently disabled in UI
+scripts/
+  smoke-browser.mjs        Lightweight browser smoke tests
+  render-intro-video.py    Optional intro-video renderer
+```
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 20+ recommended
+- npm
+- Vercel account for deployment
+- Optional OpenRouter account for AI-backed Ask Ebbad responses
+
+### Install
 
 ```bash
 npm install
+```
+
+### Run Locally
+
+```bash
 npm run dev
 ```
 
-Open `http://localhost:3000`.
+Open:
 
-Useful checks before deploying:
+```text
+http://localhost:3000
+```
+
+### Production Build
 
 ```bash
-npm run lint
-npm run typecheck
 npm run build
-npm run smoke:browser
+npm run start
 ```
 
-`npm run smoke:browser` is an optional Playwright-based smoke test. It skips cleanly when Playwright is not installed, and writes screenshots to `test-results/portfolio-smoke` when browser tooling is available.
+## Environment Variables
 
-## Configure content
-
-- Profile, socials, skills, projects, chatbot knowledge, demos, and testimonials: `src/data/site.ts`
-- Resume: `public/resume/ebbad-resume.pdf`
-- Intro video: `public/videos/intro.mp4`
-- Profile image: `public/images/profile/profile-1.jpeg`
-- Project thumbnails: `public/images/projects/*-thumbnail.svg`
-- Future real project screenshots: add files under `public/images/projects/`
-- Ask Ebbad route logic: `src/lib/chatbot.ts` and `src/app/api/chat/route.ts`
-- Contact form endpoint: `siteConfig.formspreeEndpoint` in `src/data/site.ts`
-
-Missing links and assets are handled with clean unavailable states. Raw placeholder values are never shown publicly.
-
-## Ask Ebbad AI configuration
-
-Ask Ebbad uses approved portfolio/resume/project data first. It works without any external AI key through deterministic fallback answers.
-
-Optional OpenRouter enhancement:
+Create `.env.local` for local secrets. Do not commit it.
 
 ```env
+NEXT_PUBLIC_SITE_URL=https://ebbad-portfolio.vercel.app
+
 ASK_EBBAD_AI_PROVIDER=openrouter
 OPENROUTER_API_KEY=your_openrouter_key
-OPENROUTER_MODEL=meta-llama/llama-3.1-8b-instruct:free
+OPENROUTER_MODEL=google/gemma-4-31b-it:free
 ```
 
-Keep `OPENROUTER_API_KEY` server-side only. Do not expose it through `NEXT_PUBLIC_*`, commit it to git, or place it in frontend code. If OpenRouter is unavailable or the key is missing, `/api/chat` falls back to the deterministic approved-data answer.
+### Notes
 
-## Features
+- `OPENROUTER_API_KEY` must stay server-side.
+- Never prefix the OpenRouter key with `NEXT_PUBLIC_`.
+- If OpenRouter is not configured or fails, Ask Ebbad falls back to deterministic approved-data answers.
+- The current production model is `google/gemma-4-31b-it:free`.
 
-- First-visit welcome intro with session memory
-- Intro video asset retained at `public/videos/intro.mp4`, with the public video UI disabled for now
-- Cinematic hero with profile image slot
-- Recruiter snapshot and 30-second summary
-- About section, resume section, and leadership journey
-- React Three Fiber skill globe with Drei controls and readable fallback lists
-- Three featured projects only: ProctorAI, TeleTrack Enterprise, MirrorMind
-- Honest local SVG project thumbnails for featured projects
-- Honest interactive portfolio demos with mock data labels
-- Case study pages for each featured project
-- Floating Ask Ebbad chatbot plus `/api/chat`
-- Command palette with `Ctrl/Cmd + K`
-- Formspree-backed contact form
-- SEO metadata, sitemap, robots, reduced-motion support, and Vercel Analytics
+## Contact Form
 
-## Contact form
-
-The contact form submits validated fields directly to Formspree:
+The contact form submits validated form data to Formspree:
 
 ```text
 https://formspree.io/f/mqeogggp
 ```
 
-It sends `name`, `email`, `purpose`, and `message`, plus a subject and reply-to value. To change the provider or endpoint, edit `siteConfig.formspreeEndpoint` in `src/data/site.ts`.
+Fields sent:
 
-## Security notes
+- `name`
+- `email`
+- `purpose`
+- `message`
+- honeypot field for spam reduction
+- subject and reply-to metadata
 
-- The site sends safe baseline headers through `next.config.ts`: content-type sniffing protection, strict referrer policy, frame blocking, restricted browser permissions, and HSTS.
-- `/api/chat` validates input with Zod, returns `Cache-Control: no-store`, keeps the OpenRouter provider server-side only, and includes a small in-memory rate limit as defense-in-depth only. Because serverless instances are ephemeral and distributed, this is not a complete production-grade rate limiter.
-- If stronger abuse protection is needed later, add an external store or challenge layer such as Upstash, Vercel KV, or Turnstile.
-- A full Content Security Policy is intentionally not enforced in this pass. Add CSP only after testing compatibility with Next assets, Vercel Analytics, Formspree, fonts, inline theme bootstrapping, and generated OG routes.
+To change the contact provider, update `siteConfig.formspreeEndpoint` in `src/data/site.ts`.
 
-## Real voice intro video
-
-The intro video asset remains at `public/videos/intro.mp4`, but the public intro video UI is currently disabled through `siteConfig.introVideoAvailable` in `src/data/site.ts`. Set that flag back to `true` when the intro should be shown again.
-
-The video is generated from a real recorded video so the face movement and voice stay natural. By default the renderer reads:
-
-```text
-C:\Users\HP\Downloads\VID-20260530-WA0046.mp4
-```
-
-To regenerate it with another recording, set `INTRO_SOURCE_VIDEO` to the source `.mp4`. If FFmpeg is not on PATH, set `FFMPEG_PATH` to `ffmpeg.exe`, then run:
+## Available Scripts
 
 ```bash
-python scripts/render-intro-video.py
+npm run dev
+npm run lint
+npm run typecheck
+npm run build
+npm run start
+npm run smoke:browser
 ```
 
-The current render keeps the source audio and trims it into a portfolio-ready intro. The on-screen message is:
+### Smoke Testing
+
+`npm run smoke:browser` uses Playwright when available. It checks:
+
+- homepage load;
+- major section anchors;
+- resume route;
+- project pages;
+- demo pages;
+- chat route behavior;
+- contact validation;
+- horizontal overflow at desktop and mobile sizes.
+
+Screenshots are written to:
 
 ```text
-Full-stack systems, AI tools, databases, backend APIs, computer vision, and interactive product experiences.
+test-results/portfolio-smoke
 ```
 
-## Chatbot knowledge guide
+To test production:
 
-Update `chatbotKnowledge` in `src/data/site.ts` for UI prompts and `src/lib/chatbot.ts` for deterministic intent/context behavior. Keep answers short, honest, and sourced from the portfolio. Unknown questions should keep using the fallback answer.
+```bash
+SMOKE_BASE_URL=https://ebbad-portfolio.vercel.app npm run smoke:browser
+```
 
-## Image replacement guide
+On Windows PowerShell:
 
-- Main profile portrait: `public/images/profile/profile-1.jpeg`
-- Secondary profile image: `public/images/profile/profile-2.jpg`
-- Project screenshots: `public/images/projects/{project-name}/`
-- Resume: `public/resume/ebbad-resume.pdf`
-- OG images: `public/og/`
-
-The UI uses purpose-built interface visuals when real screenshots are missing.
+```powershell
+$env:SMOKE_BASE_URL="https://ebbad-portfolio.vercel.app"
+npm run smoke:browser
+```
 
 ## Deployment
 
-1. Push the project to GitHub.
-2. Import it into Vercel.
-3. Optionally set `NEXT_PUBLIC_SITE_URL` in Vercel project settings if the production domain changes.
-4. Deploy.
+The app is deployed on Vercel.
 
-Optional Vercel Analytics is already wired and will work when enabled on Vercel.
+Typical production deploy:
 
-## Known placeholders
+```bash
+npx vercel --prod
+```
 
-Project screenshots and project-specific live demo deployments can still be added later. The shipped demo pages use clearly labeled mock data to show product flow honestly.
+Required production environment variables:
 
-## Honesty note
+```env
+ASK_EBBAD_AI_PROVIDER=openrouter
+OPENROUTER_API_KEY=your_openrouter_key
+OPENROUTER_MODEL=google/gemma-4-31b-it:free
+```
 
-Do not add fake clients, fake revenue, fake awards, fake testimonials, fake deployed demos, or fake production metrics. If a link, file, or deployment is missing, keep the clean unavailable state until the real asset exists.
+Optional:
+
+```env
+NEXT_PUBLIC_SITE_URL=https://ebbad-portfolio.vercel.app
+```
+
+## Content Editing Guide
+
+Most public content is centralized:
+
+- Profile and site config: `src/data/site.ts`
+- Social links: `src/data/site.ts`
+- Featured and archive projects: `src/data/site.ts`
+- Skill groups: `src/data/site.ts`
+- Testimonials: `src/data/site.ts`
+- Demo data: `src/data/site.ts`
+- Resume facts for chatbot: `src/data/resume.ts`
+- Actual resume PDF: `public/resume/ebbad-resume.pdf`
+
+When updating project claims, keep them honest and supported by real work. Do not add fake metrics, fake clients, fake production deployments, or fake awards.
+
+## Security And Reliability Notes
+
+- Safe baseline headers are configured in `next.config.ts`.
+- `/api/chat` validates requests with Zod.
+- `/api/chat` returns `Cache-Control: no-store`.
+- OpenRouter key is server-side only.
+- In-memory rate limiting is included as defense in depth, but it is not a complete serverless-grade rate limiter.
+- For stronger abuse protection later, consider Upstash, Vercel KV, or Turnstile.
+- Full CSP is intentionally not enforced yet because it requires careful compatibility testing with Next.js, Vercel, fonts, analytics, Formspree, and generated assets.
+
+## Accessibility And Performance
+
+- Reduced-motion behavior is respected across major motion surfaces.
+- Custom cursor is disabled for touch and reduced-motion contexts.
+- Skill list fallbacks are available around the 3D skill globe.
+- Links opening new tabs use `rel="noopener noreferrer"`.
+- Internal scroll areas use premium but visible scrollbars.
+- Heavy visual surfaces are scoped and lazy where practical.
+
+## Honesty Policy
+
+This portfolio intentionally distinguishes between:
+
+- real project work;
+- mock portfolio demos;
+- available code repositories;
+- future improvements;
+- missing or disabled assets.
+
+Mock demos are labeled as mock demos. Code links are shown only where intended. The assistant is instructed not to invent unsupported facts.
+
+## License
+
+This is a personal portfolio project for Ebbad Ur Rehman. The source is public for review and learning, but the personal branding, resume, portrait, testimonials, and portfolio copy should not be reused as someone else's identity.
+
+## Author
+
+**Ebbad Ur Rehman**  
+Software Engineering Student | Full-Stack Developer | AI / ML | Databases | Systems
+
+- Portfolio: [https://ebbad-portfolio.vercel.app](https://ebbad-portfolio.vercel.app)
+- GitHub: [https://github.com/ebbad-dev](https://github.com/ebbad-dev)
+- LinkedIn: [https://www.linkedin.com/in/ebbad-ur-rehman/](https://www.linkedin.com/in/ebbad-ur-rehman/)
+- Email: [ebbadurrehman538@gmail.com](mailto:ebbadurrehman538@gmail.com)
